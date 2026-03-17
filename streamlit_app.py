@@ -180,104 +180,128 @@ st.sidebar.caption("AssistHR v1.0")
 if page == "📊 Dashboard":
     st.title("📊 Dashboard")
 
-    # custom CSS for cards
     st.markdown("""
-    <style>
-    /* ── THEME AWARE METRIC CARDS ────────────────── */
-
-    /* Light theme */
-    [data-testid="stMetric"] {
-        background    : #ffffff;
-        border        : 1px solid #e2e8f0;
-        border-radius : 12px;
-        padding       : 20px 20px !important;
-        box-shadow    : 0 1px 4px rgba(0,0,0,0.06);
-        min-height    : 110px;
-        display       : flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    /* Dark theme */
-    @media (prefers-color-scheme: dark) {
+        <style>
+                
         [data-testid="stMetric"] {
-            background : #1e293b !important;
-            border     : 1px solid #334155 !important;
-            box-shadow : 0 1px 4px rgba(0,0,0,0.3) !important;
+            border-radius  : 12px !important;
+            padding        : 20px 20px !important;
+            min-height     : 110px !important;
+            display        : flex !important;
+            flex-direction : column !important;
+            justify-content: center !important;
+            box-shadow     : 0 1px 4px rgba(0,0,0,0.08) !important;
+            border         : 1px solid rgba(0,0,0,0.1) !important;
+            background     : var(--card-bg) !important;
         }
-    }
 
-    /* Streamlit dark theme class */
-    [data-theme="dark"] [data-testid="stMetric"],
-    .stApp[data-theme="dark"] [data-testid="stMetric"] {
-        background : #1e293b !important;
-        border     : 1px solid #334155 !important;
-    }
+        
+        [data-testid="stMetricLabel"] p {
+            font-size     : 11px !important;
+            font-weight   : 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.06em !important;
+            white-space   : normal !important;
+            word-break    : break-word !important;
+            line-height   : 1.4 !important;
+            color         : var(--card-label) !important;
+        }
 
-    /* Label styling */
-    [data-testid="stMetricLabel"] p {
-        font-size     : 11px !important;
-        font-weight   : 600 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.06em !important;
-        white-space   : normal !important;
-        word-break    : break-word !important;
-        line-height   : 1.4 !important;
-    }
+        
+        [data-testid="stMetricValue"] {
+            font-size  : 24px !important;
+            font-weight: 700 !important;
+            line-height: 1.2 !important;
+            white-space: normal !important;
+            word-break : break-word !important;
+            color      : var(--card-value) !important;
+        }
 
-    /* Value styling */
-    [data-testid="stMetricValue"] {
-        font-size  : 24px !important;
-        font-weight: 700 !important;
-        line-height: 1.2 !important;
-        white-space: normal !important;
-        word-break : break-word !important;
-    }
+        
+        [data-testid="column"] {
+            display       : flex !important;
+            flex-direction: column !important;
+        }
 
-    /* Equal height columns */
-    [data-testid="column"] {
-        display       : flex;
-        flex-direction: column;
-    }
+        [data-testid="column"] [data-testid="stMetric"] {
+            flex      : 1 !important;
+            height    : 100% !important;
+        }
 
-    [data-testid="column"] [data-testid="stMetric"] {
-        flex      : 1;
-        height    : 100%;
-        min-height: 110px;
-    }
+        
+        [data-theme="light"],
+        [data-theme="light"] * {
+            --card-bg    : #ffffff;
+            --card-label : #64748b;
+            --card-value : #1e293b;
+            --doc-bg     : #ffffff;
+            --doc-border : #e2e8f0;
+            --doc-text   : #334155;
+        }
 
-    /* Document list items */
-    .doc-item {
-        border-radius : 8px;
-        padding       : 10px 16px;
-        margin-bottom : 6px;
-        font-size     : 14px;
-        display       : flex;
-        align-items   : center;
-        gap           : 8px;
-        border        : 1px solid #e2e8f0;
-        background    : #ffffff;
-        color         : #334155;
-    }
+        [data-theme="light"] [data-testid="stMetric"] {
+            background: #ffffff !important;
+            border    : 1px solid #e2e8f0 !important;
+        }
 
-    /* Dark theme doc items */
-    @media (prefers-color-scheme: dark) {
-        .doc-item {
+        [data-theme="light"] [data-testid="stMetricLabel"] p {
+            color: #64748b !important;
+        }
+
+        [data-theme="light"] [data-testid="stMetricValue"] {
+            color: #1e293b !important;
+        }
+
+        
+        [data-theme="dark"],
+        [data-theme="dark"] * {
+            --card-bg    : #1e293b;
+            --card-label : #94a3b8;
+            --card-value : #f1f5f9;
+            --doc-bg     : #1e293b;
+            --doc-border : #334155;
+            --doc-text   : #cbd5e1;
+        }
+
+        [data-theme="dark"] [data-testid="stMetric"] {
             background: #1e293b !important;
             border    : 1px solid #334155 !important;
-            color     : #cbd5e1 !important;
         }
-    }
 
-    [data-theme="dark"] .doc-item,
-    .stApp[data-theme="dark"] .doc-item {
-        background: #1e293b !important;
-        border    : 1px solid #334155 !important;
-        color     : #cbd5e1 !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+        [data-theme="dark"] [data-testid="stMetricLabel"] p {
+            color: #94a3b8 !important;
+        }
 
+        [data-theme="dark"] [data-testid="stMetricValue"] {
+            color: #f1f5f9 !important;
+        }
+
+        
+        .doc-item {
+            border-radius : 8px;
+            padding       : 10px 16px;
+            margin-bottom : 6px;
+            font-size     : 14px;
+            display       : flex;
+            align-items   : center;
+            gap           : 8px;
+            transition    : all 0.2s ease;
+        }
+
+        [data-theme="light"] .doc-item {
+            background: #ffffff;
+            border    : 1px solid #e2e8f0;
+            color     : #334155;
+        }
+
+        [data-theme="dark"] .doc-item {
+            background: #1e293b;
+            border    : 1px solid #334155;
+            color     : #cbd5e1;
+        }
+
+        </style>
+        """, unsafe_allow_html=True)
 
     # get counts
     from embedding import get_existing_files
