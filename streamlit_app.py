@@ -183,68 +183,101 @@ if page == "📊 Dashboard":
     # custom CSS for cards
     st.markdown("""
     <style>
-    /* card container */
-    .metric-card {
-        background    : white;
+    /* ── THEME AWARE METRIC CARDS ────────────────── */
+
+    /* Light theme */
+    [data-testid="stMetric"] {
+        background    : #ffffff;
         border        : 1px solid #e2e8f0;
         border-radius : 12px;
-        padding       : 20px 24px;
-        box-shadow    : 0 1px 3px rgba(0,0,0,0.08);
-        margin-bottom : 8px;
+        padding       : 20px 20px !important;
+        box-shadow    : 0 1px 4px rgba(0,0,0,0.06);
+        min-height    : 110px;
+        display       : flex;
+        flex-direction: column;
+        justify-content: center;
     }
-    .metric-card .label {
-        font-size   : 13px;
-        font-weight : 500;
-        color       : #64748b;
-        margin-bottom: 6px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+
+    /* Dark theme */
+    @media (prefers-color-scheme: dark) {
+        [data-testid="stMetric"] {
+            background : #1e293b !important;
+            border     : 1px solid #334155 !important;
+            box-shadow : 0 1px 4px rgba(0,0,0,0.3) !important;
+        }
     }
-    .metric-card .value {
-        font-size   : 28px;
-        font-weight : 700;
-        color       : #1e293b;
-        line-height : 1;
+
+    /* Streamlit dark theme class */
+    [data-theme="dark"] [data-testid="stMetric"],
+    .stApp[data-theme="dark"] [data-testid="stMetric"] {
+        background : #1e293b !important;
+        border     : 1px solid #334155 !important;
     }
-    .metric-card .icon {
-        font-size    : 22px;
-        margin-bottom: 10px;
+
+    /* Label styling */
+    [data-testid="stMetricLabel"] p {
+        font-size     : 11px !important;
+        font-weight   : 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.06em !important;
+        white-space   : normal !important;
+        word-break    : break-word !important;
+        line-height   : 1.4 !important;
     }
-    /* document list */
+
+    /* Value styling */
+    [data-testid="stMetricValue"] {
+        font-size  : 24px !important;
+        font-weight: 700 !important;
+        line-height: 1.2 !important;
+        white-space: normal !important;
+        word-break : break-word !important;
+    }
+
+    /* Equal height columns */
+    [data-testid="column"] {
+        display       : flex;
+        flex-direction: column;
+    }
+
+    [data-testid="column"] [data-testid="stMetric"] {
+        flex      : 1;
+        height    : 100%;
+        min-height: 110px;
+    }
+
+    /* Document list items */
     .doc-item {
-        background    : white;
-        border        : 1px solid #e2e8f0;
         border-radius : 8px;
         padding       : 10px 16px;
         margin-bottom : 6px;
         font-size     : 14px;
-        color         : #334155;
         display       : flex;
         align-items   : center;
         gap           : 8px;
-    }
-    /* hide streamlit default metric */
-    div[data-testid="stMetric"] {
-        background    : white;
         border        : 1px solid #e2e8f0;
-        border-radius : 12px;
-        padding       : 16px 20px;
-        box-shadow    : 0 1px 3px rgba(0,0,0,0.08);
+        background    : #ffffff;
+        color         : #334155;
     }
-    div[data-testid="stMetricLabel"] {
-        font-size  : 12px !important;
-        color      : #64748b !important;
-        font-weight: 600 !important;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+
+    /* Dark theme doc items */
+    @media (prefers-color-scheme: dark) {
+        .doc-item {
+            background: #1e293b !important;
+            border    : 1px solid #334155 !important;
+            color     : #cbd5e1 !important;
+        }
     }
-    div[data-testid="stMetricValue"] {
-        font-size  : 26px !important;
-        font-weight: 700 !important;
-        color      : #1e293b !important;
+
+    [data-theme="dark"] .doc-item,
+    .stApp[data-theme="dark"] .doc-item {
+        background: #1e293b !important;
+        border    : 1px solid #334155 !important;
+        color     : #cbd5e1 !important;
     }
     </style>
     """, unsafe_allow_html=True)
+
 
     # get counts
     from embedding import get_existing_files
