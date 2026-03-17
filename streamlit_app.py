@@ -1,20 +1,7 @@
 import os
-import sys
 import streamlit as st
 from supabase import create_client
 
-# =====================================
-# ADD BACKEND FOLDER TO PATH
-# so we can import from backend/
-# =====================================
-
-BASE_DIR     = os.path.dirname(os.path.abspath(__file__))
-BACKEND_DIR  = os.path.join(BASE_DIR, "backend")
-sys.path.insert(0, BACKEND_DIR)
-
-# =====================================
-# GET SECRETS FROM STREAMLIT CLOUD
-# =====================================
 
 def get_secret(key: str) -> str:
     try:
@@ -22,8 +9,6 @@ def get_secret(key: str) -> str:
     except Exception:
         return os.getenv(key, "")
 
-# set all env variables from Streamlit secrets
-# so backend files can use os.getenv() normally
 os.environ["GROQ_API_KEY"]      = get_secret("GROQ_API_KEY")
 os.environ["MISTRAL_API_KEY"]   = get_secret("MISTRAL_API_KEY")
 os.environ["SUPABASE_URL"]      = get_secret("SUPABASE_URL")
@@ -31,19 +16,11 @@ os.environ["SUPABASE_ANON_KEY"] = get_secret("SUPABASE_ANON_KEY")
 os.environ["DATABASE_URL"]      = get_secret("DATABASE_URL")
 
 
-# =====================================
-# SUPABASE CLIENT
-# =====================================
-
 supabase = create_client(
     get_secret("SUPABASE_URL"),
     get_secret("SUPABASE_ANON_KEY")
 )
 
-
-# =====================================
-# PAGE CONFIG
-# =====================================
 
 st.set_page_config(
     page_title = "AssistHR",
@@ -51,10 +28,6 @@ st.set_page_config(
     layout     = "wide"
 )
 
-
-# =====================================
-# AUTH FUNCTIONS
-# =====================================
 
 def login_page():
     st.title("🤖 AssistHR")
@@ -167,10 +140,6 @@ def logout():
     st.rerun()
 
 
-# =====================================
-# CHECK AUTH
-# =====================================
-
 if "user" not in st.session_state:
     st.session_state.user  = None
     st.session_state.token = None
@@ -182,11 +151,6 @@ if not st.session_state.user:
 # get current user info
 current_user  = st.session_state.user
 current_email = current_user.email
-
-
-# =====================================
-# SIDEBAR
-# =====================================
 
 st.sidebar.title("🤖 AssistHR")
 st.sidebar.caption("AI HR Assistant")
@@ -213,10 +177,6 @@ if st.sidebar.button(
 st.sidebar.divider()
 st.sidebar.caption("AssistHR v1.0")
 
-
-# =====================================
-# DASHBOARD
-# =====================================
 
 if page == "🏠 Dashboard":
     st.title("🏠 Dashboard")
@@ -246,11 +206,6 @@ if page == "🏠 Dashboard":
                 st.write(f"📄 {doc}")
     except Exception as e:
         st.error(f"Could not load documents: {e}")
-
-
-# =====================================
-# DOCUMENTS
-# =====================================
 
 elif page == "📄 Documents":
     st.title("📄 HR Documents")
@@ -310,9 +265,6 @@ elif page == "📄 Documents":
         st.error(f"Could not load documents: {e}")
 
 
-# =====================================
-# CHAT
-# =====================================
 
 elif page == "💬 Chat":
     st.title("💬 HR Assistant")
@@ -320,7 +272,6 @@ elif page == "💬 Chat":
     from rag_chain  import ask
     from chat_store import create_session, load_history
 
-    # ── SETTINGS ──────────────────────────────
     col1, col2 = st.columns([2, 1])
 
     with col1:
@@ -340,7 +291,6 @@ elif page == "💬 Chat":
             ]
         )
 
-    # prefix session with user email for isolation
     full_session = f"{current_email}_{session_id}"
 
     # ── LOAD HISTORY ──────────────────────────
@@ -394,11 +344,6 @@ elif page == "💬 Chat":
                     })
                 except Exception as e:
                     st.error(f"❌ Error: {e}")
-
-
-# =====================================
-# SCREENING
-# =====================================
 
 elif page == "👥 Screening":
     st.title("👥 Resume Screening")
