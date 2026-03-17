@@ -159,7 +159,7 @@ st.sidebar.divider()
 page = st.sidebar.radio(
     "Navigation",
     [
-        "🏠 Dashboard",
+        "📊 Dashboard",
         "📄 Documents",
         "💬 Chat",
         "👥 Screening"
@@ -177,92 +177,227 @@ if st.sidebar.button(
 st.sidebar.divider()
 st.sidebar.caption("AssistHR v1.0")
 
+if page == "📊 Dashboard":
+    st.title("📊 Dashboard")
 
-if page == "🏠 Dashboard":
-    st.title("🏠 Dashboard")
+    # custom CSS for cards
+    st.markdown("""
+    <style>
+    /* card container */
+    .metric-card {
+        background    : white;
+        border        : 1px solid #e2e8f0;
+        border-radius : 12px;
+        padding       : 20px 24px;
+        box-shadow    : 0 1px 3px rgba(0,0,0,0.08);
+        margin-bottom : 8px;
+    }
+    .metric-card .label {
+        font-size   : 13px;
+        font-weight : 500;
+        color       : #64748b;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .metric-card .value {
+        font-size   : 28px;
+        font-weight : 700;
+        color       : #1e293b;
+        line-height : 1;
+    }
+    .metric-card .icon {
+        font-size    : 22px;
+        margin-bottom: 10px;
+    }
+    /* document list */
+    .doc-item {
+        background    : white;
+        border        : 1px solid #e2e8f0;
+        border-radius : 8px;
+        padding       : 10px 16px;
+        margin-bottom : 6px;
+        font-size     : 14px;
+        color         : #334155;
+        display       : flex;
+        align-items   : center;
+        gap           : 8px;
+    }
+    /* hide streamlit default metric */
+    div[data-testid="stMetric"] {
+        background    : white;
+        border        : 1px solid #e2e8f0;
+        border-radius : 12px;
+        padding       : 16px 20px;
+        box-shadow    : 0 1px 3px rgba(0,0,0,0.08);
+    }
+    div[data-testid="stMetricLabel"] {
+        font-size  : 12px !important;
+        color      : #64748b !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    div[data-testid="stMetricValue"] {
+        font-size  : 26px !important;
+        font-weight: 700 !important;
+        color      : #1e293b !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
+    # get counts
     from embedding import get_existing_files
 
     try:
-        docs_count = len(get_existing_files())
+        all_docs     = get_existing_files()
+        docs_count   = len(all_docs)
     except Exception:
-        docs_count = 0
+        all_docs     = []
+        docs_count   = 0
 
+    # count resumes from uploads folder
+    try:
+        resume_dir   = "/tmp/resumes"
+        resume_count = len([
+            f for f in os.listdir(resume_dir)
+            if f.endswith((
+                ".pdf", ".docx",
+                ".jpg", ".jpeg", ".png"
+            ))
+        ]) if os.path.exists(resume_dir) else 0
+    except Exception:
+        resume_count = 0
+
+    # ── METRIC CARDS ──────────────────────────
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Documents Uploaded", docs_count)
-    col2.metric("AI Model",           "Groq llama-3.3-70b")
-    col3.metric("Vector DB",          "Supabase pgvector")
-    col4.metric("Status",             "Running ✅")
+
+    with col1:
+        st.metric(
+            label = "📄  Documents",
+            value = docs_count
+        )
+    with col2:
+        st.metric(
+            label = "👥  Resumes Screened",
+            value = resume_count
+        )
+    with col3:
+        st.metric(
+            label = "🤖  AI Model",
+            value = "Groq"
+        )
+    with col4:
+        st.metric(
+            label = "🗄️  Vector DB",
+            value = "Supabase"
+        )
 
     st.divider()
-    st.subheader("Uploaded Documents")
 
-    try:
-        docs = get_existing_files()
-        if not docs:
-            st.info("No documents uploaded yet.")
-        else:
-            for doc in docs:
-                st.write(f"📄 {doc}")
-    except Exception as e:
-        st.error(f"Could not load documents: {e}")
+    # ── RECENT DOCUMENTS ──────────────────────
+    st.subheader("📁 Uploaded Documents")
 
-elif page == "📄 Documents":
-    st.title("📄 HR Documents")
+    if not all_docs:
+        st.info(
+            "No documents uploaded yet. "
+            "Go to Documents page to upload."
+        )
+    else:
+        for doc in all_docs:
+            st.markdown(
+                f"""<div class="doc-item">
+                    📄 {doc}
+                </div>""",
+                unsafe_allow_html=True
+            )
 
-    from document_loader import load_document
-    from chunking        import chunk_documents
-    from embedding       import (
-        create_vector_store,
-        get_existing_files
-    )
 
-    # ── UPLOAD ────────────────────────────────
-    st.subheader("Upload Document")
-    uploaded = st.file_uploader(
-        "Choose file",
-        type=["pdf", "docx", "txt"]
-    )
+# if page == "📊 Dashboard":
+#     st.title("📊 Dashboard")
 
-    if uploaded:
-        if st.button(
-            "Upload & Process",
-            use_container_width=True
-        ):
-            with st.spinner(
-                f"Processing '{uploaded.name}'..."
-            ):
-                tmp_path = f"/tmp/{uploaded.name}"
-                with open(tmp_path, "wb") as f:
-                    f.write(uploaded.getbuffer())
-                try:
-                    docs   = load_document(tmp_path)
-                    chunks = chunk_documents(docs)
-                    create_vector_store(chunks)
-                    st.success(
-                        f"✅ '{uploaded.name}' uploaded "
-                        f"({len(chunks)} chunks)"
-                    )
-                except Exception as e:
-                    st.error(f"❌ Error: {e}")
-                finally:
-                    if os.path.exists(tmp_path):
-                        os.remove(tmp_path)
+#     from embedding import get_existing_files
 
-    # ── LIST ──────────────────────────────────
-    st.divider()
-    st.subheader("Uploaded Documents")
+#     try:
+#         docs_count = len(get_existing_files())
+#     except Exception:
+#         docs_count = 0
 
-    try:
-        existing = get_existing_files()
-        if not existing:
-            st.info("No documents uploaded yet.")
-        else:
-            for doc in existing:
-                col1, col2 = st.columns([4, 1])
-                col1.write(f"📄 {doc}")
-    except Exception as e:
-        st.error(f"Could not load documents: {e}")
+#     col1, col2, col3, col4 = st.columns(4)
+#     col1.metric("Documents Uploaded", docs_count)
+#     col2.metric("AI Model",           "Groq llama-3.3-70b")
+#     col3.metric("Vector DB",          "Supabase pgvector")
+#     col4.metric("Status",             "Running ✅")
+
+#     st.divider()
+#     st.subheader("Uploaded Documents")
+
+#     try:
+#         docs = get_existing_files()
+#         if not docs:
+#             st.info("No documents uploaded yet.")
+#         else:
+#             for doc in docs:
+#                 st.write(f"📄 {doc}")
+#     except Exception as e:
+#         st.error(f"Could not load documents: {e}")
+
+# elif page == "📄 Documents":
+#     st.title("📄 HR Documents")
+
+#     from document_loader import load_document
+#     from chunking        import chunk_documents
+#     from embedding       import (
+#         create_vector_store,
+#         get_existing_files
+#     )
+
+#     # ── UPLOAD ────────────────────────────────
+#     st.subheader("Upload Document")
+#     uploaded = st.file_uploader(
+#         "Choose file",
+#         type=["pdf", "docx", "txt"]
+#     )
+
+#     if uploaded:
+#         if st.button(
+#             "Upload & Process",
+#             use_container_width=True
+#         ):
+#             with st.spinner(
+#                 f"Processing '{uploaded.name}'..."
+#             ):
+#                 tmp_path = f"/tmp/{uploaded.name}"
+#                 with open(tmp_path, "wb") as f:
+#                     f.write(uploaded.getbuffer())
+#                 try:
+#                     docs   = load_document(tmp_path)
+#                     chunks = chunk_documents(docs)
+#                     create_vector_store(chunks)
+#                     st.success(
+#                         f"✅ '{uploaded.name}' uploaded "
+#                         f"({len(chunks)} chunks)"
+#                     )
+#                 except Exception as e:
+#                     st.error(f"❌ Error: {e}")
+#                 finally:
+#                     if os.path.exists(tmp_path):
+#                         os.remove(tmp_path)
+
+#     # ── LIST ──────────────────────────────────
+#     st.divider()
+#     st.subheader("Uploaded Documents")
+
+#     try:
+#         existing = get_existing_files()
+#         if not existing:
+#             st.info("No documents uploaded yet.")
+#         else:
+#             for doc in existing:
+#                 col1, col2 = st.columns([4, 1])
+#                 col1.write(f"📄 {doc}")
+#     except Exception as e:
+#         st.error(f"Could not load documents: {e}")
 
 
 
