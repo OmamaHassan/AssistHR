@@ -9,9 +9,11 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 
-def get_embedding_model():
-    return HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L12-v2"
+def get_conn():
+    return psycopg2.connect(
+        DATABASE_URL,
+        connect_timeout=10,
+        sslmode="require"    # ← required for Supabase ✅
     )
 
 

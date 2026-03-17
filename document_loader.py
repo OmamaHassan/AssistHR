@@ -3,12 +3,20 @@ import pymupdf
 from dotenv import load_dotenv
 from langchain_community.document_loaders import Docx2txtLoader
 from langchain_core.documents import Document
-from mistralai import Mistral
 
 load_dotenv()
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-client          = Mistral(api_key=MISTRAL_API_KEY)
 
+try:
+    from mistralai import Mistral
+    client = Mistral(api_key=MISTRAL_API_KEY)
+except Exception:
+    try:
+        from mistralai.client import MistralClient
+        client = MistralClient(api_key=MISTRAL_API_KEY)
+    except Exception:
+        client = None
+        print("⚠️ Mistral client not initialized")
 
 def is_scanned_pdf(file_path: str) -> bool:
     doc         = pymupdf.open(file_path)

@@ -10,8 +10,11 @@ DB_PATH      = None   # kept for compatibility
 
 
 def get_conn():
-    return psycopg2.connect(DATABASE_URL)
-
+    return psycopg2.connect(
+        DATABASE_URL,
+        connect_timeout=10,
+        sslmode="require" 
+    )
 
 def init_db():
     conn   = get_conn()
