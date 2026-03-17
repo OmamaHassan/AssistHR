@@ -1,15 +1,26 @@
 import os
 from functools import lru_cache
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.prompts import (
+    ChatPromptTemplate,
+    MessagesPlaceholder
+)
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough, RunnableLambda
+from langchain_core.runnables import (
+    RunnablePassthrough,
+    RunnableLambda
+)
 from chat_store import load_history, save_message
 
+
+# =====================================
+# PROMPTS
+# =====================================
 
 answer_prompt = ChatPromptTemplate.from_messages([
     ("system", """You are AssistHR, an intelligent HR assistant.
 Answer ONLY from the context below.
-If not found say: 'I could not find that information in the uploaded documents.'
+If not found say: 'I could not find that information
+in the uploaded documents.'
 Always cite source and page number.
 
 Context: {context}"""),
@@ -18,18 +29,27 @@ Context: {context}"""),
 ])
 
 
+# =====================================
+# HELPERS
+# =====================================
+
 def format_docs(docs):
     if not docs:
         return "NO_RELEVANT_CONTEXT"
     return "\n\n".join(
         f"[Source: {doc.metadata.get('filename', 'unknown')} | "
-        f"Page: {doc.metadata.get('page', 'N/A')}]\n{doc.page_content}"
+        f"Page: {doc.metadata.get('page', 'N/A')}]\n"
+        f"{doc.page_content}"
         for doc in docs
     )
 
 
-def get_llm(model: str):
-    """Create LLM with specified model — cached per model."""
+# =====================================
+# LAZY LOADED LLM
+# creates new instance per model
+# =====================================
+
+def get_llm(model: str = "llama-3.1-70b-versatile"):
     from langchain_groq import ChatGroq
     return ChatGroq(
         model      = model,
@@ -38,14 +58,22 @@ def get_llm(model: str):
     )
 
 
+# =====================================
+# CACHED RETRIEVER
+# loaded once — shared across calls
+# =====================================
+
 @lru_cache(maxsize=1)
 def get_cached_retriever():
     from retriever import get_retriever
     return get_retriever(k=4)
 
 
-def get_chain(model: str):
-    """Build chain with specified model."""
+# =====================================
+# BUILD CHAIN
+# =====================================
+
+def get_chain(model: str = "llama-3.1-70b-versatile"):
     llm       = get_llm(model)
     retriever = get_cached_retriever()
 
@@ -63,12 +91,23 @@ def get_chain(model: str):
     )
 
 
-def ask(question: str, session_id: str,
-        model: str = "llama-3.1-70b-versatile") -> str:
-    response = get_chain(model).invoke({
-        "question"    : question,
-        "chat_history": load_history(session_id)
-    })
-    save_message(session_id, "human", question)
-    save_message(session_id, "ai",    response)
-    return response
+# =====================================
+# ASK — main function called by
+# streamlit_app.py
+# =====================================
+
+def ask(
+    question  : str,
+    session_id: str,
+    model     : str = "llama-3.1-70b-versatile"
+) -> str:
+    try:
+        response = get_chain(model).invoke({
+            "question"    : question,
+            "chat_history": load_history(session_id)
+        })
+        save_message(session_id, "human", question)
+        save_message(session_id, "ai",    response)
+        return response
+    except Exception as e:
+        return f"❌ Error getting answer: {str(e)}"
