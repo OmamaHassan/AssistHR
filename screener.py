@@ -14,12 +14,8 @@ from document_loader import (
 )
 
 CACHE_FILE     = "screening_cache.json"
-DEFAULT_MODEL  = "llama-3.1-70b-versatile"
+DEFAULT_MODEL  = "llama-3.3-70b-versatile"
 
-
-# =====================================
-# LLM — per model, no global state
-# =====================================
 
 def get_llm(model: str = DEFAULT_MODEL):
     from langchain_groq import ChatGroq

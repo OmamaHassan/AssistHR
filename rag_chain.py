@@ -29,10 +29,6 @@ Context: {context}"""),
 ])
 
 
-# =====================================
-# HELPERS
-# =====================================
-
 def format_docs(docs):
     if not docs:
         return "NO_RELEVANT_CONTEXT"
@@ -44,12 +40,7 @@ def format_docs(docs):
     )
 
 
-# =====================================
-# LAZY LOADED LLM
-# creates new instance per model
-# =====================================
-
-def get_llm(model: str = "llama-3.1-70b-versatile"):
+def get_llm(model: str = "llama-3.3-70b-versatile"):
     from langchain_groq import ChatGroq
     return ChatGroq(
         model      = model,
@@ -69,11 +60,7 @@ def get_cached_retriever():
     return get_retriever(k=4)
 
 
-# =====================================
-# BUILD CHAIN
-# =====================================
-
-def get_chain(model: str = "llama-3.1-70b-versatile"):
+def get_chain(model: str = "llama-3.3-70b-versatile"):
     llm       = get_llm(model)
     retriever = get_cached_retriever()
 
@@ -90,16 +77,10 @@ def get_chain(model: str = "llama-3.1-70b-versatile"):
         | StrOutputParser()
     )
 
-
-# =====================================
-# ASK — main function called by
-# streamlit_app.py
-# =====================================
-
 def ask(
     question  : str,
     session_id: str,
-    model     : str = "llama-3.1-70b-versatile"
+    model     : str = "llama-3.3-70b-versatile"
 ) -> str:
     try:
         response = get_chain(model).invoke({

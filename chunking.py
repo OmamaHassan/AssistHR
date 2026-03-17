@@ -1,7 +1,6 @@
-
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# page +1 is INSIDE the for loop
+# page +1 because index started at 0.
 def chunk_documents(documents):
     for doc in documents:
         doc.metadata["filename"] = doc.metadata.get("source", "unknown")

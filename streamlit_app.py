@@ -25,7 +25,7 @@ supabase = create_client(
 st.set_page_config(
     page_title = "AssistHR",
     page_icon  = "🤖",
-    layout     = "wide"
+    layout     = "centered"
 )
 
 
@@ -190,7 +190,7 @@ if page == "🏠 Dashboard":
 
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Documents Uploaded", docs_count)
-    col2.metric("AI Model",           "Groq llama-3.1-70b")
+    col2.metric("AI Model",           "Groq llama-3.3-70b")
     col3.metric("Vector DB",          "Supabase pgvector")
     col4.metric("Status",             "Running ✅")
 
@@ -354,10 +354,10 @@ elif page == "👥 Screening":
     model = st.selectbox(
         "Select Model",
         [
-            "llama-3.1-70b-versatile",
-            "llama-3.1-8b-instant",
-            "mixtral-8x7b-32768",
-            "gemma2-9b-it"
+            "llama-3.3-70b-versatile",  
+            "llama-3.1-8b-instant",    
+            "llama-3.3-70b-specdec",    
+            "meta-llama/llama-4-scout-17b-16e-instruct",
         ]
     )
 

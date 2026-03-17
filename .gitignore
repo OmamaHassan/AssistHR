@@ -8,16 +8,11 @@ __pycache__/
 .env.local
 .env.production
 
-backend/uploads/
-backend/screening_cache.json
-backend/chat_history.db
-backend/vector_db/
-backend/*.db
-
-frontend/node_modules/
-frontend/.env
-frontend/dist/
-frontend/build/
+uploads/
+screening_cache.json
+chat_history.db
+vector_db/
+*.db
 
 .DS_Store
 Thumbs.db
@@ -25,4 +20,9 @@ Thumbs.db
 .vscode/
 .idea/
 
-venv
+venv/
+.venv/
+env/
+
+.devcontainer/
+.gitattributes
