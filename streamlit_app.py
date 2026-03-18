@@ -290,7 +290,7 @@ if page == "📊 Dashboard":
         [data-theme="light"] .doc-item {
             background: #ffffff;
             border    : 1px solid #e2e8f0;
-            color     : #334155;
+            color     : #cbd5e1;
         }
 
         [data-theme="dark"] .doc-item {
