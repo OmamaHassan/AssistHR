@@ -30,10 +30,9 @@ st.set_page_config(
 
 
 def login_page():
-    st.title("🤖 AssistHR")
-    st.caption("AI-powered HR Assistant")
-    st.divider()
-
+    st.title("🤖 AssistHR", text_alignment="center")
+    st.caption("AI-powered HR Assistant", text_alignment="center")
+  
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
 
     # ── LOGIN ─────────────────────────────────
