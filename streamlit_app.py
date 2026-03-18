@@ -52,7 +52,7 @@ def login_page():
         )
         if st.button(
             "Login",
-            use_container_width=True
+            type = "secondary"
         ):
             if not email or not password:
                 st.error("Please fill in all fields.")
@@ -368,6 +368,65 @@ if page == "📊 Dashboard":
                 </div>""",
                 unsafe_allow_html=True
             )
+
+            
+elif page == "📄 Documents":
+    st.title("📄 HR Documents")
+
+    from document_loader import load_document
+    from chunking        import chunk_documents
+    from embedding       import (
+        create_vector_store,
+        get_existing_files
+    )
+
+    # ── UPLOAD ────────────────────────────────
+    st.subheader("Upload Document")
+    uploaded = st.file_uploader(
+        "Choose file",
+        type=["pdf", "docx", "txt"]
+    )
+
+    if uploaded:
+        if st.button(
+            "Upload & Process",
+            use_container_width=True
+        ):
+            with st.spinner(
+                f"Processing '{uploaded.name}'..."
+            ):
+                tmp_path = f"/tmp/{uploaded.name}"
+                with open(tmp_path, "wb") as f:
+                    f.write(uploaded.getbuffer())
+                try:
+                    docs   = load_document(tmp_path)
+                    chunks = chunk_documents(docs)
+                    create_vector_store(chunks)
+                    st.success(
+                        f"✅ '{uploaded.name}' uploaded "
+                        f"({len(chunks)} chunks)"
+                    )
+                except Exception as e:
+                    st.error(f"❌ Error: {e}")
+                finally:
+                    if os.path.exists(tmp_path):
+                        os.remove(tmp_path)
+
+    # ── LIST ──────────────────────────────────
+    st.divider()
+    st.subheader("Uploaded Documents")
+
+    try:
+        existing = get_existing_files()
+        if not existing:
+            st.info("No documents uploaded yet.")
+        else:
+            for doc in existing:
+                col1, col2 = st.columns([4, 1])
+                col1.write(f"📄 {doc}")
+    except Exception as e:
+        st.error(f"Could not load documents: {e}")
+
 
 
 elif page == "💬 Chat":
