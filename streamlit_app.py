@@ -258,13 +258,13 @@ if page == "📊 Dashboard":
             --card-label : #94a3b8;
             --card-value : #f1f5f9;
             --doc-bg     : #1e293b;
-            --doc-border : #475569;
+            --doc-border : #e2e8f0;
             --doc-text   : #cbd5e1;
         }
 
         [data-theme="dark"] [data-testid="stMetric"] {
             background: #1e293b !important;
-            border    : 1px solid #475569 !important;
+            border    : 1px solid  #e2e8f0 !important;
         }
 
         [data-theme="dark"] [data-testid="stMetricLabel"] p {
