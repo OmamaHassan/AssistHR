@@ -12,16 +12,12 @@ from langchain_core.runnables import (
 from chat_store import load_history, save_message
 
 
-# =====================================
-# PROMPTS
-# =====================================
-
 answer_prompt = ChatPromptTemplate.from_messages([
     ("system", """You are AssistHR, an intelligent HR assistant.
 Answer ONLY from the context below.
 If not found say: 'I could not find that information
 in the uploaded documents.'
-Always cite source and page number.
+Always cite source and page number as given to you.
 
 Context: {context}"""),
     MessagesPlaceholder("chat_history"),
