@@ -527,11 +527,11 @@ elif page == "👥 Screening":
                     results = []
 
             # cleanup tmp files
-            if os.path.exists(jd_path):
-                os.remove(jd_path)
-            for path in resume_paths:
-                if os.path.exists(path):
-                    os.remove(path)
+            # if os.path.exists(jd_path):
+            #     os.remove(jd_path)
+            # for path in resume_paths:
+            #     if os.path.exists(path):
+            #         os.remove(path)
 
             # ── RESULTS ───────────────────────
             if results:

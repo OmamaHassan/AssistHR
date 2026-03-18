@@ -17,7 +17,7 @@ answer_prompt = ChatPromptTemplate.from_messages([
 Answer ONLY from the context below.
 If not found say: 'I could not find that information
 in the uploaded documents.'
-Always cite source and page number as given to you.
+Always cite source given to you.
 
 Context: {context}"""),
     MessagesPlaceholder("chat_history"),
