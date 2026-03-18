@@ -32,7 +32,7 @@ st.set_page_config(
 def login_page():
     st.title("🤖 AssistHR", text_alignment="center")
     st.caption("AI-powered HR Assistant", text_alignment="center")
-  
+
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
 
     # ── LOGIN ─────────────────────────────────
@@ -258,13 +258,13 @@ if page == "📊 Dashboard":
             --card-label : #94a3b8;
             --card-value : #f1f5f9;
             --doc-bg     : #1e293b;
-            --doc-border: #cbd5e1;
+            --doc-border : #475569;
             --doc-text   : #cbd5e1;
         }
 
         [data-theme="dark"] [data-testid="stMetric"] {
             background: #1e293b !important;
-            border    : 1px solid #cbd5e1!important;
+            border    : 1px solid #475569 !important;
         }
 
         [data-theme="dark"] [data-testid="stMetricLabel"] p {
