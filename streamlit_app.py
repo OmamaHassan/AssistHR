@@ -326,7 +326,7 @@ if page == "📊 Dashboard":
         resume_count = 0
 
     # ── METRIC CARDS ──────────────────────────
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         st.metric(
@@ -338,12 +338,13 @@ if page == "📊 Dashboard":
     #         label = "👥  Resumes Screened",
     #         value = resume_count
     #     )
-    with col3:
+
+    with col2:
         st.metric(
             label = "🤖  AI Model",
             value = "Groq"
         )
-    with col4:
+    with col3:
         st.metric(
             label = "🗄️  Vector DB",
             value = "Supabase"
