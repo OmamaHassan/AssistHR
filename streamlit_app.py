@@ -30,8 +30,8 @@ st.set_page_config(
 
 
 def login_page():
-    st.title("🤖 AssistHR", text_alignment="center")
-    st.caption("AI-powered HR Assistant", text_alignment="center")
+    st.title("🤖 AssistHR")
+    st.caption("AI-powered HR Assistant")
     st.divider()
 
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
@@ -369,7 +369,7 @@ if page == "📊 Dashboard":
                 unsafe_allow_html=True
             )
 
-            
+
 elif page == "📄 Documents":
     st.title("📄 HR Documents")
 
@@ -586,11 +586,11 @@ elif page == "👥 Screening":
                     results = []
 
             # cleanup tmp files
-            # if os.path.exists(jd_path):
-            #     os.remove(jd_path)
-            # for path in resume_paths:
-            #     if os.path.exists(path):
-            #         os.remove(path)
+            if os.path.exists(jd_path):
+                os.remove(jd_path)
+            for path in resume_paths:
+                if os.path.exists(path):
+                    os.remove(path)
 
             # ── RESULTS ───────────────────────
             if results:
