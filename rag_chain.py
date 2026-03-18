@@ -40,7 +40,7 @@ def format_docs(docs):
     )
 
 
-def get_llm(model: str = "llama-3.3-70b-versatile"):
+def get_llm(model: str = "llama-3.1-8b-instant"):
     from langchain_groq import ChatGroq
     return ChatGroq(
         model      = model,
@@ -48,19 +48,13 @@ def get_llm(model: str = "llama-3.3-70b-versatile"):
         temperature= 0.2
     )
 
-
-# =====================================
-# CACHED RETRIEVER
-# loaded once — shared across calls
-# =====================================
-
 @lru_cache(maxsize=1)
 def get_cached_retriever():
     from retriever import get_retriever
     return get_retriever(k=4)
 
 
-def get_chain(model: str = "llama-3.3-70b-versatile"):
+def get_chain(model: str = "llama-3.1-8b-instant"):
     llm       = get_llm(model)
     retriever = get_cached_retriever()
 
@@ -80,7 +74,7 @@ def get_chain(model: str = "llama-3.3-70b-versatile"):
 def ask(
     question  : str,
     session_id: str,
-    model     : str = "llama-3.3-70b-versatile"
+    model     : str = "llama-3.1-8b-instant"
 ) -> str:
     try:
         response = get_chain(model).invoke({

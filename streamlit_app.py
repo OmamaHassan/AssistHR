@@ -30,8 +30,8 @@ st.set_page_config(
 
 
 def login_page():
-    st.title("🤖 AssistHR")
-    st.caption("AI-powered HR Assistant")
+    st.title("🤖 AssistHR", text_alignment="center")
+    st.caption("AI-powered HR Assistant", text_alignment="center")
     st.divider()
 
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
@@ -303,7 +303,7 @@ if page == "📊 Dashboard":
         </style>
         """, unsafe_allow_html=True)
 
-    # get counts
+
     from embedding import get_existing_files
 
     try:
@@ -313,7 +313,7 @@ if page == "📊 Dashboard":
         all_docs     = []
         docs_count   = 0
 
-    # count resumes from uploads folder
+
     try:
         resume_dir   = "/tmp/resumes"
         resume_count = len([
@@ -370,94 +370,6 @@ if page == "📊 Dashboard":
             )
 
 
-# if page == "📊 Dashboard":
-#     st.title("📊 Dashboard")
-
-#     from embedding import get_existing_files
-
-#     try:
-#         docs_count = len(get_existing_files())
-#     except Exception:
-#         docs_count = 0
-
-#     col1, col2, col3, col4 = st.columns(4)
-#     col1.metric("Documents Uploaded", docs_count)
-#     col2.metric("AI Model",           "Groq llama-3.3-70b")
-#     col3.metric("Vector DB",          "Supabase pgvector")
-#     col4.metric("Status",             "Running ✅")
-
-#     st.divider()
-#     st.subheader("Uploaded Documents")
-
-#     try:
-#         docs = get_existing_files()
-#         if not docs:
-#             st.info("No documents uploaded yet.")
-#         else:
-#             for doc in docs:
-#                 st.write(f"📄 {doc}")
-#     except Exception as e:
-#         st.error(f"Could not load documents: {e}")
-
-# elif page == "📄 Documents":
-#     st.title("📄 HR Documents")
-
-#     from document_loader import load_document
-#     from chunking        import chunk_documents
-#     from embedding       import (
-#         create_vector_store,
-#         get_existing_files
-#     )
-
-#     # ── UPLOAD ────────────────────────────────
-#     st.subheader("Upload Document")
-#     uploaded = st.file_uploader(
-#         "Choose file",
-#         type=["pdf", "docx", "txt"]
-#     )
-
-#     if uploaded:
-#         if st.button(
-#             "Upload & Process",
-#             use_container_width=True
-#         ):
-#             with st.spinner(
-#                 f"Processing '{uploaded.name}'..."
-#             ):
-#                 tmp_path = f"/tmp/{uploaded.name}"
-#                 with open(tmp_path, "wb") as f:
-#                     f.write(uploaded.getbuffer())
-#                 try:
-#                     docs   = load_document(tmp_path)
-#                     chunks = chunk_documents(docs)
-#                     create_vector_store(chunks)
-#                     st.success(
-#                         f"✅ '{uploaded.name}' uploaded "
-#                         f"({len(chunks)} chunks)"
-#                     )
-#                 except Exception as e:
-#                     st.error(f"❌ Error: {e}")
-#                 finally:
-#                     if os.path.exists(tmp_path):
-#                         os.remove(tmp_path)
-
-#     # ── LIST ──────────────────────────────────
-#     st.divider()
-#     st.subheader("Uploaded Documents")
-
-#     try:
-#         existing = get_existing_files()
-#         if not existing:
-#             st.info("No documents uploaded yet.")
-#         else:
-#             for doc in existing:
-#                 col1, col2 = st.columns([4, 1])
-#                 col1.write(f"📄 {doc}")
-#     except Exception as e:
-#         st.error(f"Could not load documents: {e}")
-
-
-
 elif page == "💬 Chat":
     st.title("💬 HR Assistant")
 
@@ -476,10 +388,9 @@ elif page == "💬 Chat":
         model = st.selectbox(
             "Select Model",
             [
-                "llama-3.1-70b-versatile",
                 "llama-3.1-8b-instant",
-                "mixtral-8x7b-32768",
-                "gemma2-9b-it"
+                "llama-3.3-70b-versatile",      
+                "meta-llama/llama-4-scout-17b-16e-instruct", 
             ]
         )
 
@@ -546,9 +457,8 @@ elif page == "👥 Screening":
     model = st.selectbox(
         "Select Model",
         [
-            "llama-3.3-70b-versatile",  
-            "llama-3.1-8b-instant",    
-            "llama-3.3-70b-specdec",    
+            "llama-3.1-8b-instant",
+            "llama-3.3-70b-versatile",      
             "meta-llama/llama-4-scout-17b-16e-instruct",
         ]
     )
@@ -580,9 +490,9 @@ elif page == "👥 Screening":
 
     # ── SCREEN BUTTON ─────────────────────────
     if st.button(
-        "🔍 Screen Resumes",
-        type               = "primary",
-        use_container_width= True
+        "🔍 Screen",
+        type               = "secondary",
+        use_container_width= False
     ):
         if not jd:
             st.error("Please upload a Job Description.")

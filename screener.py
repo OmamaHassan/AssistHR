@@ -14,7 +14,7 @@ from document_loader import (
 )
 
 CACHE_FILE     = "screening_cache.json"
-DEFAULT_MODEL  = "llama-3.3-70b-versatile"
+DEFAULT_MODEL  = "llama-3.1-8b-instant"
 
 
 def get_llm(model: str = DEFAULT_MODEL):
@@ -44,11 +44,6 @@ def file_hash(path: str) -> str:
     with open(path, "rb") as f:
         return hashlib.md5(f.read()).hexdigest()
 
-
-# =====================================
-# TEXT EXTRACTION
-# handles all file types
-# =====================================
 
 def extract_text(file_path: str) -> str:
     ext = file_path.lower().split(".")[-1]
@@ -82,10 +77,6 @@ def normalize_text(text: str) -> str:
     )
 
 
-# =====================================
-# JSON EXTRACTOR
-# =====================================
-
 def extract_json_safe(text: str) -> dict:
     text = text.strip().replace("```json", "").replace("```", "")
     try:
@@ -100,9 +91,6 @@ def extract_json_safe(text: str) -> dict:
     return {}
 
 
-# =====================================
-# SCREENING PROMPT
-# =====================================
 
 screen_prompt = ChatPromptTemplate.from_template("""
 You are a strict and experienced HR recruiter.
@@ -164,9 +152,6 @@ Resume:
 """)
 
 
-# =====================================
-# SCREEN SINGLE RESUME
-# =====================================
 
 def screen_resume(
     resume_path: str,
