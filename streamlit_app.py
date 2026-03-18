@@ -259,12 +259,12 @@ if page == "📊 Dashboard":
             --card-value : #f1f5f9;
             --doc-bg     : #1e293b;
             --doc-border : #e2e8f0;
-            --doc-text   : #cbd5e1;
+            --doc-text   : #F5F5F5;
         }
 
         [data-theme="dark"] [data-testid="stMetric"] {
             background: #1e293b !important;
-            border    : 1px solid  #e2e8f0 !important;
+            border    : 1px solid   #F5F5F5 !important;
         }
 
         [data-theme="dark"] [data-testid="stMetricLabel"] p {
@@ -290,12 +290,12 @@ if page == "📊 Dashboard":
         [data-theme="light"] .doc-item {
             background: #ffffff;
             border    : 1px solid #e2e8f0;
-            color     : #cbd5e1;
+            color     : #334155;
         }
 
         [data-theme="dark"] .doc-item {
             background: #1e293b;
-            border    : 1px solid #334155;
+            border    : 1px solid #F5F5F5;
             color     : #cbd5e1;
         }
 
