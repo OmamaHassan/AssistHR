@@ -258,13 +258,13 @@ if page == "📊 Dashboard":
             --card-label : #94a3b8;
             --card-value : #f1f5f9;
             --doc-bg     : #1e293b;
-            --doc-border : #e2e8f0;
-            --doc-text   : #F5F5F5;
+            --doc-border : #334155;
+            --doc-text   : #cbd5e1;
         }
 
         [data-theme="dark"] [data-testid="stMetric"] {
             background: #1e293b !important;
-            border    : 1px solid   #F5F5F5 !important;
+            border    : 1px solid #334155 !important;
         }
 
         [data-theme="dark"] [data-testid="stMetricLabel"] p {
@@ -295,7 +295,7 @@ if page == "📊 Dashboard":
 
         [data-theme="dark"] .doc-item {
             background: #1e293b;
-            border    : 1px solid #F5F5F5;
+            border    : 1px solid #334155;
             color     : #cbd5e1;
         }
 
@@ -333,11 +333,11 @@ if page == "📊 Dashboard":
             label = "📄  Documents",
             value = docs_count
         )
-    with col2:
-        st.metric(
-            label = "👥  Resumes Screened",
-            value = resume_count
-        )
+    # with col2:
+    #     st.metric(
+    #         label = "👥  Resumes Screened",
+    #         value = resume_count
+    #     )
     with col3:
         st.metric(
             label = "🤖  AI Model",
