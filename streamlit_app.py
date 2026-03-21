@@ -1427,6 +1427,6 @@ elif page == "📄  Resume Screener":
                 st.warning("No results returned.")
                 st.markdown("</div></div>",
                             unsafe_allow_html=True)
-            return
+                
 
-    st.markdown("</div></div>", unsafe_allow_html=True)
+st.markdown("</div></div>", unsafe_allow_html=True)
