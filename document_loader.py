@@ -18,11 +18,13 @@ except Exception:
         client = None
         print("⚠️ Mistral client not initialized")
 
+
 def is_scanned_pdf(file_path: str) -> bool:
     doc         = pymupdf.open(file_path)
     text_length = sum(len(page.get_text().strip()) for page in doc)
     doc.close()
     return text_length < 10
+
 
 
 def extract_pdf_text(file_path: str) -> list:
