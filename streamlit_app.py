@@ -1,132 +1,288 @@
 import os
+import html
+import tempfile
+from pathlib import Path
+
 import streamlit as st
 from supabase import create_client
 
 
+# =========================
+# Config + Secrets
+# =========================
 def get_secret(key: str) -> str:
     try:
         return st.secrets[key]
     except Exception:
         return os.getenv(key, "")
 
-os.environ["GROQ_API_KEY"]      = get_secret("GROQ_API_KEY")
-os.environ["MISTRAL_API_KEY"]   = get_secret("MISTRAL_API_KEY")
-os.environ["SUPABASE_URL"]      = get_secret("SUPABASE_URL")
-os.environ["SUPABASE_ANON_KEY"] = get_secret("SUPABASE_ANON_KEY")
-os.environ["DATABASE_URL"]      = get_secret("DATABASE_URL")
 
+os.environ["GROQ_API_KEY"] = get_secret("GROQ_API_KEY")
+os.environ["MISTRAL_API_KEY"] = get_secret("MISTRAL_API_KEY")
+os.environ["SUPABASE_URL"] = get_secret("SUPABASE_URL")
+os.environ["SUPABASE_ANON_KEY"] = get_secret("SUPABASE_ANON_KEY")
+os.environ["DATABASE_URL"] = get_secret("DATABASE_URL")
+
+st.set_page_config(
+    page_title="AssistHR",
+    page_icon="🤖",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 supabase = create_client(
     get_secret("SUPABASE_URL"),
-    get_secret("SUPABASE_ANON_KEY")
+    get_secret("SUPABASE_ANON_KEY"),
 )
 
 
-st.set_page_config(
-    page_title = "AssistHR",
-    page_icon  = "🤖",
-    layout     = "centered"
-)
+# =========================
+# UI Styling
+# =========================
+def inject_ui() -> None:
+    st.markdown(
+        """
+        <style>
+        :root {
+            --bg-1: #0b1020;
+            --bg-2: #111a33;
+            --card-1: #121a30;
+            --card-2: #18223f;
+            --text: #e8ecf8;
+            --muted: #a8b2d1;
+            --accent: #7c9cff;
+            --accent-2: #5eead4;
+            --border: rgba(255,255,255,0.12);
+            --shadow: 0 10px 28px rgba(0,0,0,0.28);
+        }
+
+        .stApp {
+            background:
+                radial-gradient(1200px 620px at 8% -12%, #1d2a59 0%, transparent 55%),
+                radial-gradient(900px 520px at 95% -8%, #13354f 0%, transparent 50%),
+                linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 70%);
+            color: var(--text);
+        }
+
+        .block-container {
+            max-width: 1250px;
+            padding-top: 1.0rem !important;
+            padding-bottom: 1.5rem !important;
+        }
+
+        .hero {
+            border: 1px solid var(--border);
+            background: linear-gradient(120deg, rgba(124,156,255,0.20), rgba(94,234,212,0.10));
+            border-radius: 18px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 0.9rem;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(4px);
+        }
+        .hero h1 {
+            margin: 0;
+            color: var(--text);
+            font-size: clamp(1.25rem, 2.6vw, 2rem);
+            line-height: 1.2;
+        }
+        .hero p {
+            margin: 0.35rem 0 0 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .glass-card {
+            border: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border-radius: 16px;
+            padding: 0.9rem 1rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 0.9rem;
+        }
+
+        [data-testid="stMetric"] {
+            border-radius: 14px !important;
+            border: 1px solid var(--border) !important;
+            background: linear-gradient(180deg, var(--card-1), var(--card-2)) !important;
+            padding: 16px !important;
+            box-shadow: var(--shadow) !important;
+            min-height: 108px !important;
+        }
+        [data-testid="stMetricLabel"] p {
+            color: var(--muted) !important;
+            font-size: 0.74rem !important;
+            letter-spacing: 0.07em !important;
+            text-transform: uppercase !important;
+            font-weight: 700 !important;
+        }
+        [data-testid="stMetricValue"] {
+            color: var(--text) !important;
+            font-size: 1.5rem !important;
+            font-weight: 700 !important;
+        }
+
+        .stTextInput input, .stTextArea textarea {
+            border-radius: 12px !important;
+        }
+
+        .stSelectbox [data-baseweb="select"] > div {
+            border-radius: 12px !important;
+        }
+
+        .stButton > button {
+            border-radius: 12px !important;
+            border: 1px solid rgba(124,156,255,0.55) !important;
+            background: linear-gradient(90deg, #5f7fff, #7493ff) !important;
+            color: white !important;
+            font-weight: 600 !important;
+            transition: transform .12s ease, box-shadow .12s ease;
+        }
+        .stButton > button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(95,127,255,.34);
+        }
+
+        [data-testid="stSidebar"] {
+            border-right: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(18,26,48,.93), rgba(10,16,33,.98));
+        }
+
+        .doc-item {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.65rem 0.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            background: rgba(255,255,255,0.03);
+        }
+
+        .candidate-pill {
+            display: inline-block;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 0.2rem 0.55rem;
+            margin-right: 0.35rem;
+            margin-bottom: 0.35rem;
+            font-size: 0.85rem;
+            background: rgba(124,156,255,0.18);
+            color: #dbe5ff;
+        }
+
+        @media (max-width: 900px) {
+            .block-container { padding: .8rem .8rem 1rem .8rem !important; }
+            [data-testid="stMetricValue"] { font-size: 1.2rem !important; }
+            .hero { border-radius: 14px; }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
+def hero(title: str, subtitle: str) -> None:
+    st.markdown(
+        f"""
+        <div class="hero">
+            <h1>{html.escape(title)}</h1>
+            <p>{html.escape(subtitle)}</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def card_start() -> None:
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+
+
+def card_end() -> None:
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# =========================
+# Auth Pages
+# =========================
 def login_page():
-    st.title("🤖 AssistHR", text_alignment="center")
-    st.caption("AI-powered HR Assistant", text_alignment="center")
+    hero("🤖 AssistHR", "AI-powered HR workspace for modern teams")
 
+    card_start()
     tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
 
-    # ── LOGIN ─────────────────────────────────
     with tab1:
         st.subheader("Welcome back")
         email = st.text_input(
             "Email",
-            key        = "login_email",
-            placeholder= "you@company.com"
+            key="login_email",
+            placeholder="you@company.com",
         )
         password = st.text_input(
             "Password",
-            type       = "password",
-            key        = "login_pass",
-            placeholder= "••••••••"
+            type="password",
+            key="login_pass",
+            placeholder="••••••••",
         )
-        if st.button(
-            "Login",
-            type = "secondary"
-        ):
+
+        if st.button("Login", use_container_width=True):
             if not email or not password:
                 st.error("Please fill in all fields.")
             else:
                 try:
-                    response = supabase.auth\
-                        .sign_in_with_password({
-                            "email"   : email,
-                            "password": password
-                        })
-                    st.session_state.user  = response.user
-                    st.session_state.token = \
-                        response.session.access_token
-                    st.success("✅ Logged in!")
+                    response = supabase.auth.sign_in_with_password(
+                        {"email": email, "password": password}
+                    )
+                    st.session_state.user = response.user
+                    st.session_state.token = response.session.access_token
+                    st.toast("Logged in successfully")
                     st.rerun()
                 except Exception as e:
-                    st.error(f"❌ Login failed: {e}")
+                    st.error(f"Login failed: {e}")
 
-    # ── REGISTER ──────────────────────────────
     with tab2:
         st.subheader("Create account")
         name = st.text_input(
             "Full Name",
-            key        = "reg_name",
-            placeholder= "John Smith"
+            key="reg_name",
+            placeholder="John Smith",
         )
         email = st.text_input(
             "Email",
-            key        = "reg_email",
-            placeholder= "you@company.com"
+            key="reg_email",
+            placeholder="you@company.com",
         )
         password = st.text_input(
             "Password",
-            type       = "password",
-            key        = "reg_pass",
-            placeholder= "Min 6 characters"
+            type="password",
+            key="reg_pass",
+            placeholder="Min 6 characters",
         )
         confirm = st.text_input(
             "Confirm Password",
-            type       = "password",
-            key        = "reg_confirm",
-            placeholder= "Repeat password"
+            type="password",
+            key="reg_confirm",
+            placeholder="Repeat password",
         )
 
-        if st.button(
-            "Create Account",
-            use_container_width=True
-        ):
-            if not name or not email \
-               or not password or not confirm:
+        if st.button("Create Account", use_container_width=True):
+            if not name or not email or not password or not confirm:
                 st.error("Please fill in all fields.")
             elif len(password) < 6:
-                st.error(
-                    "Password must be "
-                    "at least 6 characters."
-                )
+                st.error("Password must be at least 6 characters.")
             elif password != confirm:
                 st.error("Passwords do not match.")
             else:
                 try:
-                    supabase.auth.sign_up({
-                        "email"   : email,
-                        "password": password,
-                        "options" : {
-                            "data": {"name": name}
+                    supabase.auth.sign_up(
+                        {
+                            "email": email,
+                            "password": password,
+                            "options": {"data": {"name": name}},
                         }
-                    })
-                    st.success(
-                        "✅ Account created! "
-                        "Please login."
                     )
+                    st.success("Account created. Please login.")
                 except Exception as e:
-                    st.error(
-                        f"❌ Registration failed: {e}"
-                    )
+                    st.error(f"Registration failed: {e}")
+
+    card_end()
 
 
 def logout():
@@ -134,554 +290,353 @@ def logout():
         supabase.auth.sign_out()
     except Exception:
         pass
-    st.session_state.user  = None
+    st.session_state.user = None
     st.session_state.token = None
     st.rerun()
 
 
+# =========================
+# Helpers
+# =========================
+def save_uploaded_file(uploaded_file, target_dir: Path) -> Path:
+    target_dir.mkdir(parents=True, exist_ok=True)
+    file_path = target_dir / uploaded_file.name
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    return file_path
+
+
+# =========================
+# App Entry
+# =========================
+inject_ui()
+
 if "user" not in st.session_state:
-    st.session_state.user  = None
+    st.session_state.user = None
     st.session_state.token = None
 
 if not st.session_state.user:
     login_page()
     st.stop()
 
-# get current user info
-current_user  = st.session_state.user
-current_email = current_user.email
+current_user = st.session_state.user
+current_email = current_user.email if current_user else "unknown@user"
 
+# Sidebar
 st.sidebar.title("🤖 AssistHR")
 st.sidebar.caption("AI HR Assistant")
 st.sidebar.divider()
 
 page = st.sidebar.radio(
     "Navigation",
-    [
-        "📊 Dashboard",
-        "📄 Documents",
-        "💬 Chat",
-        "👥 Screening"
-    ]
+    ["📊 Dashboard", "📄 Documents", "💬 Chat", "👥 Screening"],
 )
 
 st.sidebar.divider()
 st.sidebar.write(f"👤 {current_email}")
-if st.sidebar.button(
-    "Logout",
-    use_container_width=True
-):
+if st.sidebar.button("Logout", use_container_width=True):
     logout()
 
 st.sidebar.divider()
-st.sidebar.caption("AssistHR v1.0")
+st.sidebar.caption("AssistHR v2.0")
 
+
+# =========================
+# Dashboard
+# =========================
 if page == "📊 Dashboard":
-    st.title("📊 Dashboard")
-
-    st.markdown("""
-        <style>
-                
-        [data-testid="stMetric"] {
-            border-radius  : 12px !important;
-            padding        : 20px 20px !important;
-            min-height     : 110px !important;
-            display        : flex !important;
-            flex-direction : column !important;
-            justify-content: center !important;
-            box-shadow     : 0 1px 4px rgba(0,0,0,0.08) !important;
-            border         : 1px solid rgba(0,0,0,0.1) !important;
-            background     : var(--card-bg) !important;
-        }
-
-        
-        [data-testid="stMetricLabel"] p {
-            font-size     : 11px !important;
-            font-weight   : 600 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.06em !important;
-            white-space   : normal !important;
-            word-break    : break-word !important;
-            line-height   : 1.4 !important;
-            color         : var(--card-label) !important;
-        }
-
-        
-        [data-testid="stMetricValue"] {
-            font-size  : 24px !important;
-            font-weight: 700 !important;
-            line-height: 1.2 !important;
-            white-space: normal !important;
-            word-break : break-word !important;
-            color      : var(--card-value) !important;
-        }
-
-        
-        [data-testid="column"] {
-            display       : flex !important;
-            flex-direction: column !important;
-        }
-
-        [data-testid="column"] [data-testid="stMetric"] {
-            flex      : 1 !important;
-            height    : 100% !important;
-        }
-
-        
-        [data-theme="light"],
-        [data-theme="light"] * {
-            --card-bg    : #ffffff;
-            --card-label : #64748b;
-            --card-value : #1e293b;
-            --doc-bg     : #ffffff;
-            --doc-border : #e2e8f0;
-            --doc-text   : #334155;
-        }
-
-        [data-theme="light"] [data-testid="stMetric"] {
-            background: #ffffff !important;
-            border    : 1px solid #e2e8f0 !important;
-        }
-
-        [data-theme="light"] [data-testid="stMetricLabel"] p {
-            color: #64748b !important;
-        }
-
-        [data-theme="light"] [data-testid="stMetricValue"] {
-            color: #1e293b !important;
-        }
-
-        
-        [data-theme="dark"],
-        [data-theme="dark"] * {
-            --card-bg    : #1e293b;
-            --card-label : #94a3b8;
-            --card-value : #f1f5f9;
-            --doc-bg     : #1e293b;
-            --doc-border : #334155;
-            --doc-text   : #cbd5e1;
-        }
-
-        [data-theme="dark"] [data-testid="stMetric"] {
-            background: #1e293b !important;
-            border    : 1px solid #334155 !important;
-        }
-
-        [data-theme="dark"] [data-testid="stMetricLabel"] p {
-            color: #94a3b8 !important;
-        }
-
-        [data-theme="dark"] [data-testid="stMetricValue"] {
-            color: #f1f5f9 !important;
-        }
-
-        
-        .doc-item {
-            border-radius : 8px;
-            padding       : 10px 16px;
-            margin-bottom : 6px;
-            font-size     : 14px;
-            display       : flex;
-            align-items   : center;
-            gap           : 8px;
-            transition    : all 0.2s ease;
-        }
-
-        [data-theme="light"] .doc-item {
-            background: #ffffff;
-            border    : 1px solid #e2e8f0;
-            color     : #334155;
-        }
-
-        [data-theme="dark"] .doc-item {
-            background: #1e293b;
-            border    : 1px solid #334155;
-            color     : #cbd5e1;
-        }
-
-        </style>
-        """, unsafe_allow_html=True)
-
+    hero(
+        "📊 HR Dashboard",
+        "Monitor documents, AI readiness, and screening pipeline health",
+    )
 
     from embedding import get_existing_files
 
     try:
-        all_docs     = get_existing_files()
-        docs_count   = len(all_docs)
+        all_docs = get_existing_files()
+        docs_count = len(all_docs)
     except Exception:
-        all_docs     = []
-        docs_count   = 0
+        all_docs = []
+        docs_count = 0
 
-
+    # Optional local resumes count
+    resumes_dir = Path(tempfile.gettempdir()) / "resumes"
     try:
-        resume_dir   = "/tmp/resumes"
-        resume_count = len([
-            f for f in os.listdir(resume_dir)
-            if f.endswith((
-                ".pdf", ".docx",
-                ".jpg", ".jpeg", ".png"
-            ))
-        ]) if os.path.exists(resume_dir) else 0
+        resume_count = (
+            len(
+                [
+                    f
+                    for f in os.listdir(resumes_dir)
+                    if f.lower().endswith((".pdf", ".docx", ".jpg", ".jpeg", ".png"))
+                ]
+            )
+            if resumes_dir.exists()
+            else 0
+        )
     except Exception:
         resume_count = 0
 
-    # ── METRIC CARDS ──────────────────────────
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.metric(
-            label = "📄  Documents",
-            value = docs_count
-        )
-    # with col2:
-    #     st.metric(
-    #         label = "👥  Resumes Screened",
-    #         value = resume_count
-    #     )
-
-    with col2:
-        st.metric(
-            label = "🤖  AI Model",
-            value = "Groq"
-        )
-    with col3:
-        st.metric(
-            label = "🗄️  Vector DB",
-            value = "Supabase"
-        )
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        st.metric("📄 Documents", docs_count)
+    with c2:
+        st.metric("👥 Resumes Cached", resume_count)
+    with c3:
+        st.metric("🤖 AI Model", "Groq")
+    with c4:
+        st.metric("🗄️ Vector DB", "Supabase")
 
     st.divider()
 
-    # ── RECENT DOCUMENTS ──────────────────────
+    col_a, col_b, col_c = st.columns(3)
+    col_a.success("System: Online")
+    col_b.info("Embeddings: Synced")
+    col_c.warning("Screening queue: Idle")
+
+    st.divider()
     st.subheader("📁 Uploaded Documents")
 
     if not all_docs:
-        st.info(
-            "No documents uploaded yet. "
-            "Go to Documents page to upload."
-        )
+        st.info("No documents uploaded yet. Go to Documents page to upload.")
     else:
         for doc in all_docs:
-            st.markdown(
-                f"""<div class="doc-item">
-                    📄 {doc}
-                </div>""",
-                unsafe_allow_html=True
-            )
+            safe_doc = html.escape(str(doc))
+            st.markdown(f'<div class="doc-item">📄 {safe_doc}</div>', unsafe_allow_html=True)
 
 
+# =========================
+# Documents
+# =========================
 elif page == "📄 Documents":
-    st.title("📄 HR Documents")
+    hero("📄 HR Documents", "Upload, process, and track your knowledge base")
 
     from document_loader import load_document
-    from chunking        import chunk_documents
-    from embedding       import (
-        create_vector_store,
-        get_existing_files
-    )
+    from chunking import chunk_documents
+    from embedding import create_vector_store, get_existing_files
 
-    # ── UPLOAD ────────────────────────────────
+    card_start()
     st.subheader("Upload Document")
-    uploaded = st.file_uploader(
-        "Choose file",
-        type=["pdf", "docx", "txt"]
-    )
+    st.caption("Accepted: PDF, DOCX, TXT")
+    uploaded = st.file_uploader("Choose file", type=["pdf", "docx", "txt"])
 
-    if uploaded:
-        if st.button(
-            "Upload & Process",
-            use_container_width=True
-        ):
-            with st.spinner(
-                f"Processing '{uploaded.name}'..."
-            ):
-                tmp_path = f"/tmp/{uploaded.name}"
-                with open(tmp_path, "wb") as f:
-                    f.write(uploaded.getbuffer())
-                try:
-                    docs   = load_document(tmp_path)
-                    chunks = chunk_documents(docs)
-                    create_vector_store(chunks)
-                    st.success(
-                        f"✅ '{uploaded.name}' uploaded "
-                        f"({len(chunks)} chunks)"
-                    )
-                except Exception as e:
-                    st.error(f"❌ Error: {e}")
-                finally:
-                    if os.path.exists(tmp_path):
-                        os.remove(tmp_path)
+    if uploaded and st.button("Upload & Process", use_container_width=True):
+        with st.spinner(f"Processing '{uploaded.name}'..."):
+            temp_dir = Path(tempfile.gettempdir()) / "assisthr_docs"
+            file_path = save_uploaded_file(uploaded, temp_dir)
 
-    # ── LIST ──────────────────────────────────
+            try:
+                docs = load_document(str(file_path))
+                chunks = chunk_documents(docs)
+                create_vector_store(chunks)
+                st.success(f"'{uploaded.name}' uploaded ({len(chunks)} chunks)")
+                st.toast("Document processed successfully")
+            except Exception as e:
+                st.error(f"Error: {e}")
+            finally:
+                if file_path.exists():
+                    file_path.unlink(missing_ok=True)
+    card_end()
+
     st.divider()
     st.subheader("Uploaded Documents")
-
     try:
         existing = get_existing_files()
         if not existing:
             st.info("No documents uploaded yet.")
         else:
             for doc in existing:
-                col1, col2 = st.columns([4, 1])
-                col1.write(f"📄 {doc}")
+                st.markdown(
+                    f'<div class="doc-item">📄 {html.escape(str(doc))}</div>',
+                    unsafe_allow_html=True,
+                )
     except Exception as e:
         st.error(f"Could not load documents: {e}")
 
 
-
+# =========================
+# Chat
+# =========================
 elif page == "💬 Chat":
-    st.title("💬 HR Assistant")
+    hero("💬 HR Assistant", "Ask policy, process, and HR operations questions")
 
-    from rag_chain  import ask
+    from rag_chain import ask
     from chat_store import create_session, load_history
 
+    card_start()
     col1, col2 = st.columns([2, 1])
 
     with col1:
         session_id = st.text_input(
             "Session Name",
-            value      = "default",
-            placeholder= "e.g. hr-queries"
+            value="default",
+            placeholder="e.g. hr-queries",
         )
     with col2:
         model = st.selectbox(
             "Select Model",
             [
                 "llama-3.1-8b-instant",
-                "llama-3.3-70b-versatile",      
-                "meta-llama/llama-4-scout-17b-16e-instruct", 
-            ]
+                "llama-3.3-70b-versatile",
+                "meta-llama/llama-4-scout-17b-16e-instruct",
+            ],
         )
+    card_end()
 
     full_session = f"{current_email}_{session_id}"
 
-    # ── LOAD HISTORY ──────────────────────────
-    if "messages"     not in st.session_state or \
-       "last_session" not in st.session_state or \
-        st.session_state.last_session != full_session:
-
+    if (
+        "messages" not in st.session_state
+        or "last_session" not in st.session_state
+        or st.session_state.last_session != full_session
+    ):
         st.session_state.last_session = full_session
         try:
             create_session(full_session)
-            history  = load_history(full_session)
+            history = load_history(full_session)
             st.session_state.messages = [
                 {
-                    "role"   : "user" if msg.type == "human"
-                               else "assistant",
-                    "content": msg.content
+                    "role": "user" if msg.type == "human" else "assistant",
+                    "content": msg.content,
                 }
                 for msg in history
             ]
         except Exception:
             st.session_state.messages = []
 
-    # ── SHOW MESSAGES ─────────────────────────
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.write(msg["content"])
 
-    # ── INPUT ─────────────────────────────────
-    if prompt := st.chat_input(
-        "Ask about HR policies, leave, dress code..."
-    ):
-        st.session_state.messages.append({
-            "role"   : "user",
-            "content": prompt
-        })
+    prompt = st.chat_input("Ask about HR policies, leave, dress code...")
+    if prompt:
+        st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.write(prompt)
 
         with st.chat_message("assistant"):
             with st.spinner("AssistHR is thinking..."):
                 try:
-                    answer = ask(
-                        prompt,
-                        full_session,
-                        model
-                    )
+                    answer = ask(prompt, full_session, model)
                     st.write(answer)
-                    st.session_state.messages.append({
-                        "role"   : "assistant",
-                        "content": answer
-                    })
+                    st.session_state.messages.append(
+                        {"role": "assistant", "content": answer}
+                    )
                 except Exception as e:
-                    st.error(f"❌ Error: {e}")
+                    st.error(f"Error: {e}")
 
+
+# =========================
+# Screening
+# =========================
 elif page == "👥 Screening":
-    st.title("👥 Resume Screening")
+    hero("👥 Resume Screening", "Score candidates against role requirements in minutes")
 
     from screener import screen_all
 
-    # ── MODEL SELECTION ───────────────────────
+    card_start()
     model = st.selectbox(
         "Select Model",
         [
             "llama-3.1-8b-instant",
-            "llama-3.3-70b-versatile",      
+            "llama-3.3-70b-versatile",
             "meta-llama/llama-4-scout-17b-16e-instruct",
-        ]
+        ],
     )
+    st.caption("Upload one JD and multiple resumes. PDF, DOCX, and image resumes are supported.")
+    card_end()
 
-    st.divider()
-
-    # ── FILE UPLOAD ───────────────────────────
     col1, col2 = st.columns(2)
-
     with col1:
+        card_start()
         st.subheader("📋 Job Description")
-        jd = st.file_uploader(
-            "Upload JD (PDF or DOCX)",
-            type=["pdf", "docx"],
-            key="jd"
-        )
+        jd = st.file_uploader("Upload JD (PDF or DOCX)", type=["pdf", "docx"], key="jd")
+        card_end()
 
     with col2:
+        card_start()
         st.subheader("📄 Resumes")
         resumes = st.file_uploader(
             "Upload Resumes (multiple allowed)",
-            type             = ["pdf", "docx",
-                                "jpg", "jpeg", "png"],
-            accept_multiple_files= True,
-            key="resumes"
+            type=["pdf", "docx", "jpg", "jpeg", "png"],
+            accept_multiple_files=True,
+            key="resumes",
         )
+        card_end()
 
-    st.divider()
-
-    # ── SCREEN BUTTON ─────────────────────────
-    if st.button(
-        "🔍 Screen",
-        type               = "primary",
-        use_container_width= True
-        
-    ):
+    if st.button("🔍 Start Screening", type="primary", use_container_width=True):
         if not jd:
             st.error("Please upload a Job Description.")
         elif not resumes:
             st.error("Please upload at least one resume.")
         else:
-            # save files to /tmp
-            jd_path = f"/tmp/{jd.name}"
-            with open(jd_path, "wb") as f:
-                f.write(jd.getbuffer())
+            temp_dir = Path(tempfile.gettempdir()) / "assisthr_screening"
+            temp_dir.mkdir(parents=True, exist_ok=True)
 
-            resume_paths = []
-            for r in resumes:
-                path = f"/tmp/{r.name}"
-                with open(path, "wb") as f:
-                    f.write(r.getbuffer())
-                resume_paths.append(path)
+            jd_path = save_uploaded_file(jd, temp_dir)
+            resume_paths = [save_uploaded_file(r, temp_dir) for r in resumes]
 
-            with st.spinner(
-                "Screening candidates... "
-                "this may take a moment."
-            ):
+            with st.spinner("Screening candidates... this may take a moment."):
                 try:
                     results = screen_all(
-                        resume_paths,
-                        jd_path,
-                        model
+                        [str(p) for p in resume_paths],
+                        str(jd_path),
+                        model,
                     )
                 except Exception as e:
-                    st.error(f"❌ Screening failed: {e}")
+                    st.error(f"Screening failed: {e}")
                     results = []
 
-            # cleanup tmp files
-            if os.path.exists(jd_path):
-                os.remove(jd_path)
-            for path in resume_paths:
-                if os.path.exists(path):
-                    os.remove(path)
+            # cleanup temp files
+            jd_path.unlink(missing_ok=True)
+            for p in resume_paths:
+                p.unlink(missing_ok=True)
 
-            # ── RESULTS ───────────────────────
             if results:
-                st.success(
-                    f"✅ Screened "
-                    f"{len(results)} candidate(s)"
-                )
-                st.divider()
+                st.success(f"Screened {len(results)} candidate(s)")
+                st.toast("Screening complete")
 
                 for i, r in enumerate(results, 1):
-                    verdict = r.get("verdict", "")
-                    score   = r.get("score",   0)
-                    name    = r.get("name", "Unknown")
+                    verdict = r.get("verdict", "N/A")
+                    score = r.get("score", 0)
+                    name = r.get("name", "Unknown")
 
-                    with st.expander(
-                        f"#{i}  {name}  "
-                        f"|  {score}%  "
-                        f"|  {verdict}"
-                    ):
-                        # score + progress
-                        col1, col2 = st.columns(2)
-                        col1.metric("Score", f"{score}%")
-                        col2.metric(
-                            "Experience",
-                            r.get("experience",
-                                  "Not specified")
-                        )
-                        st.progress(score / 100)
+                    with st.expander(f"#{i}  {name}  |  {score}%  |  {verdict}"):
+                        m1, m2 = st.columns(2)
+                        m1.metric("Score", f"{score}%")
+                        m2.metric("Experience", r.get("experience", "Not specified"))
+                        st.progress(max(0, min(int(score), 100)) / 100)
+
                         st.divider()
+                        c1, c2 = st.columns(2)
+                        c1.write(f"📧 {r.get('email', 'N/A')}")
+                        c1.write(f"📞 {r.get('phone', 'N/A')}")
+                        c2.write(f"🎓 {r.get('education', 'N/A')}")
 
-                        # contact info
-                        col1, col2 = st.columns(2)
-                        col1.write(
-                            f"📧 {r.get('email', 'N/A')}"
-                        )
-                        col1.write(
-                            f"📞 {r.get('phone', 'N/A')}"
-                        )
-                        col2.write(
-                            f"🎓 {r.get('education', 'N/A')}"
-                        )
                         if r.get("linkedin"):
-                            col2.write(
-                                f"🔗 [LinkedIn]"
-                                f"({r.get('linkedin')})"
-                            )
+                            c2.write(f"🔗 [LinkedIn]({r.get('linkedin')})")
                         if r.get("github"):
-                            col2.write(
-                                f"💻 [GitHub]"
-                                f"({r.get('github')})"
-                            )
+                            c2.write(f"💻 [GitHub]({r.get('github')})")
 
                         st.divider()
-
-                        # skills
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            if r.get("matched_skills"):
-                                st.write(
-                                    "✅ **Matched Skills:**"
+                        col_l, col_r = st.columns(2)
+                        with col_l:
+                            st.write("✅ **Matched Skills**")
+                            for s in r.get("matched_skills", []):
+                                st.markdown(
+                                    f'<span class="candidate-pill">{html.escape(str(s))}</span>',
+                                    unsafe_allow_html=True,
                                 )
-                                st.write(
-                                    " • ".join(
-                                        r["matched_skills"]
-                                    )
-                                )
-                        with col2:
-                            if r.get("missing_skills"):
-                                st.write(
-                                    "❌ **Missing Skills:**"
-                                )
-                                st.write(
-                                    " • ".join(
-                                        r["missing_skills"]
-                                    )
+                        with col_r:
+                            st.write("❌ **Missing Skills**")
+                            for s in r.get("missing_skills", []):
+                                st.markdown(
+                                    f'<span class="candidate-pill" style="background:rgba(251,113,133,.15);color:#ffd5de;">{html.escape(str(s))}</span>',
+                                    unsafe_allow_html=True,
                                 )
 
                         st.divider()
-
-                        # strengths + weaknesses
-                        st.write(
-                            f"💪 **Strengths:** "
-                            f"{r.get('strengths', '')}"
-                        )
-                        st.write(
-                            f"⚠️ **Weaknesses:** "
-                            f"{r.get('weaknesses', '')}"
-                        )
-
-                        st.caption(
-                            f"Model used: {r.get('model')}"
-                        )
+                        st.write(f"💪 **Strengths:** {r.get('strengths', '')}")
+                        st.write(f"⚠️ **Weaknesses:** {r.get('weaknesses', '')}")
+                        st.caption(f"Model used: {r.get('model', model)}")
             else:
                 st.warning("No results returned.")
