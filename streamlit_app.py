@@ -184,6 +184,8 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color         : #94a3b8 !important;
 }
+            
+
 [data-testid="collapsedControl"]{
     background:linear-gradient(145deg,#1e293b 0%,#0f172a 100%)!important;
     border:2px solid rgba(148,163,184,.55)!important;
@@ -192,11 +194,21 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     z-index:999991!important;
     min-width:44px!important;
     min-height:44px!important;
+    position:fixed!important;
     top:12px!important;
+    left:12px!important;
+    opacity:1!important;
+    visibility:visible!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    cursor:pointer!important;
+    transition:all 0.2s ease!important;
 }
 [data-testid="collapsedControl"]:hover{
     border-color:rgba(96,165,250,.85)!important;
     box-shadow:0 6px 20px rgba(37,99,235,.35),0 0 0 1px rgba(96,165,250,.25) inset!important;
+    transform:scale(1.05)!important;
 }
 [data-testid="collapsedControl"] svg{
     fill:#f1f5f9!important;
@@ -204,6 +216,15 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     height:22px!important;
     filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
 }
+/* When sidebar is collapsed, make button more visible */
+[data-testid="collapsedControl"][aria-expanded="false"] {
+    background:linear-gradient(145deg,#2563eb 0%,#1d4ed8 100%)!important;
+    border-color:rgba(96,165,250,.9)!important;
+    box-shadow:0 4px 20px rgba(37,99,235,.5)!important;
+}
+            
+
+
 /* Hide keyboard-shortcut hint text/icon clutter on sidebar controls */
 [data-testid="stSidebar"] kbd,
 [data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
@@ -1026,6 +1047,7 @@ theme_choice = st.sidebar.selectbox(
     key="ui_theme",
 )
 
+
 components.html(
     f"""
     <script>
@@ -1063,10 +1085,35 @@ components.html(
           }}
         }});
       }}
+      
+      function ensureCollapseButtonVisible() {{
+        const doc = window.parent.document;
+        const collapseBtn = doc.querySelector('[data-testid="collapsedControl"]');
+        
+        if (collapseBtn) {{
+          collapseBtn.style.opacity = '1';
+          collapseBtn.style.visibility = 'visible';
+          collapseBtn.style.display = 'flex';
+          collapseBtn.style.pointerEvents = 'auto';
+          collapseBtn.style.position = 'fixed';
+          collapseBtn.style.left = '12px';
+          collapseBtn.style.top = '12px';
+        }}
+      }}
+      
       stripSidebarShortcutHints();
-      [200, 600, 1200].forEach(function(ms) {{ setTimeout(stripSidebarShortcutHints, ms); }});
+      ensureCollapseButtonVisible();
+      
+      [200, 600, 1200, 2000].forEach(function(ms) {{ 
+        setTimeout(stripSidebarShortcutHints, ms);
+        setTimeout(ensureCollapseButtonVisible, ms);
+      }});
+      
       try {{
-        const obs = new MutationObserver(stripSidebarShortcutHints);
+        const obs = new MutationObserver(function() {{
+          stripSidebarShortcutHints();
+          ensureCollapseButtonVisible();
+        }});
         const sb = window.parent.document.querySelector('[data-testid="stSidebar"]');
         if (sb) obs.observe(sb, {{ childList: true, subtree: true, attributes: true }});
       }} catch (e) {{}}
@@ -1075,6 +1122,7 @@ components.html(
     """,
     height=0,
 )
+
 
 page = st.sidebar.radio(
     "nav",
