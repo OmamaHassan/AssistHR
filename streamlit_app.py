@@ -210,6 +210,62 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] .st-keyboard-shortcut {
     display:none!important;
 }
+            
+
+
+/* Ensure collapse button remains visible and functional */
+[data-testid="collapsedControl"] {
+    background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%) !important;
+    border: 2px solid rgba(148,163,184,.55) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06) inset !important;
+    z-index: 999991 !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    top: 12px !important;
+    position: fixed !important;
+    left: 12px !important;
+    transition: all 0.2s ease !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+}
+
+/* When sidebar is collapsed, ensure button stays visible */
+[data-testid="collapsedControl"][aria-expanded="false"],
+[data-testid="collapsedControl"][data-state="collapsed"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    left: 12px !important;
+    background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: rgba(96, 165, 250, 0.9) !important;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.5) !important;
+}
+
+[data-testid="collapsedControl"]:hover {
+    border-color: rgba(96,165,250,.85) !important;
+    box-shadow: 0 6px 20px rgba(37,99,235,.35), 0 0 0 1px rgba(96,165,250,.25) inset !important;
+    transform: scale(1.05) !important;
+}
+
+[data-testid="collapsedControl"] svg {
+    fill: #f1f5f9 !important;
+    width: 22px !important;
+    height: 22px !important;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
+}
+
+/* When sidebar is expanded, button sits at top-left */
+[data-testid="stSidebar"][aria-expanded="true"] + [data-testid="collapsedControl"] {
+    left: 260px !important;
+}
+            
+
+
+
 
 /* ══════════════════════════════════════════════════════════
    METRIC CARDS — theme aware
@@ -859,6 +915,7 @@ hr {
 
 
 
+
 # ══════════════════════════════════════════════════════════════
 # AUTH
 # ══════════════════════════════════════════════════════════════
@@ -1035,6 +1092,7 @@ theme_choice = st.sidebar.selectbox(
     key="ui_theme",
 )
 
+
 components.html(
     f"""
     <script>
@@ -1072,18 +1130,64 @@ components.html(
           }}
         }});
       }}
+      
+      // New function to ensure collapse button remains visible
+      function ensureCollapseButtonVisible() {{
+        const doc = window.parent.document;
+        const collapseBtn = doc.querySelector('[data-testid="collapsedControl"]');
+        
+        if (collapseBtn) {{
+          collapseBtn.style.opacity = '1';
+          collapseBtn.style.visibility = 'visible';
+          collapseBtn.style.display = 'flex';
+          collapseBtn.style.pointerEvents = 'auto';
+          
+          collapseBtn.offsetHeight;
+          
+          if (!collapseBtn.hasAttribute('data-listener')) {{
+            collapseBtn.setAttribute('data-listener', 'true');
+            collapseBtn.addEventListener('click', function(e) {{
+              setTimeout(function() {{
+                const updatedBtn = doc.querySelector('[data-testid="collapsedControl"]');
+                if (updatedBtn) {{
+                  updatedBtn.style.opacity = '1';
+                  updatedBtn.style.visibility = 'visible';
+                }}
+              }}, 50);
+            }});
+          }}
+        }}
+      }}
+      
       stripSidebarShortcutHints();
-      [200, 600, 1200].forEach(function(ms) {{ setTimeout(stripSidebarShortcutHints, ms); }});
+      ensureCollapseButtonVisible();
+      
+      [200, 600, 1200, 2000].forEach(function(ms) {{ 
+        setTimeout(stripSidebarShortcutHints, ms);
+        setTimeout(ensureCollapseButtonVisible, ms);
+      }});
+      
       try {{
-        const obs = new MutationObserver(stripSidebarShortcutHints);
+        const obs = new MutationObserver(function() {{
+          stripSidebarShortcutHints();
+          ensureCollapseButtonVisible();
+        }});
         const sb = window.parent.document.querySelector('[data-testid="stSidebar"]');
         if (sb) obs.observe(sb, {{ childList: true, subtree: true, attributes: true }});
+        
+        const container = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+        if (container) {{
+          const containerObs = new MutationObserver(ensureCollapseButtonVisible);
+          containerObs.observe(container, {{ attributes: true, attributeFilter: ['class', 'style'] }});
+        }}
       }} catch (e) {{}}
     }})();
     </script>
     """,
     height=0,
 )
+
+
 
 page = st.sidebar.radio(
     "nav",
