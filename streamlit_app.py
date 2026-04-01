@@ -58,10 +58,39 @@ st.markdown("""
 [data-theme="dark"], [data-user-theme="dark"] {
     --app-bg: #0b1220;
     --surface: #1e293b;
-    --surface-2: #111827;
-    --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
-    --border: #334155;
+    --surface-2: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #cbd5e1;
+    --border: #475569;
+}
+/* Dark mode: stronger body & widget text (Streamlit defaults can be too dim) */
+[data-theme="dark"] [data-testid="stMain"] p,
+[data-theme="dark"] [data-testid="stMain"] li,
+[data-user-theme="dark"] [data-testid="stMain"] p,
+[data-user-theme="dark"] [data-testid="stMain"] li {
+    color: var(--text-main) !important;
+}
+[data-theme="dark"] label,
+[data-user-theme="dark"] label,
+[data-theme="dark"] [data-testid="stWidgetLabel"] p,
+[data-user-theme="dark"] [data-testid="stWidgetLabel"] p {
+    color: #e2e8f0 !important;
+}
+[data-theme="dark"] [data-testid="stCaption"],
+[data-user-theme="dark"] [data-testid="stCaption"] {
+    color: var(--text-muted) !important;
+}
+[data-theme="dark"] [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"],
+[data-user-theme="dark"] [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] {
+    color: #e2e8f0 !important;
+}
+[data-theme="dark"] .stSelectbox [data-baseweb="select"] span,
+[data-user-theme="dark"] .stSelectbox [data-baseweb="select"] span {
+    color: var(--text-main) !important;
+}
+[data-theme="dark"] [data-baseweb="popover"] li,
+[data-user-theme="dark"] [data-baseweb="popover"] li {
+    color: #0f172a !important;
 }
 /* ══════════════════════════════════════════════════════════
    RESET & BASE
@@ -424,33 +453,77 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     color: #ffffff !important;
 }
 
-/* Chat composer — HR Q&A */
+/* Chat composer — HR Q&A (sleek, professional) */
 [data-testid="stChatInput"] {
-    border-radius: 16px !important;
-    border: 1.5px solid var(--border) !important;
-    background: var(--surface) !important;
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.07) !important;
-    padding: 4px 6px !important;
+    border-radius: 22px !important;
+    border: 1px solid var(--border) !important;
+    background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%) !important;
+    box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.06),
+        0 8px 32px rgba(15, 23, 42, 0.08) !important;
+    padding: 6px 8px 6px 12px !important;
+    max-width: min(920px, 100%) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 [data-theme="dark"] [data-testid="stChatInput"],
 [data-user-theme="dark"] [data-testid="stChatInput"] {
-    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.35) !important;
+    background: linear-gradient(180deg, #1e293b 0%, #172033 100%) !important;
+    border-color: #64748b !important;
+    box-shadow:
+        0 0 0 1px rgba(148, 163, 184, 0.12),
+        0 12px 40px rgba(0, 0, 0, 0.45) !important;
+}
+[data-testid="stChatInput"]:focus-within {
+    border-color: #3b82f6 !important;
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.2),
+        0 12px 36px rgba(37, 99, 235, 0.12) !important;
+}
+[data-theme="dark"] [data-testid="stChatInput"]:focus-within,
+[data-user-theme="dark"] [data-testid="stChatInput"]:focus-within {
+    border-color: #60a5fa !important;
+    box-shadow:
+        0 0 0 3px rgba(96, 165, 250, 0.18),
+        0 12px 40px rgba(0, 0, 0, 0.5) !important;
 }
 [data-testid="stChatInput"] textarea {
-    min-height: 52px !important;
-    padding: 14px 16px !important;
+    min-height: 56px !important;
+    padding: 16px 18px !important;
     font-size: 15px !important;
-    line-height: 1.45 !important;
+    letter-spacing: 0.01em !important;
+    line-height: 1.5 !important;
     border: none !important;
     background: transparent !important;
     color: var(--text-main) !important;
 }
 [data-testid="stChatInput"] textarea:focus {
     box-shadow: none !important;
+    outline: none !important;
 }
 [data-testid="stChatInput"] textarea::placeholder {
     color: var(--text-muted) !important;
-    opacity: 0.85 !important;
+    opacity: 0.92 !important;
+}
+/* Send / control row inside chat input */
+[data-testid="stChatInput"] button {
+    border-radius: 12px !important;
+}
+/* HR Q&A footer note — pinned below main content, above composer in flow */
+.qa-rag-footer {
+    text-align: center;
+    font-size: 12.5px !important;
+    line-height: 1.55 !important;
+    color: var(--text-muted) !important;
+    padding: 16px 16px 12px !important;
+    margin: 24px auto 6px auto !important;
+    border-top: 1px solid var(--border) !important;
+    max-width: min(920px, 100%) !important;
+}
+[data-theme="dark"] .qa-rag-footer,
+[data-user-theme="dark"] .qa-rag-footer {
+    color: #cbd5e1 !important;
+    border-top-color: var(--border) !important;
 }
 
 /* Selectbox — theme aware */
@@ -1535,7 +1608,14 @@ elif page == "💬  HR Q&A":
         with st.chat_message(msg["role"], avatar=avatar):
             st.write(msg["content"])
 
-    # input
+    st.markdown(
+        '<div class="qa-rag-footer">'
+        "💡 Answers sourced from uploaded documents using "
+        "<strong>Retrieval-Augmented Generation (RAG)</strong>."
+        "</div>",
+        unsafe_allow_html=True,
+    )
+
     if prompt := st.chat_input(
         "Ask about HR policies, leave, dress code..."
     ):
@@ -1554,11 +1634,6 @@ elif page == "💬  HR Q&A":
                     )
                 except Exception as e:
                     st.error(f"❌ {e}")
-
-    st.caption(
-        "💡 Answers sourced from uploaded documents "
-        "using Retrieval-Augmented Generation (RAG)"
-    )
 
 
 # ══════════════════════════════════════════════════════════════
