@@ -34,7 +34,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ── IMPROVED THEME-FRIENDLY CSS (Keeps your blue aesthetic) ─────
+# ── CLEAN & THEME-FRIENDLY CSS (Keeps your blue style) ────────
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
@@ -42,71 +42,50 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', sans-serif !important;
     }
 
-    /* Adaptive Background */
     [data-testid="stAppViewContainer"] {
         background-color: var(--background-color) !important;
     }
-    [data-theme="dark"] [data-testid="stAppViewContainer"] {
-        background: #0d1117 !important;
-    }
 
-    #MainMenu, footer, header {visibility: hidden;}
-
-    /* Sidebar - Kept your dark blue feel but adaptive */
+    /* Sidebar - Your original blue/dark feel */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0f172a, #1e2937) !important;
-        min-width: 260px !important;
-    }
-    [data-theme="dark"] [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0f172a, #1e2937) !important;
     }
 
-    /* Modern Chat Bubbles - Real Bot Feel */
+    /* Better Chat Bubbles */
     [data-testid="stChatMessage"] {
         border-radius: 18px !important;
         padding: 14px 18px !important;
-        margin-bottom: 14px !important;
-    }
-    
-    /* User Message (Blue - your brand color) */
-    .stChatMessage[data-testid="stChatMessage"][data-chat-message-user="true"] {
-        background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
-        color: white !important;
-        margin-left: 50px !important;
-        border-bottom-right-radius: 6px !important;
-    }
-    
-    /* Bot Message */
-    .stChatMessage[data-testid="stChatMessage"]:not([data-chat-message-user="true"]) {
-        background-color: var(--secondary-background-color) !important;
-        border: 1px solid var(--border-color) !important;
-        margin-right: 50px !important;
-        border-bottom-left-radius: 6px !important;
+        margin-bottom: 16px !important;
     }
 
-    /* Better File Uploader & Buttons - Keep blue accent */
+    /* User message - Your blue brand color */
+    [data-testid="stChatMessage"] [data-testid="stChatMessageContent"] {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+        color: white !important;
+        border-radius: 18px !important;
+        padding: 12px 16px !important;
+        margin-left: auto !important;
+        max-width: 80%;
+    }
+
+    /* Assistant message */
+    [data-testid="stChatMessage"] [data-testid="stChatMessageContent"]:not(:has(~ *)) {
+        background-color: var(--secondary-background-color) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 18px !important;
+        padding: 12px 16px !important;
+    }
+
     .stButton>button[kind="primary"] {
         background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
-        border: none !important;
     }
     .stButton>button[kind="primary"]:hover {
         background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
-        transform: translateY(-1px) !important;
-    }
-
-    /* Score bars and metrics keep your original blue feel */
-    [data-testid="stMetricValue"] {
-        color: #2563eb !important;
-    }
-    [data-theme="dark"] [data-testid="stMetricValue"] {
-        color: #60a5fa !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# ══════════════════════════════════════════════════════════════
-# AUTH (Slightly cleaner but same style)
-# ══════════════════════════════════════════════════════════════
+# AUTH (kept almost same as your original)
 def login_page():
     _, col, _ = st.columns([1, 1.4, 1])
     with col:
@@ -176,9 +155,7 @@ if not st.session_state.user:
 
 current_email = st.session_state.user.email
 
-# ══════════════════════════════════════════════════════════════
-# IMPROVED SIDEBAR (Cleaner + Professional)
-# ══════════════════════════════════════════════════════════════
+# ── IMPROVED SIDEBAR ──────────────────────────────────────────
 with st.sidebar:
     st.markdown(f"""
     <div style="padding:20px 12px 12px;">
@@ -208,79 +185,71 @@ with st.sidebar:
 
     st.divider()
 
-    # User Info
     st.markdown(f"""
-    <div style="padding:0 12px;">
+    <div style="padding:0 12px 20px;">
         <div style="color:#94a3b8;font-size:12px;">👤 Logged in as</div>
         <div style="color:#e2e8f0;font-size:13.5px;font-weight:500;">{current_email}</div>
     </div>
     """, unsafe_allow_html=True)
 
-    st.divider()
-
     if st.button("🚪 Logout", use_container_width=True):
         logout()
 
-# ══════════════════════════════════════════════════════════════
-# HR Q&A - REAL BOT LOOK (Main Improvement)
-# ══════════════════════════════════════════════════════════════
-elif page == "💬  HR Q&A":
-    st.markdown("<h2 style='margin-bottom:8px;'>💬 HR Q&A</h2>", unsafe_allow_html=True)
-    st.caption("Ask questions about HR policies • Powered by RAG + Groq")
+# ── HR Q&A - REAL CHATBOT LOOK ────────────────────────────────
+    elif page == "💬  HR Q&A":
+        st.markdown("<h2 style='margin-bottom:8px;'>💬 HR Q&A</h2>", unsafe_allow_html=True)
+        st.caption("Ask questions about HR policies • Answers powered by RAG + Groq")
 
-    from rag_chain import ask
-    from chat_store import create_session, load_history
+        from rag_chain import ask
+        from chat_store import create_session, load_history
 
-    # Your original session & model logic kept
-    default_sess = st.session_state.get("active_session", "default")
-    session_id = st.text_input("Session Name", value=default_sess, key="qa_sess_input")
-    st.session_state.active_session = session_id
-    full_session = f"{current_email}_{session_id}"
+        default_sess = st.session_state.get("active_session", "default")
+        session_id = st.text_input("Session Name", value=default_sess, key="qa_sess_input")
+        st.session_state.active_session = session_id
+        full_session = f"{current_email}_{session_id}"
 
-    model = st.selectbox("Model", [
-        "llama-3.3-70b-versatile",
-        "llama-3.1-8b-instant"
-    ], label_visibility="collapsed")
+        model = st.selectbox("Model", [
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant"
+        ], label_visibility="collapsed")
 
-    # Initialize messages (your logic)
-    if "messages" not in st.session_state or st.session_state.get("last_session") != full_session:
-        st.session_state.last_session = full_session
-        try:
-            create_session(full_session)
-            history = load_history(full_session)
-            st.session_state.messages = [
-                {"role": "user" if m.type == "human" else "assistant", "content": m.content}
-                for m in history
-            ]
-        except Exception:
-            st.session_state.messages = []
+        # Initialize messages
+        if "messages" not in st.session_state or st.session_state.get("last_session") != full_session:
+            st.session_state.last_session = full_session
+            try:
+                create_session(full_session)
+                history = load_history(full_session)
+                st.session_state.messages = [
+                    {"role": "user" if m.type == "human" else "assistant", "content": m.content}
+                    for m in history
+                ]
+            except Exception:
+                st.session_state.messages = []
 
-    # Modern Chat Display with better icons
-    for msg in st.session_state.messages:
-        if msg["role"] == "user":
+        # Display chat with nice avatars
+        for msg in st.session_state.messages:
+            if msg["role"] == "user":
+                with st.chat_message("user", avatar="👤"):
+                    st.write(msg["content"])
+            else:
+                with st.chat_message("assistant", avatar="🧠"):
+                    st.write(msg["content"])
+
+        # Chat input
+        if prompt := st.chat_input("Ask about leave policy, working hours, benefits..."):
+            st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user", avatar="👤"):
-                st.write(msg["content"])
-        else:
+                st.write(prompt)
+
             with st.chat_message("assistant", avatar="🧠"):
-                st.write(msg["content"])
+                with st.spinner("AssistHR is thinking..."):
+                    try:
+                        ans = ask(prompt, full_session, model)
+                        st.write(ans)
+                        st.session_state.messages.append({"role": "assistant", "content": ans})
+                    except Exception as e:
+                        st.error(f"❌ {e}")
 
-    # Chat Input
-    if prompt := st.chat_input("Ask about leave policy, working hours, benefits..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user", avatar="👤"):
-            st.write(prompt)
+    # Add your other pages (Dashboard, Knowledge Base, Resume Screener) below as they were in your original code.
 
-        with st.chat_message("assistant", avatar="🧠"):
-            with st.spinner("AssistHR is thinking..."):
-                try:
-                    ans = ask(prompt, full_session, model)
-                    st.write(ans)
-                    st.session_state.messages.append({"role": "assistant", "content": ans})
-                except Exception as e:
-                    st.error(f"❌ {e}")
-
-# (Your other pages - Dashboard, Knowledge Base, Resume Screener remain almost same as original)
-
-# Just replace the entire HR Q&A section and Sidebar + CSS with the above.
-
-st.caption("AssistHR • Blue Edition • Groq + Supabase + Mistral")
+    st.caption("AssistHR • Powered by Groq + Supabase")
