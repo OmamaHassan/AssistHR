@@ -156,12 +156,30 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     color         : #94a3b8 !important;
 }
 [data-testid="collapsedControl"]{
-    background:rgba(15,23,42,.9)!important;
-    border:1px solid rgba(148,163,184,.28)!important;
-    border-radius:10px!important;
+    background:linear-gradient(145deg,#1e293b 0%,#0f172a 100%)!important;
+    border:2px solid rgba(148,163,184,.55)!important;
+    border-radius:12px!important;
+    box-shadow:0 4px 14px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.06) inset!important;
+    z-index:999991!important;
+    min-width:44px!important;
+    min-height:44px!important;
+    top:12px!important;
+}
+[data-testid="collapsedControl"]:hover{
+    border-color:rgba(96,165,250,.85)!important;
+    box-shadow:0 6px 20px rgba(37,99,235,.35),0 0 0 1px rgba(96,165,250,.25) inset!important;
 }
 [data-testid="collapsedControl"] svg{
-    fill:#e2e8f0!important;
+    fill:#f1f5f9!important;
+    width:22px!important;
+    height:22px!important;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
+}
+/* Hide keyboard-shortcut hint text/icon clutter on sidebar controls */
+[data-testid="stSidebar"] kbd,
+[data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
+[data-testid="stSidebar"] .st-keyboard-shortcut {
+    display:none!important;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -917,16 +935,6 @@ st.sidebar.markdown(f"""
             </div>
         </div>
     </div>
-    <div style="background:rgba(255,255,255,0.05);
-                border-radius:8px;padding:8px 10px;margin-top:4px;">
-        <div style="color:#e2e8f0;font-size:11px;font-weight:700;">
-            Saylani Mass IT Training
-        </div>
-        <div style="color:#64748b;font-size:10.5px;
-                    margin-top:2px;line-height:1.5;">
-            AI &amp; Data Science · Batch 9
-        </div>
-    </div>
 </div>
 <div style="padding:2px 16px 6px;">
     <div style="color:#475569;font-size:9px;letter-spacing:1.5px;
@@ -964,6 +972,31 @@ components.html(
       if (main) main.setAttribute("data-theme", mode);
       const body = window.parent.document.body;
       if (body) body.setAttribute("data-user-theme", mode);
+
+      function stripSidebarShortcutHints() {{
+        const doc = window.parent.document;
+        const cc = doc.querySelector('[data-testid="collapsedControl"]');
+        if (cc) {{
+          cc.removeAttribute("title");
+          cc.removeAttribute("aria-label");
+          const btn = (cc.tagName === "BUTTON") ? cc : cc.closest("button");
+          if (btn) {{ btn.removeAttribute("title"); btn.removeAttribute("aria-label"); }}
+        }}
+        doc.querySelectorAll('[data-testid="stSidebar"] button[title], [data-testid="stSidebar"] [title]').forEach(function(el) {{
+          const t = (el.getAttribute("title") || "") + (el.getAttribute("aria-label") || "");
+          if (/keyboard|shortcut|Press |⌘|Ctrl|\\[/i.test(t)) {{
+            el.removeAttribute("title");
+            el.removeAttribute("aria-label");
+          }}
+        }});
+      }}
+      stripSidebarShortcutHints();
+      [200, 600, 1200].forEach(function(ms) {{ setTimeout(stripSidebarShortcutHints, ms); }});
+      try {{
+        const obs = new MutationObserver(stripSidebarShortcutHints);
+        const sb = window.parent.document.querySelector('[data-testid="stSidebar"]');
+        if (sb) obs.observe(sb, {{ childList: true, subtree: true, attributes: true }});
+      }} catch (e) {{}}
     }})();
     </script>
     """,
@@ -1150,13 +1183,36 @@ if page == "📊  Dashboard":
         all_docs   = set()
         docs_count = 0
 
+    try:
+        from chat_store import get_conn as _gc_dash
+        _cd = _gc_dash()
+        _cur_d = _cd.cursor()
+        _cur_d.execute(
+            "SELECT COUNT(*) FROM sessions WHERE session_id LIKE %s",
+            (f"{current_email}_%",),
+        )
+        sessions_count = _cur_d.fetchone()[0]
+        _cur_d.execute(
+            """
+            SELECT session_id FROM sessions
+            WHERE session_id LIKE %s
+            ORDER BY last_active DESC LIMIT 6
+            """,
+            (f"{current_email}_%",),
+        )
+        dash_session_rows = _cur_d.fetchall()
+        _cd.close()
+    except Exception:
+        sessions_count = 0
+        dash_session_rows = []
+
     c1, c2, c3, c4 = st.columns(4)
     with c1:
         st.metric("📄  Documents",  docs_count,
                   help="HR documents in knowledge base")
     with c2:
-        st.metric("⚡  Vector DB",  "pgvector",
-                  help="Supabase pgvector extension")
+        st.metric("💬  Chat Sessions", sessions_count,
+                  help="Your saved HR Q&A sessions")
     with c3:
         st.metric("🤖  LLM",        "Groq",
                   help="llama-3.3-70b-versatile")
@@ -1240,31 +1296,59 @@ if page == "📊  Dashboard":
 
         st.markdown("</div></div>", unsafe_allow_html=True)
 
-    # recent documents
-    st.markdown('<div class="card"><div class="card-head">'
-                '<div class="card-title">📁 Recent Documents</div>'
-                f'<span class="card-sub">'
-                f'{docs_count} file{"s" if docs_count!=1 else ""}</span>'
-                '</div><div class="card-body">',
-                unsafe_allow_html=True)
+    # recent documents + chat sessions
+    dc, sc = st.columns([1.55, 1], gap="medium")
 
-    if not all_docs:
-        st.info("No documents yet. Upload from Knowledge Base.")
-    else:
-        icons = {"pdf":"📕","docx":"📘","txt":"📄"}
-        for doc in list(all_docs)[:6]:
-            ext  = doc.split(".")[-1].lower() if "." in doc else "file"
-            icon = icons.get(ext, "📄")
-            st.markdown(f"""
-            <div class="doc-row">
-                <span style="font-size:18px;">{icon}</span>
-                <span style="flex:1;font-size:13px;
-                             font-weight:600;">{doc}</span>
-                <span class="doc-badge">{ext}</span>
-            </div>
-            """, unsafe_allow_html=True)
+    with dc:
+        st.markdown('<div class="card"><div class="card-head">'
+                    '<div class="card-title">📁 Recent Documents</div>'
+                    f'<span class="card-sub">'
+                    f'{docs_count} file{"s" if docs_count!=1 else ""}</span>'
+                    '</div><div class="card-body">',
+                    unsafe_allow_html=True)
 
-    st.markdown("</div></div>", unsafe_allow_html=True)
+        if not all_docs:
+            st.info("No documents yet. Upload from Knowledge Base.")
+        else:
+            icons = {"pdf":"📕","docx":"📘","txt":"📄"}
+            for doc in list(all_docs)[:6]:
+                ext  = doc.split(".")[-1].lower() if "." in doc else "file"
+                icon = icons.get(ext, "📄")
+                st.markdown(f"""
+                <div class="doc-row">
+                    <span style="font-size:18px;">{icon}</span>
+                    <span style="flex:1;font-size:13px;
+                                 font-weight:600;">{doc}</span>
+                    <span class="doc-badge">{ext}</span>
+                </div>
+                """, unsafe_allow_html=True)
+
+        st.markdown("</div></div>", unsafe_allow_html=True)
+
+    with sc:
+        st.markdown(
+            '<div class="card"><div class="card-head">'
+            '<div class="card-title">💬 Chat Sessions</div>'
+            f'<span class="card-sub">{sessions_count} saved</span>'
+            '</div><div class="card-body">',
+            unsafe_allow_html=True,
+        )
+        if not dash_session_rows:
+            st.info("No sessions yet. Open **HR Q&A** to start chatting.")
+        else:
+            for row in dash_session_rows:
+                raw = row[0]
+                disp = raw.split("_", 1)[1] if "_" in raw else raw
+                st.markdown(f"""
+                <div class="doc-row">
+                    <span style="font-size:18px;">💬</span>
+                    <span style="flex:1;font-size:13px;font-weight:600;
+                        overflow:hidden;text-overflow:ellipsis;
+                        white-space:nowrap;">{disp}</span>
+                    <span class="doc-badge">chat</span>
+                </div>
+                """, unsafe_allow_html=True)
+        st.markdown("</div></div>", unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════
