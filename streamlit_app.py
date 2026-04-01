@@ -63,6 +63,14 @@ st.markdown("""
     --text-muted: #94a3b8;
     --border: #334155;
 }
+[data-user-theme="light"] {
+    --app-bg: #f3f6fb;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+}
 /* ══════════════════════════════════════════════════════════
    RESET & BASE
 ══════════════════════════════════════════════════════════ */
@@ -73,8 +81,12 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background  : var(--app-bg) !important;
 }
 #MainMenu, footer { visibility: hidden; }
+[data-testid="stHeader"]{
+    background: transparent !important;
+    height: 0 !important;
+}
 .block-container {
-    padding-top   : 24px !important;
+    padding-top   : 12px !important;
     padding-left  : 32px !important;
     padding-right : 32px !important;
     max-width     : 100% !important;
@@ -91,34 +103,69 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] * {
     font-family   : 'Plus Jakarta Sans', sans-serif !important;
 }
-[data-testid="stSidebar"] .stRadio label {
+/* Sidebar nav (buttons, not radio) */
+[data-testid="stSidebar"] [data-testid="baseButton-secondary"] {
+    background    : transparent !important;
+    border        : 1px solid transparent !important;
     color         : #94a3b8 !important;
-    font-size     : 13.5px !important;
+    justify-content : flex-start !important;
+    text-align    : left !important;
+    padding       : 10px 14px !important;
+    border-radius : 10px !important;
     font-weight   : 500 !important;
-    padding       : 10px 12px !important;
-    border-radius : 8px !important;
-    transition    : all 0.18s ease !important;
-    cursor        : pointer !important;
 }
-[data-testid="stSidebar"] .stRadio label:hover {
-    background    : rgba(255,255,255,0.07) !important;
+[data-testid="stSidebar"] [data-testid="baseButton-secondary"]:hover {
+    background    : rgba(255,255,255,0.08) !important;
     color         : #e2e8f0 !important;
+    border-color  : rgba(148,163,184,0.2) !important;
 }
-[data-testid="stSidebar"] .stRadio label:has(input:checked) {
-    background    : linear-gradient(135deg, rgba(37,99,235,.25), rgba(56,189,248,.18)) !important;
-    color         : #dbeafe !important;
-    border        : 1px solid rgba(96,165,250,.45) !important;
+[data-testid="stSidebar"] [data-testid="baseButton-primary"] {
+    justify-content : flex-start !important;
+    text-align    : left !important;
+    padding       : 10px 14px !important;
+    border-radius : 10px !important;
+    width         : 100% !important;
+    background    : linear-gradient(135deg, rgba(37,99,235,.35), rgba(56,189,248,.22)) !important;
+    border        : 1px solid rgba(96,165,250,.5) !important;
+    color         : #e0f2fe !important;
+    box-shadow    : 0 2px 12px rgba(37,99,235,.25) !important;
 }
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color         : #94a3b8 !important;
 }
+/* Collapse sidebar control: hide leaked icon font text, show arrow clearly */
 [data-testid="collapsedControl"]{
-    background:rgba(15,23,42,.9)!important;
-    border:1px solid rgba(148,163,184,.28)!important;
-    border-radius:10px!important;
+    background:rgba(15,23,42,.96)!important;
+    border:2px solid rgba(248,250,252,.85)!important;
+    border-radius:12px!important;
+    position: fixed !important;
+    top: 12px !important;
+    left: 12px !important;
+    z-index: 1000 !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,.35) !important;
 }
-[data-testid="collapsedControl"] svg{
-    fill:#e2e8f0!important;
+[data-testid="collapsedControl"] button {
+    font-size: 0 !important;
+    line-height: 0 !important;
+    color: transparent !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    padding: 8px !important;
+}
+[data-testid="collapsedControl"] svg {
+    width: 24px !important;
+    height: 24px !important;
+    fill: #f8fafc !important;
+    opacity: 1 !important;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
+}
+[data-testid="collapsedControl"] span:not(:has(svg)) {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -271,6 +318,11 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     color         : var(--text-main) !important;
     background    : var(--surface) !important;
 }
+.stSelectbox [data-baseweb="select"] > div{
+    border:1.5px solid var(--border)!important;
+    background:var(--surface)!important;
+    color:var(--text-main)!important;
+}
 .stTextInput input:focus,
 .stTextArea textarea:focus {
     border-color  : #2563eb !important;
@@ -288,7 +340,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 [data-testid="stFileUploader"]:hover {
     border-color  : #2563eb !important;
-    background    : #eff6ff !important;
+    background    : color-mix(in srgb, var(--surface) 80%, #dbeafe 20%) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -514,17 +566,35 @@ hr {
 .section-title {
     font-size      : 22px;
     font-weight    : 800;
-    color          : #0f172a;
+    color          : var(--text-main);
     margin         : 0 0 4px 0;
     font-family    : 'Plus Jakarta Sans', sans-serif;
 }
-[data-theme="dark"] .section-title {
+[data-theme="dark"] .section-title,
+[data-user-theme="dark"] .section-title {
     color          : #f1f5f9;
 }
 .section-sub {
     font-size      : 13.5px;
     color          : var(--text-muted);
     margin-bottom  : 22px;
+}
+[data-testid="stChatInput"]{
+    border:1.5px solid var(--border)!important;
+    background:var(--surface)!important;
+    border-radius:14px!important;
+    box-shadow:0 6px 20px rgba(15,23,42,.08)!important;
+}
+[data-testid="stChatInput"] textarea{
+    color:var(--text-main)!important;
+}
+[data-testid="stChatInput"] textarea::placeholder{
+    color:var(--text-muted)!important;
+}
+[data-testid="stChatInput"] button{
+    border-radius:10px!important;
+    background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;
+    color:#fff!important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -739,23 +809,6 @@ components.html(
     height=0,
 )
 
-st.sidebar.markdown("""
-<div style="padding:0 16px 10px;">
-    <div style="display:flex;gap:8px;">
-        <div style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(148,163,184,.2);
-                    border-radius:8px;padding:8px 10px;">
-            <div style="color:#e2e8f0;font-size:11px;font-weight:700;">Mode</div>
-            <div style="color:#94a3b8;font-size:10px;">Production</div>
-        </div>
-        <div style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(148,163,184,.2);
-                    border-radius:8px;padding:8px 10px;">
-            <div style="color:#e2e8f0;font-size:11px;font-weight:700;">Stack</div>
-            <div style="color:#94a3b8;font-size:10px;">RAG + Groq</div>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
 page = st.sidebar.radio(
     "nav",
     ["📊  Dashboard",
@@ -851,7 +904,7 @@ if st.sidebar.button("Logout", use_container_width=True,
 
 st.sidebar.markdown("""
 <div style="padding:12px 4px 4px;text-align:center;">
-    <div style="color:#334155;font-size:10px;
+    <div style="color:var(--text-muted);font-size:10px;
                 font-family:'JetBrains Mono',monospace;">
         AssistHR v1.0 · MIT License
     </div>
@@ -1058,7 +1111,7 @@ elif page == "📚  Knowledge Base":
     # upload card
     st.markdown('<div class="card"><div class="card-head">'
                 '<div class="card-title">📁 Upload HR Document</div>'
-                '<span style="font-size:11.5px;color:#64748b;">'
+                '<span style="font-size:11.5px;color:var(--text-muted);">'
                 'PDF · DOCX · TXT</span>'
                 '</div><div class="card-body">',
                 unsafe_allow_html=True)
@@ -1074,14 +1127,14 @@ elif page == "📚  Knowledge Base":
         with c1:
             st.markdown(f"""
             <div style="display:flex;align-items:center;gap:10px;
-                        padding:10px 14px;background:#eff6ff;
-                        border:1px solid #dbeafe;border-radius:10px;
+                        padding:10px 14px;background:var(--surface-2);
+                        border:1px solid var(--border);border-radius:10px;
                         font-size:12.5px;margin-top:8px;">
                 <span>📄</span>
-                <span style="flex:1;font-weight:600;color:#1d4ed8;">
+                <span style="flex:1;font-weight:600;color:var(--text-main);">
                     {uploaded.name}
                 </span>
-                <span style="color:#64748b;">
+                <span style="color:var(--text-muted);">
                     {uploaded.size/1024:.1f} KB
                 </span>
             </div>
@@ -1195,11 +1248,11 @@ elif page == "💬  HR Q&A":
         <div style="text-align:center;padding:36px 24px 20px;">
             <div style="font-size:48px;margin-bottom:12px;">💬</div>
             <div style="font-size:18px;font-weight:700;
-                        color:#0f172a;margin-bottom:6px;
+                        color:var(--text-main);margin-bottom:6px;
                         font-family:'Plus Jakarta Sans',sans-serif;">
                 Ask AssistHR Anything
             </div>
-            <div style="font-size:13px;color:#64748b;max-width:320px;
+            <div style="font-size:13px;color:var(--text-muted);max-width:320px;
                         margin:0 auto;">
                 Questions are answered using your uploaded
                 HR documents via RAG
@@ -1280,7 +1333,7 @@ elif page == "📄  Resume Screener":
     st.markdown('<div class="card"><div class="card-head">'
                 '<div class="card-title">'
                 '🔍 Screening Engine</div>'
-                '<span style="font-size:11.5px;color:#64748b;">'
+                '<span style="font-size:11.5px;color:var(--text-muted);">'
                 'Semantic AI evaluation</span>'
                 '</div><div class="card-body">',
                 unsafe_allow_html=True)
@@ -1295,7 +1348,7 @@ elif page == "📄  Resume Screener":
     with c1:
         st.markdown("""
         <div style="font-size:12px;font-weight:700;
-                    color:#334155;margin-bottom:6px;">
+                    color:var(--text-main);margin-bottom:6px;">
             📄 Upload Resumes
         </div>
         """, unsafe_allow_html=True)
@@ -1309,7 +1362,7 @@ elif page == "📄  Resume Screener":
     with c2:
         st.markdown("""
         <div style="font-size:12px;font-weight:700;
-                    color:#334155;margin-bottom:6px;">
+                    color:var(--text-main);margin-bottom:6px;">
             💼 Upload Job Description
         </div>
         """, unsafe_allow_html=True)
@@ -1322,8 +1375,8 @@ elif page == "📄  Resume Screener":
 
     st.markdown("""
     <div style="margin-top:14px;padding:12px 16px;
-                background:#eff6ff;border:1px solid #dbeafe;
-                border-radius:10px;font-size:12.5px;color:#334155;">
+                background:var(--surface-2);border:1px solid var(--border);
+                border-radius:10px;font-size:12.5px;color:var(--text-main);">
         💡 <b>Scoring:</b> Skills match · Experience level ·
         Education · Role alignment.
         Score ≥ 65 = Recommended.
@@ -1429,7 +1482,7 @@ elif page == "📄  Resume Screener":
                                 </span>
                             </div>
                             <div style="height:6px;
-                                        background:#e2e8f0;
+                                        background:var(--border);
                                         border-radius:99px;
                                         overflow:hidden;">
                                 <div style="height:100%;
@@ -1447,7 +1500,7 @@ elif page == "📄  Resume Screener":
                         with c1:
                             st.markdown(f"""
                             <div style="font-size:12.5px;
-                                        color:#334155;
+                                        color:var(--text-main);
                                         line-height:1.8;">
                                 📧 {r.get('email','N/A')}<br/>
                                 📞 {r.get('phone','N/A')}<br/>
@@ -1457,7 +1510,7 @@ elif page == "📄  Resume Screener":
                         with c2:
                             st.markdown(f"""
                             <div style="font-size:12.5px;
-                                        color:#334155;
+                                        color:var(--text-main);
                                         line-height:1.8;">
                                 💼 {r.get('experience','N/A')}<br/>
                                 {'🔗 <a href="' + r.get("linkedin","") + '" target="_blank" style="color:#2563eb;">LinkedIn</a>' if r.get("linkedin") else ''}
@@ -1513,12 +1566,13 @@ elif page == "📄  Resume Screener":
                         # strengths/weaknesses
                         st.markdown(f"""
                         <div style="background:#f8fafc;
+                                    background:var(--surface-2);
                                     border-radius:10px;
                                     padding:14px 16px;
                                     font-size:12.5px;
                                     line-height:1.7;
-                                    color:#334155;
-                                    border:1px solid #e2e8f0;">
+                                    color:var(--text-main);
+                                    border:1px solid var(--border);">
                             <div style="margin-bottom:8px;">
                                 💪 <b>Strengths:</b>
                                 {r.get('strengths','')}
