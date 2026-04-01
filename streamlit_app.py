@@ -403,10 +403,16 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     border-color  : #2563eb !important;
     background    : #eff6ff !important;
 }
+/* Dark theme file uploader */
+[data-theme="dark"] [data-testid="stFileUploader"],
+[data-user-theme="dark"] [data-testid="stFileUploader"] {
+    background    : #1e293b !important;
+    border-color  : #475569 !important;
+}
 [data-theme="dark"] [data-testid="stFileUploader"]:hover,
 [data-user-theme="dark"] [data-testid="stFileUploader"]:hover {
     border-color  : #3b82f6 !important;
-    background    : rgba(37, 99, 235, 0.12) !important;
+    background    : #2d3a4f !important;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -453,7 +459,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     color: #ffffff !important;
 }
 
-/* Chat composer — HR Q&A (sleek, professional) */
+/* Chat composer — HR Q&A (sleek, professional, reduced height) */
 [data-testid="stChatInput"] {
     border-radius: 22px !important;
     border: 1px solid var(--border) !important;
@@ -461,7 +467,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     box-shadow:
         0 1px 2px rgba(15, 23, 42, 0.06),
         0 8px 32px rgba(15, 23, 42, 0.08) !important;
-    padding: 6px 8px 6px 12px !important;
+    padding: 4px 8px 4px 12px !important;
     max-width: min(920px, 100%) !important;
     margin-left: auto !important;
     margin-right: auto !important;
@@ -488,11 +494,11 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
         0 12px 40px rgba(0, 0, 0, 0.5) !important;
 }
 [data-testid="stChatInput"] textarea {
-    min-height: 56px !important;
-    padding: 16px 18px !important;
-    font-size: 15px !important;
+    min-height: 48px !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
     letter-spacing: 0.01em !important;
-    line-height: 1.5 !important;
+    line-height: 1.4 !important;
     border: none !important;
     background: transparent !important;
     color: var(--text-main) !important;
