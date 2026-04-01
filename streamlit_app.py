@@ -36,7 +36,7 @@ supabase = create_client(
 st.set_page_config(
     page_title = "AssistHR",
     page_icon  = "🤖",
-    layout     = "centered",
+    layout     = "wide",
     initial_sidebar_state="expanded",
 )
 
@@ -63,7 +63,7 @@ st.markdown("""
     --text-muted: #cbd5e1;
     --border: #475569;
 }
-/* Dark mode: stronger body & widget text */
+/* Dark mode: stronger body & widget text (Streamlit defaults can be too dim) */
 [data-theme="dark"] [data-testid="stMain"] p,
 [data-theme="dark"] [data-testid="stMain"] li,
 [data-user-theme="dark"] [data-testid="stMain"] p,
@@ -102,6 +102,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background  : var(--app-bg) !important;
 }
 #MainMenu, footer { visibility: hidden; }
+/* Remove default Streamlit header strip (empty / awkward gap) */
 [data-testid="stHeader"],
 [data-testid="stDecoration"] {
     display: none !important;
@@ -112,7 +113,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     padding-right : 32px !important;
     max-width     : 100% !important;
 }
-/* Post-login top bar */
+/* Post-login top bar (replaces empty header visually) */
 .app-topbar {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -146,6 +147,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] {
     background    : linear-gradient(180deg, #0f172a 0%, #111b34 100%) !important;
     border-right  : 1px solid rgba(148,163,184,0.18) !important;
+    width         : 248px !important;
 }
 [data-testid="stSidebar"] * {
     font-family   : 'Plus Jakarta Sans', sans-serif !important;
@@ -182,7 +184,27 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color         : #94a3b8 !important;
 }
-/* Hide keyboard-shortcut hint text */
+[data-testid="collapsedControl"]{
+    background:linear-gradient(145deg,#1e293b 0%,#0f172a 100%)!important;
+    border:2px solid rgba(148,163,184,.55)!important;
+    border-radius:12px!important;
+    box-shadow:0 4px 14px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.06) inset!important;
+    z-index:999991!important;
+    min-width:44px!important;
+    min-height:44px!important;
+    top:12px!important;
+}
+[data-testid="collapsedControl"]:hover{
+    border-color:rgba(96,165,250,.85)!important;
+    box-shadow:0 6px 20px rgba(37,99,235,.35),0 0 0 1px rgba(96,165,250,.25) inset!important;
+}
+[data-testid="collapsedControl"] svg{
+    fill:#f1f5f9!important;
+    width:22px!important;
+    height:22px!important;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
+}
+/* Hide keyboard-shortcut hint text/icon clutter on sidebar controls */
 [data-testid="stSidebar"] kbd,
 [data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
 [data-testid="stSidebar"] .st-keyboard-shortcut {
@@ -190,7 +212,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 
 /* ══════════════════════════════════════════════════════════
-   METRIC CARDS
+   METRIC CARDS — theme aware
 ══════════════════════════════════════════════════════════ */
 [data-testid="stMetric"] {
     border-radius  : 14px !important;
@@ -228,6 +250,13 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     word-break     : break-word !important;
     font-family    : 'Plus Jakarta Sans', sans-serif !important;
 }
+[data-testid="column"] {
+    display        : flex !important;
+    flex-direction : column !important;
+}
+[data-testid="column"] [data-testid="stMetric"] {
+    flex           : 1 !important;
+}
 
 /* Light theme cards */
 [data-theme="light"] [data-testid="stMetric"],
@@ -257,6 +286,40 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-theme="dark"] [data-testid="stMetricValue"],
 [data-user-theme="dark"] [data-testid="stMetricValue"] {
     color : #f1f5f9 !important;
+}
+
+/* Colored accent top border per column */
+[data-testid="column"]:nth-child(1) [data-testid="stMetric"]::before {
+    content    : '';
+    position   : absolute;
+    top:0; left:0; right:0;
+    height     : 3px;
+    background : linear-gradient(90deg, #2563eb, #3b82f6);
+    border-radius: 14px 14px 0 0;
+}
+[data-testid="column"]:nth-child(2) [data-testid="stMetric"]::before {
+    content    : '';
+    position   : absolute;
+    top:0; left:0; right:0;
+    height     : 3px;
+    background : linear-gradient(90deg, #0891b2, #22d3ee);
+    border-radius: 14px 14px 0 0;
+}
+[data-testid="column"]:nth-child(3) [data-testid="stMetric"]::before {
+    content    : '';
+    position   : absolute;
+    top:0; left:0; right:0;
+    height     : 3px;
+    background : linear-gradient(90deg, #7c3aed, #a78bfa);
+    border-radius: 14px 14px 0 0;
+}
+[data-testid="column"]:nth-child(4) [data-testid="stMetric"]::before {
+    content    : '';
+    position   : absolute;
+    top:0; left:0; right:0;
+    height     : 3px;
+    background : linear-gradient(90deg, #059669, #34d399);
+    border-radius: 14px 14px 0 0;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -296,6 +359,36 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     border-color: #475569 !important;
     background: rgba(30, 41, 59, 0.5) !important;
 }
+[data-theme="dark"] .stButton > button[kind="secondary"]:hover,
+[data-user-theme="dark"] .stButton > button[kind="secondary"]:hover {
+    background: rgba(51, 65, 85, 0.65) !important;
+}
+[data-testid="stSidebar"] .stButton > button[kind="secondary"] {
+    color: #cbd5e1 !important;
+    border-color: #475569 !important;
+}
+[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover {
+    background: rgba(255,255,255,0.06) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   INPUTS & SELECTBOX
+══════════════════════════════════════════════════════════ */
+.stTextInput input,
+.stTextArea textarea {
+    font-family   : 'Plus Jakarta Sans', sans-serif !important;
+    border        : 1.5px solid var(--border) !important;
+    border-radius : 10px !important;
+    font-size     : 13.5px !important;
+    transition    : all 0.18s ease !important;
+    color         : var(--text-main) !important;
+    background    : var(--surface) !important;
+}
+.stTextInput input:focus,
+.stTextArea textarea:focus {
+    border-color  : #2563eb !important;
+    box-shadow    : 0 0 0 3px rgba(37,99,235,0.12) !important;
+}
 
 /* ══════════════════════════════════════════════════════════
    FILE UPLOADER
@@ -310,19 +403,36 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     border-color  : #2563eb !important;
     background    : #eff6ff !important;
 }
-[data-theme="dark"] [data-testid="stFileUploader"],
-[data-user-theme="dark"] [data-testid="stFileUploader"] {
-    background    : #1e293b !important;
-    border-color  : #475569 !important;
-}
 [data-theme="dark"] [data-testid="stFileUploader"]:hover,
 [data-user-theme="dark"] [data-testid="stFileUploader"]:hover {
     border-color  : #3b82f6 !important;
-    background    : #2d3a4f !important;
+    background    : rgba(37, 99, 235, 0.12) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
-   CHAT MESSAGES & INPUT
+   EXPANDER (screening results)
+══════════════════════════════════════════════════════════ */
+[data-testid="stExpander"] {
+    border        : 1.5px solid var(--border) !important;
+    border-radius : 14px !important;
+    background    : var(--surface) !important;
+    box-shadow    : 0 1px 4px rgba(0,0,0,0.05) !important;
+    margin-bottom : 14px !important;
+    overflow      : hidden !important;
+    transition    : all 0.18s ease !important;
+}
+[data-testid="stExpander"]:hover {
+    box-shadow    : 0 6px 24px rgba(0,0,0,0.08) !important;
+    transform     : translateY(-1px) !important;
+}
+[data-theme="dark"] [data-testid="stExpander"],
+[data-user-theme="dark"] [data-testid="stExpander"] {
+    background    : #1e293b !important;
+    border-color  : #334155 !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   CHAT MESSAGES
 ══════════════════════════════════════════════════════════ */
 [data-testid="stChatMessage"] {
     border-radius : 14px !important;
@@ -330,44 +440,422 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     border        : 1px solid var(--border) !important;
     box-shadow    : 0 1px 4px rgba(0,0,0,0.04) !important;
 }
+[data-theme="dark"] [data-testid="stChatMessage"],
+[data-user-theme="dark"] [data-testid="stChatMessage"] {
+    border-color  : #334155 !important;
+}
+[data-testid="stChatMessageAvatarUser"] {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #ffffff !important;
+}
+[data-testid="stChatMessageAvatarAssistant"] {
+    background: linear-gradient(135deg, #0891b2, #14b8a6) !important;
+    color: #ffffff !important;
+}
+
+/* Chat composer — HR Q&A (sleek, professional) */
 [data-testid="stChatInput"] {
     border-radius: 22px !important;
     border: 1px solid var(--border) !important;
     background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%) !important;
-    padding: 4px 8px 4px 12px !important;
+    box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.06),
+        0 8px 32px rgba(15, 23, 42, 0.08) !important;
+    padding: 6px 8px 6px 12px !important;
     max-width: min(920px, 100%) !important;
     margin-left: auto !important;
     margin-right: auto !important;
 }
+[data-theme="dark"] [data-testid="stChatInput"],
+[data-user-theme="dark"] [data-testid="stChatInput"] {
+    background: linear-gradient(180deg, #1e293b 0%, #172033 100%) !important;
+    border-color: #64748b !important;
+    box-shadow:
+        0 0 0 1px rgba(148, 163, 184, 0.12),
+        0 12px 40px rgba(0, 0, 0, 0.45) !important;
+}
+[data-testid="stChatInput"]:focus-within {
+    border-color: #3b82f6 !important;
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.2),
+        0 12px 36px rgba(37, 99, 235, 0.12) !important;
+}
+[data-theme="dark"] [data-testid="stChatInput"]:focus-within,
+[data-user-theme="dark"] [data-testid="stChatInput"]:focus-within {
+    border-color: #60a5fa !important;
+    box-shadow:
+        0 0 0 3px rgba(96, 165, 250, 0.18),
+        0 12px 40px rgba(0, 0, 0, 0.5) !important;
+}
 [data-testid="stChatInput"] textarea {
-    min-height: 48px !important;
-    padding: 12px 16px !important;
-    font-size: 14px !important;
-    line-height: 1.4 !important;
+    min-height: 56px !important;
+    padding: 16px 18px !important;
+    font-size: 15px !important;
+    letter-spacing: 0.01em !important;
+    line-height: 1.5 !important;
     border: none !important;
     background: transparent !important;
     color: var(--text-main) !important;
 }
+[data-testid="stChatInput"] textarea:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+[data-testid="stChatInput"] textarea::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.92 !important;
+}
+/* Send / control row inside chat input */
+[data-testid="stChatInput"] button {
+    border-radius: 12px !important;
+}
+/* HR Q&A footer note — pinned below main content, above composer in flow */
 .qa-rag-footer {
     text-align: center;
     font-size: 12.5px !important;
+    line-height: 1.55 !important;
     color: var(--text-muted) !important;
     padding: 16px 16px 12px !important;
     margin: 24px auto 6px auto !important;
     border-top: 1px solid var(--border) !important;
     max-width: min(920px, 100%) !important;
 }
+[data-theme="dark"] .qa-rag-footer,
+[data-user-theme="dark"] .qa-rag-footer {
+    color: #cbd5e1 !important;
+    border-top-color: var(--border) !important;
+}
 
-/* Other existing styles (keep all the card, doc-row, etc. styles from your original) */
+/* Selectbox — theme aware */
+.stSelectbox [data-baseweb="select"] > div {
+    border-radius: 10px !important;
+    border: 1.5px solid var(--border) !important;
+    background: var(--surface) !important;
+    color: var(--text-main) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ALERTS
+══════════════════════════════════════════════════════════ */
+.stSuccess, .stError, .stInfo, .stWarning {
+    border-radius : 10px !important;
+    font-family   : 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   DIVIDER
+══════════════════════════════════════════════════════════ */
+hr {
+    border-color  : var(--border) !important;
+    margin        : 20px 0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PROGRESS BAR
+══════════════════════════════════════════════════════════ */
+[data-testid="stProgress"] > div > div {
+    background    : linear-gradient(90deg, #2563eb, #0891b2) !important;
+    border-radius : 99px !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SKILL CHIPS
+══════════════════════════════════════════════════════════ */
+.chip-green {
+    display       : inline-block;
+    padding       : 3px 10px;
+    border-radius : 99px;
+    font-size     : 11.5px;
+    font-weight   : 600;
+    background    : #d1fae5;
+    color         : #059669;
+    border        : 1px solid #a7f3d0;
+    margin        : 2px;
+}
+.chip-red {
+    display       : inline-block;
+    padding       : 3px 10px;
+    border-radius : 99px;
+    font-size     : 11.5px;
+    font-weight   : 600;
+    background    : #fee2e2;
+    color         : #dc2626;
+    border        : 1px solid #fca5a5;
+    margin        : 2px;
+}
+.verdict-badge {
+    display       : inline-block;
+    padding       : 4px 12px;
+    border-radius : 99px;
+    font-size     : 11px;
+    font-weight   : 700;
+}
+.doc-row {
+    display        : flex;
+    align-items    : center;
+    gap            : 12px;
+    padding        : 11px 16px;
+    border-radius  : 10px;
+    margin-bottom  : 6px;
+    border         : 1px solid #e2e8f0;
+    background     : #ffffff;
+    transition     : all 0.18s ease;
+    font-size      : 13.5px;
+    font-weight    : 500;
+    color          : #334155;
+}
+.doc-row:hover {
+    border-color   : #2563eb;
+    box-shadow     : 0 0 0 3px rgba(37,99,235,0.08);
+}
+[data-theme="dark"] .doc-row {
+    background     : #1e293b;
+    border-color   : #334155;
+    color          : #cbd5e1;
+}
+.doc-badge {
+    font-size      : 10px;
+    padding        : 2px 8px;
+    border-radius  : 99px;
+    background     : #eff6ff;
+    color          : #2563eb;
+    font-weight    : 700;
+    text-transform : uppercase;
+    margin-left    : auto;
+}
+.info-row {
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    padding        : 9px 0;
+    border-bottom  : 1px solid #f1f5f9;
+    font-size      : 13px;
+}
+.info-val {
+    font-size      : 11.5px;
+    font-weight    : 700;
+    background     : #f1f5f9;
+    padding        : 3px 10px;
+    border-radius  : 99px;
+    color          : #0f172a;
+}
+[data-theme="dark"] .info-val {
+    background     : #334155;
+    color          : #f1f5f9;
+}
+[data-theme="dark"] .info-row {
+    border-color   : #1e293b;
+    color          : #94a3b8;
+}
+.card {
+    background     : #ffffff;
+    border         : 1px solid #e2e8f0;
+    border-radius  : 14px;
+    overflow       : hidden;
+    box-shadow     : 0 1px 4px rgba(0,0,0,0.06);
+    margin-bottom  : 20px;
+}
+[data-theme="dark"] .card {
+    background     : #1e293b;
+    border-color   : #334155;
+}
+.card-head {
+    padding        : 16px 22px;
+    border-bottom  : 1px solid #e2e8f0;
+    display        : flex;
+    align-items    : center;
+    justify-content: space-between;
+}
+[data-theme="dark"] .card-head {
+    border-color   : #334155;
+}
+.card-title {
+    font-size      : 14px;
+    font-weight    : 700;
+    color          : #0f172a;
+}
+[data-theme="dark"] .card-title {
+    color          : #f1f5f9;
+}
+.card-body {
+    padding        : 20px 22px;
+}
+.step-item {
+    display        : flex;
+    gap            : 12px;
+    align-items    : flex-start;
+    margin-bottom  : 18px;
+}
+.step-num {
+    min-width      : 30px;
+    height         : 30px;
+    border-radius  : 8px;
+    color          : #ffffff;
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    font-weight    : 800;
+    font-size      : 13px;
+    flex-shrink    : 0;
+}
+.step-title {
+    font-size      : 13.5px;
+    font-weight    : 700;
+    color          : #0f172a;
+    margin-bottom  : 3px;
+}
+[data-theme="dark"] .step-title,
+[data-user-theme="dark"] .step-title {
+    color          : #f1f5f9;
+}
+.step-desc {
+    font-size      : 12.5px;
+    color          : #64748b;
+    line-height    : 1.5;
+}
+.section-title {
+    font-size      : 22px;
+    font-weight    : 800;
+    color          : #0f172a;
+    margin         : 0 0 4px 0;
+    font-family    : 'Plus Jakarta Sans', sans-serif;
+}
+[data-theme="dark"] .section-title,
+[data-user-theme="dark"] .section-title {
+    color          : #f1f5f9;
+}
+.section-sub {
+    font-size      : 13.5px;
+    color          : var(--text-muted);
+    margin-bottom  : 22px;
+}
+.card-sub { font-size: 11.5px; color: var(--text-muted); }
+.field-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 6px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.upload-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.22);
+    border-radius: 10px;
+    font-size: 12.5px;
+    margin-top: 8px;
+}
+[data-theme="dark"] .upload-preview,
+[data-user-theme="dark"] .upload-preview {
+    background: rgba(37, 99, 235, 0.14);
+    border-color: rgba(96, 165, 250, 0.35);
+}
+.upload-preview-name { flex: 1; font-weight: 600; color: #2563eb; }
+[data-theme="dark"] .upload-preview-name,
+[data-user-theme="dark"] .upload-preview-name { color: #93c5fd; }
+.upload-preview-meta { color: var(--text-muted); }
+.callout-info {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: 10px;
+    font-size: 12.5px;
+    color: var(--text-main);
+    line-height: 1.55;
+}
+[data-theme="dark"] .callout-info,
+[data-user-theme="dark"] .callout-info {
+    background: rgba(30, 58, 138, 0.25);
+    border-color: rgba(96, 165, 250, 0.28);
+}
+.empty-state { text-align: center; padding: 36px 24px 20px; }
+.empty-state-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 6px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.empty-state-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    max-width: 340px;
+    margin: 0 auto;
+    line-height: 1.55;
+}
+.body-text {
+    font-size: 12.5px;
+    color: var(--text-main);
+    line-height: 1.8;
+}
+.body-text a { color: #2563eb; font-weight: 600; }
+[data-theme="dark"] .body-text a,
+[data-user-theme="dark"] .body-text a { color: #60a5fa; }
+.insight-box {
+    background: var(--surface-2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+.score-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+}
+.detailed-results-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.skill-section-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 8px;
+}
+[data-theme="dark"] .doc-row,
+[data-user-theme="dark"] .doc-row {
+    background: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+[data-theme="dark"] .doc-badge,
+[data-user-theme="dark"] .doc-badge {
+    background: #1e3a5f;
+    color: #60a5fa;
+}
+[data-theme="dark"] .info-row,
+[data-user-theme="dark"] .info-row {
+    border-color: #1e293b;
+    color: #94a3b8;
+}
+[data-theme="dark"] .step-desc,
+[data-user-theme="dark"] .step-desc {
+    color: var(--text-muted);
+}
 </style>
 """, unsafe_allow_html=True)
 
+
 # ══════════════════════════════════════════════════════════════
-# AUTH (keep your existing login_page and logout functions)
+# AUTH
 # ══════════════════════════════════════════════════════════════
 
 def login_page():
-    # [Keep your existing login_page code exactly as is]
+    # centered hero
     st.markdown("""
     <div style="max-width:440px; margin:60px auto 0;">
         <div style="
@@ -470,6 +958,7 @@ def login_page():
                     except Exception as e:
                         st.error(f"❌ {e}")
 
+
 def logout():
     try:
         supabase.auth.sign_out()
@@ -478,6 +967,7 @@ def logout():
     st.session_state.user  = None
     st.session_state.token = None
     st.rerun()
+
 
 # ── CHECK AUTH ────────────────────────────────────────────────
 
@@ -492,13 +982,15 @@ if not st.session_state.user:
 current_user  = st.session_state.user
 current_email = current_user.email
 
+
 # ══════════════════════════════════════════════════════════════
-# SIDEBAR - Simplified to ensure it works
+# SIDEBAR
 # ══════════════════════════════════════════════════════════════
 
 st.sidebar.markdown(f"""
 <div style="padding:20px 16px 16px;">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+    <div style="display:flex;align-items:center;gap:10px;
+                margin-bottom:10px;">
         <div style="width:38px;height:38px;background:#2563eb;
                     border-radius:10px;display:flex;
                     align-items:center;justify-content:center;
@@ -534,20 +1026,50 @@ theme_choice = st.sidebar.selectbox(
     key="ui_theme",
 )
 
-# Simple theme script without sidebar interference
 components.html(
     f"""
     <script>
     (function() {{
-        const root = document.documentElement;
-        const choice = "{theme_choice}";
-        let mode = "light";
-        if (choice === "Dark") mode = "dark";
-        else if (choice === "System") {{
-            mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      const root = window.parent.document.documentElement;
+      const app = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+      const main = window.parent.document.querySelector('[data-testid="stMain"]');
+      const choice = "{theme_choice}";
+      let mode = "light";
+      if (choice === "Dark") mode = "dark";
+      else if (choice === "System") {{
+        mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }}
+      root.setAttribute("data-user-theme", mode);
+      root.setAttribute("data-theme", mode);
+      if (app) app.setAttribute("data-theme", mode);
+      if (main) main.setAttribute("data-theme", mode);
+      const body = window.parent.document.body;
+      if (body) body.setAttribute("data-user-theme", mode);
+
+      function stripSidebarShortcutHints() {{
+        const doc = window.parent.document;
+        const cc = doc.querySelector('[data-testid="collapsedControl"]');
+        if (cc) {{
+          cc.removeAttribute("title");
+          cc.removeAttribute("aria-label");
+          const btn = (cc.tagName === "BUTTON") ? cc : cc.closest("button");
+          if (btn) {{ btn.removeAttribute("title"); btn.removeAttribute("aria-label"); }}
         }}
-        root.setAttribute("data-user-theme", mode);
-        root.setAttribute("data-theme", mode);
+        doc.querySelectorAll('[data-testid="stSidebar"] button[title], [data-testid="stSidebar"] [title]').forEach(function(el) {{
+          const t = (el.getAttribute("title") || "") + (el.getAttribute("aria-label") || "");
+          if (/keyboard|shortcut|Press |⌘|Ctrl|\\[/i.test(t)) {{
+            el.removeAttribute("title");
+            el.removeAttribute("aria-label");
+          }}
+        }});
+      }}
+      stripSidebarShortcutHints();
+      [200, 600, 1200].forEach(function(ms) {{ setTimeout(stripSidebarShortcutHints, ms); }});
+      try {{
+        const obs = new MutationObserver(stripSidebarShortcutHints);
+        const sb = window.parent.document.querySelector('[data-testid="stSidebar"]');
+        if (sb) obs.observe(sb, {{ childList: true, subtree: true, attributes: true }});
+      }} catch (e) {{}}
     }})();
     </script>
     """,
@@ -556,64 +1078,13 @@ components.html(
 
 page = st.sidebar.radio(
     "nav",
-    ["📊  Dashboard", "📚  Knowledge Base", "💬  HR Q&A", "📄  Resume Screener"],
+    ["📊  Dashboard",
+     "📚  Knowledge Base",
+     "💬  HR Q&A",
+     "📄  Resume Screener"],
     label_visibility="collapsed"
 )
 
-st.sidebar.divider()
-
-st.sidebar.markdown(f"""
-<div style="padding:0 4px;">
-    <div style="display:flex;align-items:center;gap:8px;
-                background:rgba(255,255,255,0.05);
-                border-radius:8px;padding:10px 12px;
-                margin-bottom:10px;">
-        <div style="width:7px;height:7px;background:#22c55e;
-                    border-radius:50%;flex-shrink:0;"></div>
-        <div>
-            <div style="color:#e2e8f0;font-size:11px;
-                        font-weight:700;">System Ready</div>
-            <div style="color:#64748b;font-size:10px;margin-top:1px;">
-                RAG · Supabase pgvector · Groq
-            </div>
-        </div>
-    </div>
-    <div style="color:#64748b;font-size:11px;padding:2px 2px 8px;">
-        👤 {current_email}
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-if st.sidebar.button("Logout", use_container_width=True, key="logout_btn"):
-    logout()
-
-st.sidebar.markdown("""
-<div style="padding:12px 4px 4px;text-align:center;">
-    <div style="color:#334155;font-size:10px;
-                font-family:'JetBrains Mono',monospace;">
-        AssistHR v1.0 · MIT License
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown(
-    f"""
-    <div class="app-topbar">
-        <div class="app-topbar-inner">
-            <span class="app-topbar-brand">AssistHR</span>
-            <span class="app-topbar-sep">·</span>
-            <span class="app-topbar-page">{page}</span>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-# ══════════════════════════════════════════════════════════════
-# PAGE CONTENT (keep all your existing page code below)
-# ══════════════════════════════════════════════════════════════
-
-# [Keep all your existing page content for Dashboard, Knowledge Base, HR Q&A, Resume Screener]
 st.sidebar.markdown("<div style='margin-top:12px'></div>",
                     unsafe_allow_html=True)
 
