@@ -184,6 +184,10 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color         : #94a3b8 !important;
 }
+
+
+
+
 [data-testid="collapsedControl"]{
     background:linear-gradient(145deg,#1e293b 0%,#0f172a 100%)!important;
     border:2px solid rgba(148,163,184,.55)!important;
@@ -193,10 +197,20 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     min-width:44px!important;
     min-height:44px!important;
     top:12px!important;
+    position:fixed!important;
+    left:12px!important;
+    transition:all 0.2s ease!important;
+    opacity:1!important;
+    visibility:visible!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    cursor:pointer!important;
 }
 [data-testid="collapsedControl"]:hover{
     border-color:rgba(96,165,250,.85)!important;
     box-shadow:0 6px 20px rgba(37,99,235,.35),0 0 0 1px rgba(96,165,250,.25) inset!important;
+    transform:scale(1.05)!important;
 }
 [data-testid="collapsedControl"] svg{
     fill:#f1f5f9!important;
@@ -204,66 +218,32 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     height:22px!important;
     filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
 }
-/* Hide keyboard-shortcut hint text/icon clutter on sidebar controls */
+/* Style when sidebar is collapsed */
+[data-testid="collapsedControl"][aria-expanded="false"],
+[data-testid="collapsedControl"][data-state="collapsed"] {
+    opacity:1!important;
+    visibility:visible!important;
+    left:12px!important;
+    background:linear-gradient(145deg,#2563eb 0%,#1d4ed8 100%)!important;
+    border-color:rgba(96,165,250,.9)!important;
+    box-shadow:0 4px 20px rgba(37,99,235,.5)!important;
+}
+/* Position when sidebar is expanded */
+[data-testid="stSidebar"][aria-expanded="true"] + [data-testid="collapsedControl"] {
+    left:260px!important;
+}
+/* Hide keyboard shortcut hints */
 [data-testid="stSidebar"] kbd,
 [data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
 [data-testid="stSidebar"] .st-keyboard-shortcut {
     display:none!important;
-}
-            
-
-
-/* Ensure collapse button remains visible and functional */
-[data-testid="collapsedControl"] {
-    background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%) !important;
-    border: 2px solid rgba(148,163,184,.55) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 14px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06) inset !important;
-    z-index: 999991 !important;
-    min-width: 44px !important;
-    min-height: 44px !important;
-    top: 12px !important;
-    position: fixed !important;
-    left: 12px !important;
-    transition: all 0.2s ease !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-}
-
-/* When sidebar is collapsed, ensure button stays visible */
-[data-testid="collapsedControl"][aria-expanded="false"],
-[data-testid="collapsedControl"][data-state="collapsed"] {
-    opacity: 1 !important;
-    visibility: visible !important;
-    left: 12px !important;
-    background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: rgba(96, 165, 250, 0.9) !important;
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.5) !important;
-}
-
-[data-testid="collapsedControl"]:hover {
-    border-color: rgba(96,165,250,.85) !important;
-    box-shadow: 0 6px 20px rgba(37,99,235,.35), 0 0 0 1px rgba(96,165,250,.25) inset !important;
-    transform: scale(1.05) !important;
-}
-
-[data-testid="collapsedControl"] svg {
-    fill: #f1f5f9 !important;
-    width: 22px !important;
-    height: 22px !important;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
-}
+}          
 
 /* When sidebar is expanded, button sits at top-left */
 [data-testid="stSidebar"][aria-expanded="true"] + [data-testid="collapsedControl"] {
     left: 260px !important;
 }
-            
-
+        
 
 
 
