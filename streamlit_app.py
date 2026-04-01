@@ -140,7 +140,6 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     font-weight: 600;
     color: var(--text-muted);
 }
-
 /* ══════════════════════════════════════════════════════════
    SIDEBAR
 ══════════════════════════════════════════════════════════ */
@@ -148,6 +147,9 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background    : linear-gradient(180deg, #0f172a 0%, #111b34 100%) !important;
     border-right  : 1px solid rgba(148,163,184,0.18) !important;
     width         : 248px !important;
+    min-width     : 248px !important;
+    z-index       : 100000 !important;
+    position      : relative !important;
 }
 [data-testid="stSidebar"] * {
     font-family   : 'Plus Jakarta Sans', sans-serif !important;
@@ -184,7 +186,6 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color         : #94a3b8 !important;
 }
-            
 [data-testid="collapsedControl"] {
     background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%) !important;
     border: 2px solid rgba(148, 163, 184, 0.55) !important;
@@ -217,14 +218,18 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     height: 22px !important;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
 }
-/* When sidebar is collapsed, make button more prominent */
-[data-testid="collapsedControl"][aria-expanded="false"] {
-    background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: rgba(96, 165, 250, 0.9) !important;
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.5) !important;
+/* When sidebar is collapsed, adjust button */
+[data-testid="stSidebar"][aria-expanded="false"] {
+    width: 0px !important;
+    min-width: 0px !important;
+    overflow: hidden !important;
 }
-            
-
+/* Hide keyboard-shortcut hint text/icon clutter on sidebar controls */
+[data-testid="stSidebar"] kbd,
+[data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
+[data-testid="stSidebar"] .st-keyboard-shortcut {
+    display: none !important;
+}
 /* ══════════════════════════════════════════════════════════
    METRIC CARDS — theme aware
 ══════════════════════════════════════════════════════════ */
@@ -878,6 +883,21 @@ hr {
 [data-testid="stMain"] {
     margin-left: 0 !important;
 }
+            
+
+/* Ensure main content doesn't overlap the collapse button */
+[data-testid="stMain"] {
+    margin-top: 8px !important;
+}
+
+/* Make sure the sidebar toggle works */
+[data-testid="stSidebar"][aria-expanded="true"] {
+    transform: translateX(0) !important;
+}
+
+[data-testid="stSidebar"][aria-expanded="false"] {
+    transform: translateX(-100%) !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -1063,6 +1083,7 @@ components.html(
     f"""
     <script>
     (function() {{
+      // Theme handling
       const root = window.parent.document.documentElement;
       const app = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
       const main = window.parent.document.querySelector('[data-testid="stMain"]');
@@ -1079,47 +1100,36 @@ components.html(
       const body = window.parent.document.body;
       if (body) body.setAttribute("data-user-theme", mode);
 
-      function ensureCollapseButtonVisible() {{
+      // Function to ensure collapse button is visible and working
+      function fixCollapseButton() {{
         const doc = window.parent.document;
-        const collapseBtn = doc.querySelector('[data-testid="collapsedControl"]');
+        const btn = doc.querySelector('[data-testid="collapsedControl"]');
         
-        if (collapseBtn) {{
-          // Force visibility
-          collapseBtn.style.setProperty('opacity', '1', 'important');
-          collapseBtn.style.setProperty('visibility', 'visible', 'important');
-          collapseBtn.style.setProperty('display', 'flex', 'important');
-          collapseBtn.style.setProperty('position', 'fixed', 'important');
-          collapseBtn.style.setProperty('left', '12px', 'important');
-          collapseBtn.style.setProperty('top', '12px', 'important');
-          collapseBtn.style.setProperty('z-index', '999999', 'important');
-          collapseBtn.style.setProperty('pointer-events', 'auto', 'important');
+        if (btn) {{
+          // Remove any hiding attributes
+          btn.removeAttribute("title");
+          btn.removeAttribute("aria-label");
           
-          // Ensure click handler works
-          if (!collapseBtn.hasAttribute('data-listener')) {{
-            collapseBtn.setAttribute('data-listener', 'true');
-            collapseBtn.addEventListener('click', function(e) {{
-              // Small delay to ensure Streamlit registers the click
-              setTimeout(function() {{
-                const updatedBtn = doc.querySelector('[data-testid="collapsedControl"]');
-                if (updatedBtn) {{
-                  updatedBtn.style.setProperty('opacity', '1', 'important');
-                  updatedBtn.style.setProperty('visibility', 'visible', 'important');
-                }}
-              }}, 50);
-            }});
-          }}
+          // Force visibility styles
+          btn.style.cssText = `
+            position: fixed !important;
+            top: 12px !important;
+            left: 12px !important;
+            z-index: 999999 !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: flex !important;
+            width: 44px !important;
+            height: 44px !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+          `;
         }}
       }}
       
-      function stripSidebarShortcutHints() {{
+      // Function to remove shortcut hints
+      function removeShortcutHints() {{
         const doc = window.parent.document;
-        const cc = doc.querySelector('[data-testid="collapsedControl"]');
-        if (cc) {{
-          cc.removeAttribute("title");
-          cc.removeAttribute("aria-label");
-          const btn = (cc.tagName === "BUTTON") ? cc : cc.closest("button");
-          if (btn) {{ btn.removeAttribute("title"); btn.removeAttribute("aria-label"); }}
-        }}
         doc.querySelectorAll('[data-testid="stSidebar"] button[title], [data-testid="stSidebar"] [title]').forEach(function(el) {{
           const t = (el.getAttribute("title") || "") + (el.getAttribute("aria-label") || "");
           if (/keyboard|shortcut|Press |⌘|Ctrl|\\[/i.test(t)) {{
@@ -1129,41 +1139,29 @@ components.html(
         }});
       }}
       
-      // Run immediately and repeatedly
-      stripSidebarShortcutHints();
-      ensureCollapseButtonVisible();
+      // Run fixes immediately and repeatedly
+      fixCollapseButton();
+      removeShortcutHints();
       
-      // Run multiple times to catch dynamic changes
-      const intervals = [100, 500, 1000, 2000, 3000];
-      intervals.forEach(function(ms) {{
+      // Run multiple times to ensure it sticks
+      [100, 500, 1000, 2000, 3000, 5000].forEach(function(ms) {{
         setTimeout(function() {{
-          stripSidebarShortcutHints();
-          ensureCollapseButtonVisible();
+          fixCollapseButton();
+          removeShortcutHints();
         }}, ms);
       }});
       
       // Watch for DOM changes
       try {{
         const observer = new MutationObserver(function() {{
-          stripSidebarShortcutHints();
-          ensureCollapseButtonVisible();
+          fixCollapseButton();
+          removeShortcutHints();
         }});
-        
         observer.observe(window.parent.document.body, {{ 
           childList: true, 
-          subtree: true, 
-          attributes: true,
-          attributeFilter: ['class', 'style']
+          subtree: true,
+          attributes: true
         }});
-        
-        // Specifically watch sidebar
-        const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
-        if (sidebar) {{
-          const sidebarObserver = new MutationObserver(function() {{
-            ensureCollapseButtonVisible();
-          }});
-          sidebarObserver.observe(sidebar, {{ attributes: true, attributeFilter: ['aria-expanded'] }});
-        }}
       }} catch (e) {{
         console.log("Observer error:", e);
       }}
