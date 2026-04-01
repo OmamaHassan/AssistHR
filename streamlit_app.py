@@ -36,7 +36,7 @@ supabase = create_client(
 st.set_page_config(
     page_title = "AssistHR",
     page_icon  = "🤖",
-    layout     = "centered",
+    layout     = "wide",
     initial_sidebar_state="expanded",
 )
 
@@ -846,11 +846,8 @@ hr {
 [data-user-theme="dark"] .step-desc {
     color: var(--text-muted);
 }
-            
 </style>
 """, unsafe_allow_html=True)
-
-
 
 
 # ══════════════════════════════════════════════════════════════
@@ -1611,6 +1608,13 @@ elif page == "💬  HR Q&A":
         with st.chat_message(msg["role"], avatar=avatar):
             st.write(msg["content"])
 
+    st.markdown(
+        '<div class="qa-rag-footer">'
+        "💡 Answers sourced from uploaded documents using "
+        "<strong>Retrieval-Augmented Generation (RAG)</strong>."
+        "</div>",
+        unsafe_allow_html=True,
+    )
 
     if prompt := st.chat_input(
         "Ask about HR policies, leave, dress code..."
@@ -1630,14 +1634,6 @@ elif page == "💬  HR Q&A":
                     )
                 except Exception as e:
                     st.error(f"❌ {e}")
-
-    st.markdown(
-        '<div class="qa-rag-footer">'
-        "💡 Answers sourced from uploaded documents using "
-        "<strong>Retrieval-Augmented Generation (RAG)</strong>."
-        "</div>",
-        unsafe_allow_html=True,
-    )
 
 
 # ══════════════════════════════════════════════════════════════
