@@ -1519,15 +1519,13 @@ elif page == "📚  Knowledge Base":
 # ══════════════════════════════════════════════════════════════
 # HR Q&A
 # ══════════════════════════════════════════════════════════════
-
-elif page == "💬  HR Q&A":
-
+elif page == "💬 HR Q&A":
     st.markdown('<p class="section-title">💬 HR Q&amp;A</p>'
                 '<p class="section-sub">'
                 'Ask questions answered from your documents via RAG</p>',
                 unsafe_allow_html=True)
 
-    from rag_chain  import ask
+    from rag_chain import ask
     from chat_store import create_session, load_history
 
     c1, c2 = st.columns([2, 1])
@@ -1547,74 +1545,55 @@ elif page == "💬  HR Q&A":
 
     full_session = f"{current_email}_{session_id}"
 
-    # load history on session change
-    if ("messages"     not in st.session_state or
+    if ("messages" not in st.session_state or
         "last_session" not in st.session_state or
          st.session_state.last_session != full_session):
-
         st.session_state.last_session = full_session
         try:
             create_session(full_session)
             history = load_history(full_session)
             st.session_state.messages = [
-                {"role": "user" if m.type == "human"
-                         else "assistant",
+                {"role": "user" if m.type == "human" else "assistant",
                  "content": m.content}
                 for m in history
             ]
         except Exception:
             st.session_state.messages = []
 
-    # empty state with suggestions
     if not st.session_state.messages:
         st.markdown("""
         <div class="empty-state">
             <div style="font-size:48px;margin-bottom:12px;">💬</div>
             <div class="empty-state-title">Ask AssistHR Anything</div>
             <div class="empty-state-sub">
-                Questions are answered using your uploaded
-                HR documents via RAG
+                Questions are answered using your uploaded HR documents via RAG
             </div>
         </div>
         """, unsafe_allow_html=True)
-
-        sugs = [
-            "What is the leave policy?",
-            "What are the working hours?",
-            "How to apply for remote work?",
-            "What is the probation period?",
-        ]
+        sugs = ["What is the leave policy?", "What are the working hours?",
+                "How to apply for remote work?", "What is the probation period?"]
         cols = st.columns(len(sugs))
         for col, sug in zip(cols, sugs):
             with col:
-                if st.button(sug, use_container_width=True,
-                             key=f"sug_{sug}"):
-                    st.session_state.messages.append(
-                        {"role": "user", "content": sug}
-                    )
+                if st.button(sug, use_container_width=True, key=f"sug_{sug}"):
+                    st.session_state.messages.append({"role": "user", "content": sug})
                     with st.spinner("AssistHR is thinking..."):
                         try:
                             ans = ask(sug, full_session, model)
-                            st.session_state.messages.append(
-                                {"role": "assistant", "content": ans}
-                            )
+                            st.session_state.messages.append({"role": "assistant", "content": ans})
                             st.rerun()
                         except Exception as e:
                             st.error(f"❌ {e}")
 
-    # show messages
+    # Show chat messages (now centered)
     for msg in st.session_state.messages:
         avatar = "🧑‍💼" if msg["role"] == "user" else "🤖"
         with st.chat_message(msg["role"], avatar=avatar):
             st.write(msg["content"])
 
-
-    if prompt := st.chat_input(
-        "Ask about HR policies, leave, dress code..."
-    ):
-        st.session_state.messages.append(
-            {"role": "user", "content": prompt}
-        )
+    # Chat Input (Professional & better height)
+    if prompt := st.chat_input("Ask about HR policies, leave, dress code..."):
+        st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user", avatar="🧑‍💼"):
             st.write(prompt)
         with st.chat_message("assistant", avatar="🤖"):
@@ -1622,11 +1601,121 @@ elif page == "💬  HR Q&A":
                 try:
                     ans = ask(prompt, full_session, model)
                     st.write(ans)
-                    st.session_state.messages.append(
-                        {"role": "assistant", "content": ans}
-                    )
+                    st.session_state.messages.append({"role": "assistant", "content": ans})
                 except Exception as e:
                     st.error(f"❌ {e}")
+
+
+
+
+
+# elif page == "💬  HR Q&A":
+
+#     st.markdown('<p class="section-title">💬 HR Q&amp;A</p>'
+#                 '<p class="section-sub">'
+#                 'Ask questions answered from your documents via RAG</p>',
+#                 unsafe_allow_html=True)
+
+#     from rag_chain  import ask
+#     from chat_store import create_session, load_history
+
+#     c1, c2 = st.columns([2, 1])
+#     with c1:
+#         default_session = st.session_state.get("active_session", "default")
+#         session_id = st.text_input(
+#             "Session Name", value=default_session,
+#             placeholder="e.g. hr-queries"
+#         )
+#         st.session_state.active_session = session_id
+#     with c2:
+#         model = st.selectbox("Model", [
+#             "llama-3.3-70b-versatile",
+#             "meta-llama/llama-4-scout-17b-16e-instruct",
+#             "llama-3.1-8b-instant",
+#         ])
+
+#     full_session = f"{current_email}_{session_id}"
+
+#     # load history on session change
+#     if ("messages"     not in st.session_state or
+#         "last_session" not in st.session_state or
+#          st.session_state.last_session != full_session):
+
+#         st.session_state.last_session = full_session
+#         try:
+#             create_session(full_session)
+#             history = load_history(full_session)
+#             st.session_state.messages = [
+#                 {"role": "user" if m.type == "human"
+#                          else "assistant",
+#                  "content": m.content}
+#                 for m in history
+#             ]
+#         except Exception:
+#             st.session_state.messages = []
+
+#     # empty state with suggestions
+#     if not st.session_state.messages:
+#         st.markdown("""
+#         <div class="empty-state">
+#             <div style="font-size:48px;margin-bottom:12px;">💬</div>
+#             <div class="empty-state-title">Ask AssistHR Anything</div>
+#             <div class="empty-state-sub">
+#                 Questions are answered using your uploaded
+#                 HR documents via RAG
+#             </div>
+#         </div>
+#         """, unsafe_allow_html=True)
+
+#         sugs = [
+#             "What is the leave policy?",
+#             "What are the working hours?",
+#             "How to apply for remote work?",
+#             "What is the probation period?",
+#         ]
+#         cols = st.columns(len(sugs))
+#         for col, sug in zip(cols, sugs):
+#             with col:
+#                 if st.button(sug, use_container_width=True,
+#                              key=f"sug_{sug}"):
+#                     st.session_state.messages.append(
+#                         {"role": "user", "content": sug}
+#                     )
+#                     with st.spinner("AssistHR is thinking..."):
+#                         try:
+#                             ans = ask(sug, full_session, model)
+#                             st.session_state.messages.append(
+#                                 {"role": "assistant", "content": ans}
+#                             )
+#                             st.rerun()
+#                         except Exception as e:
+#                             st.error(f"❌ {e}")
+
+#     # show messages
+#     for msg in st.session_state.messages:
+#         avatar = "🧑‍💼" if msg["role"] == "user" else "🤖"
+#         with st.chat_message(msg["role"], avatar=avatar):
+#             st.write(msg["content"])
+
+
+#     if prompt := st.chat_input(
+#         "Ask about HR policies, leave, dress code..."
+#     ):
+#         st.session_state.messages.append(
+#             {"role": "user", "content": prompt}
+#         )
+#         with st.chat_message("user", avatar="🧑‍💼"):
+#             st.write(prompt)
+#         with st.chat_message("assistant", avatar="🤖"):
+#             with st.spinner("AssistHR is thinking..."):
+#                 try:
+#                     ans = ask(prompt, full_session, model)
+#                     st.write(ans)
+#                     st.session_state.messages.append(
+#                         {"role": "assistant", "content": ans}
+#                     )
+#                 except Exception as e:
+#                     st.error(f"❌ {e}")
 
 
     st.markdown(
