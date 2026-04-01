@@ -103,48 +103,69 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] * {
     font-family   : 'Plus Jakarta Sans', sans-serif !important;
 }
-[data-testid="stSidebar"] .stRadio label {
-    width         : 100% !important;
-    box-sizing    : border-box !important;
+/* Sidebar nav (buttons, not radio) */
+[data-testid="stSidebar"] [data-testid="baseButton-secondary"] {
+    background    : transparent !important;
+    border        : 1px solid transparent !important;
     color         : #94a3b8 !important;
-    font-size     : 13.5px !important;
+    justify-content : flex-start !important;
+    text-align    : left !important;
+    padding       : 10px 14px !important;
+    border-radius : 10px !important;
     font-weight   : 500 !important;
-    padding       : 10px 12px !important;
-    border-radius : 8px !important;
-    transition    : all 0.18s ease !important;
-    cursor        : pointer !important;
 }
-[data-testid="stSidebar"] .stRadio label:hover {
-    background    : rgba(255,255,255,0.07) !important;
+[data-testid="stSidebar"] [data-testid="baseButton-secondary"]:hover {
+    background    : rgba(255,255,255,0.08) !important;
     color         : #e2e8f0 !important;
+    border-color  : rgba(148,163,184,0.2) !important;
 }
-[data-testid="stSidebar"] .stRadio label:has(input:checked) {
-    background    : linear-gradient(135deg, rgba(37,99,235,.25), rgba(56,189,248,.18)) !important;
-    color         : #dbeafe !important;
-    border        : 1px solid rgba(96,165,250,.45) !important;
-}
-[data-testid="stSidebar"] .stRadio > div {
-    gap: 6px !important;
-    width: 100% !important;
-}
-[data-testid="stSidebar"] .stRadio > div > label {
-    margin: 0 !important;
-    width: 100% !important;
+[data-testid="stSidebar"] [data-testid="baseButton-primary"] {
+    justify-content : flex-start !important;
+    text-align    : left !important;
+    padding       : 10px 14px !important;
+    border-radius : 10px !important;
+    width         : 100% !important;
+    background    : linear-gradient(135deg, rgba(37,99,235,.35), rgba(56,189,248,.22)) !important;
+    border        : 1px solid rgba(96,165,250,.5) !important;
+    color         : #e0f2fe !important;
+    box-shadow    : 0 2px 12px rgba(37,99,235,.25) !important;
 }
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color         : #94a3b8 !important;
 }
+/* Collapse sidebar control: hide leaked icon font text, show arrow clearly */
 [data-testid="collapsedControl"]{
-    background:rgba(15,23,42,.9)!important;
-    border:1px solid rgba(148,163,184,.28)!important;
-    border-radius:10px!important;
+    background:rgba(15,23,42,.96)!important;
+    border:2px solid rgba(248,250,252,.85)!important;
+    border-radius:12px!important;
     position: fixed !important;
-    top: 10px !important;
-    left: 10px !important;
+    top: 12px !important;
+    left: 12px !important;
     z-index: 1000 !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,.35) !important;
 }
-[data-testid="collapsedControl"] svg{
-    fill:#e2e8f0!important;
+[data-testid="collapsedControl"] button {
+    font-size: 0 !important;
+    line-height: 0 !important;
+    color: transparent !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    padding: 8px !important;
+}
+[data-testid="collapsedControl"] svg {
+    width: 24px !important;
+    height: 24px !important;
+    fill: #f8fafc !important;
+    opacity: 1 !important;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
+}
+[data-testid="collapsedControl"] span:not(:has(svg)) {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
 }
 
 /* ══════════════════════════════════════════════════════════
