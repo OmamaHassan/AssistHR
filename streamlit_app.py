@@ -185,42 +185,43 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     color         : #94a3b8 !important;
 }
             
-
-[data-testid="collapsedControl"]{
-    background:linear-gradient(145deg,#1e293b 0%,#0f172a 100%)!important;
-    border:2px solid rgba(148,163,184,.55)!important;
-    border-radius:12px!important;
-    box-shadow:0 4px 14px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.06) inset!important;
-    z-index:999991!important;
-    min-width:44px!important;
-    min-height:44px!important;
-    position:fixed!important;
-    top:12px!important;
-    left:12px!important;
-    opacity:1!important;
-    visibility:visible!important;
-    display:flex!important;
-    align-items:center!important;
-    justify-content:center!important;
-    cursor:pointer!important;
-    transition:all 0.2s ease!important;
+[data-testid="collapsedControl"] {
+    background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%) !important;
+    border: 2px solid rgba(148, 163, 184, 0.55) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.06) inset !important;
+    z-index: 999999 !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    position: fixed !important;
+    top: 12px !important;
+    left: 12px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
 }
-[data-testid="collapsedControl"]:hover{
-    border-color:rgba(96,165,250,.85)!important;
-    box-shadow:0 6px 20px rgba(37,99,235,.35),0 0 0 1px rgba(96,165,250,.25) inset!important;
-    transform:scale(1.05)!important;
+[data-testid="collapsedControl"]:hover {
+    border-color: rgba(96, 165, 250, 0.85) !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35), 0 0 0 1px rgba(96, 165, 250, 0.25) inset !important;
+    transform: scale(1.05) !important;
 }
-[data-testid="collapsedControl"] svg{
-    fill:#f1f5f9!important;
-    width:22px!important;
-    height:22px!important;
-    filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
+[data-testid="collapsedControl"] svg {
+    fill: #f1f5f9 !important;
+    width: 22px !important;
+    height: 22px !important;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
 }
-/* When sidebar is collapsed, make button more visible */
+/* When sidebar is collapsed, make button more prominent */
 [data-testid="collapsedControl"][aria-expanded="false"] {
-    background:linear-gradient(145deg,#2563eb 0%,#1d4ed8 100%)!important;
-    border-color:rgba(96,165,250,.9)!important;
-    box-shadow:0 4px 20px rgba(37,99,235,.5)!important;
+    background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: rgba(96, 165, 250, 0.9) !important;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.5) !important;
 }
             
 
@@ -859,6 +860,24 @@ hr {
 [data-user-theme="dark"] .step-desc {
     color: var(--text-muted);
 }
+            
+
+
+/* Ensure sidebar doesn't overlap the collapse button */
+[data-testid="stSidebar"] {
+    margin-top: 0 !important;
+    z-index: 99999 !important;
+}
+
+/* When sidebar is expanded, adjust button position */
+[data-testid="stSidebar"][aria-expanded="true"] {
+    width: 248px !important;
+}
+
+/* Make sure the main content doesn't cover the button */
+[data-testid="stMain"] {
+    margin-left: 0 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -1060,6 +1079,38 @@ components.html(
       const body = window.parent.document.body;
       if (body) body.setAttribute("data-user-theme", mode);
 
+      function ensureCollapseButtonVisible() {{
+        const doc = window.parent.document;
+        const collapseBtn = doc.querySelector('[data-testid="collapsedControl"]');
+        
+        if (collapseBtn) {{
+          // Force visibility
+          collapseBtn.style.setProperty('opacity', '1', 'important');
+          collapseBtn.style.setProperty('visibility', 'visible', 'important');
+          collapseBtn.style.setProperty('display', 'flex', 'important');
+          collapseBtn.style.setProperty('position', 'fixed', 'important');
+          collapseBtn.style.setProperty('left', '12px', 'important');
+          collapseBtn.style.setProperty('top', '12px', 'important');
+          collapseBtn.style.setProperty('z-index', '999999', 'important');
+          collapseBtn.style.setProperty('pointer-events', 'auto', 'important');
+          
+          // Ensure click handler works
+          if (!collapseBtn.hasAttribute('data-listener')) {{
+            collapseBtn.setAttribute('data-listener', 'true');
+            collapseBtn.addEventListener('click', function(e) {{
+              // Small delay to ensure Streamlit registers the click
+              setTimeout(function() {{
+                const updatedBtn = doc.querySelector('[data-testid="collapsedControl"]');
+                if (updatedBtn) {{
+                  updatedBtn.style.setProperty('opacity', '1', 'important');
+                  updatedBtn.style.setProperty('visibility', 'visible', 'important');
+                }}
+              }}, 50);
+            }});
+          }}
+        }}
+      }}
+      
       function stripSidebarShortcutHints() {{
         const doc = window.parent.document;
         const cc = doc.querySelector('[data-testid="collapsedControl"]');
@@ -1078,43 +1129,49 @@ components.html(
         }});
       }}
       
-      function ensureCollapseButtonVisible() {{
-        const doc = window.parent.document;
-        const collapseBtn = doc.querySelector('[data-testid="collapsedControl"]');
-        
-        if (collapseBtn) {{
-          collapseBtn.style.opacity = '1';
-          collapseBtn.style.visibility = 'visible';
-          collapseBtn.style.display = 'flex';
-          collapseBtn.style.pointerEvents = 'auto';
-          collapseBtn.style.position = 'fixed';
-          collapseBtn.style.left = '12px';
-          collapseBtn.style.top = '12px';
-        }}
-      }}
-      
+      // Run immediately and repeatedly
       stripSidebarShortcutHints();
       ensureCollapseButtonVisible();
       
-      [200, 600, 1200, 2000].forEach(function(ms) {{ 
-        setTimeout(stripSidebarShortcutHints, ms);
-        setTimeout(ensureCollapseButtonVisible, ms);
+      // Run multiple times to catch dynamic changes
+      const intervals = [100, 500, 1000, 2000, 3000];
+      intervals.forEach(function(ms) {{
+        setTimeout(function() {{
+          stripSidebarShortcutHints();
+          ensureCollapseButtonVisible();
+        }}, ms);
       }});
       
+      // Watch for DOM changes
       try {{
-        const obs = new MutationObserver(function() {{
+        const observer = new MutationObserver(function() {{
           stripSidebarShortcutHints();
           ensureCollapseButtonVisible();
         }});
-        const sb = window.parent.document.querySelector('[data-testid="stSidebar"]');
-        if (sb) obs.observe(sb, {{ childList: true, subtree: true, attributes: true }});
-      }} catch (e) {{}}
+        
+        observer.observe(window.parent.document.body, {{ 
+          childList: true, 
+          subtree: true, 
+          attributes: true,
+          attributeFilter: ['class', 'style']
+        }});
+        
+        // Specifically watch sidebar
+        const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
+        if (sidebar) {{
+          const sidebarObserver = new MutationObserver(function() {{
+            ensureCollapseButtonVisible();
+          }});
+          sidebarObserver.observe(sidebar, {{ attributes: true, attributeFilter: ['aria-expanded'] }});
+        }}
+      }} catch (e) {{
+        console.log("Observer error:", e);
+      }}
     }})();
     </script>
     """,
     height=0,
 )
-
 
 page = st.sidebar.radio(
     "nav",
