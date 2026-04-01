@@ -184,10 +184,6 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color         : #94a3b8 !important;
 }
-
-
-
-
 [data-testid="collapsedControl"]{
     background:linear-gradient(145deg,#1e293b 0%,#0f172a 100%)!important;
     border:2px solid rgba(148,163,184,.55)!important;
@@ -197,20 +193,10 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     min-width:44px!important;
     min-height:44px!important;
     top:12px!important;
-    position:fixed!important;
-    left:12px!important;
-    transition:all 0.2s ease!important;
-    opacity:1!important;
-    visibility:visible!important;
-    display:flex!important;
-    align-items:center!important;
-    justify-content:center!important;
-    cursor:pointer!important;
 }
 [data-testid="collapsedControl"]:hover{
     border-color:rgba(96,165,250,.85)!important;
     box-shadow:0 6px 20px rgba(37,99,235,.35),0 0 0 1px rgba(96,165,250,.25) inset!important;
-    transform:scale(1.05)!important;
 }
 [data-testid="collapsedControl"] svg{
     fill:#f1f5f9!important;
@@ -218,34 +204,12 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     height:22px!important;
     filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
 }
-/* Style when sidebar is collapsed */
-[data-testid="collapsedControl"][aria-expanded="false"],
-[data-testid="collapsedControl"][data-state="collapsed"] {
-    opacity:1!important;
-    visibility:visible!important;
-    left:12px!important;
-    background:linear-gradient(145deg,#2563eb 0%,#1d4ed8 100%)!important;
-    border-color:rgba(96,165,250,.9)!important;
-    box-shadow:0 4px 20px rgba(37,99,235,.5)!important;
-}
-/* Position when sidebar is expanded */
-[data-testid="stSidebar"][aria-expanded="true"] + [data-testid="collapsedControl"] {
-    left:260px!important;
-}
-/* Hide keyboard shortcut hints */
+/* Hide keyboard-shortcut hint text/icon clutter on sidebar controls */
 [data-testid="stSidebar"] kbd,
 [data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
 [data-testid="stSidebar"] .st-keyboard-shortcut {
     display:none!important;
-}          
-
-/* When sidebar is expanded, button sits at top-left */
-[data-testid="stSidebar"][aria-expanded="true"] + [data-testid="collapsedControl"] {
-    left: 260px !important;
 }
-        
-
-
 
 /* ══════════════════════════════════════════════════════════
    METRIC CARDS — theme aware
@@ -439,16 +403,10 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     border-color  : #2563eb !important;
     background    : #eff6ff !important;
 }
-/* Dark theme file uploader */
-[data-theme="dark"] [data-testid="stFileUploader"],
-[data-user-theme="dark"] [data-testid="stFileUploader"] {
-    background    : #1e293b !important;
-    border-color  : #475569 !important;
-}
 [data-theme="dark"] [data-testid="stFileUploader"]:hover,
 [data-user-theme="dark"] [data-testid="stFileUploader"]:hover {
     border-color  : #3b82f6 !important;
-    background    : #2d3a4f !important;
+    background    : rgba(37, 99, 235, 0.12) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -495,7 +453,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     color: #ffffff !important;
 }
 
-/* Chat composer — HR Q&A (sleek, professional, reduced height) */
+/* Chat composer — HR Q&A (sleek, professional) */
 [data-testid="stChatInput"] {
     border-radius: 22px !important;
     border: 1px solid var(--border) !important;
@@ -503,7 +461,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     box-shadow:
         0 1px 2px rgba(15, 23, 42, 0.06),
         0 8px 32px rgba(15, 23, 42, 0.08) !important;
-    padding: 4px 8px 4px 12px !important;
+    padding: 6px 8px 6px 12px !important;
     max-width: min(920px, 100%) !important;
     margin-left: auto !important;
     margin-right: auto !important;
@@ -530,11 +488,11 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
         0 12px 40px rgba(0, 0, 0, 0.5) !important;
 }
 [data-testid="stChatInput"] textarea {
-    min-height: 48px !important;
-    padding: 12px 16px !important;
-    font-size: 14px !important;
+    min-height: 56px !important;
+    padding: 16px 18px !important;
+    font-size: 15px !important;
     letter-spacing: 0.01em !important;
-    line-height: 1.4 !important;
+    line-height: 1.5 !important;
     border: none !important;
     background: transparent !important;
     color: var(--text-main) !important;
@@ -895,7 +853,6 @@ hr {
 
 
 
-
 # ══════════════════════════════════════════════════════════════
 # AUTH
 # ══════════════════════════════════════════════════════════════
@@ -1072,7 +1029,6 @@ theme_choice = st.sidebar.selectbox(
     key="ui_theme",
 )
 
-
 components.html(
     f"""
     <script>
@@ -1110,64 +1066,18 @@ components.html(
           }}
         }});
       }}
-      
-      // New function to ensure collapse button remains visible
-      function ensureCollapseButtonVisible() {{
-        const doc = window.parent.document;
-        const collapseBtn = doc.querySelector('[data-testid="collapsedControl"]');
-        
-        if (collapseBtn) {{
-          collapseBtn.style.opacity = '1';
-          collapseBtn.style.visibility = 'visible';
-          collapseBtn.style.display = 'flex';
-          collapseBtn.style.pointerEvents = 'auto';
-          
-          collapseBtn.offsetHeight;
-          
-          if (!collapseBtn.hasAttribute('data-listener')) {{
-            collapseBtn.setAttribute('data-listener', 'true');
-            collapseBtn.addEventListener('click', function(e) {{
-              setTimeout(function() {{
-                const updatedBtn = doc.querySelector('[data-testid="collapsedControl"]');
-                if (updatedBtn) {{
-                  updatedBtn.style.opacity = '1';
-                  updatedBtn.style.visibility = 'visible';
-                }}
-              }}, 50);
-            }});
-          }}
-        }}
-      }}
-      
       stripSidebarShortcutHints();
-      ensureCollapseButtonVisible();
-      
-      [200, 600, 1200, 2000].forEach(function(ms) {{ 
-        setTimeout(stripSidebarShortcutHints, ms);
-        setTimeout(ensureCollapseButtonVisible, ms);
-      }});
-      
+      [200, 600, 1200].forEach(function(ms) {{ setTimeout(stripSidebarShortcutHints, ms); }});
       try {{
-        const obs = new MutationObserver(function() {{
-          stripSidebarShortcutHints();
-          ensureCollapseButtonVisible();
-        }});
+        const obs = new MutationObserver(stripSidebarShortcutHints);
         const sb = window.parent.document.querySelector('[data-testid="stSidebar"]');
         if (sb) obs.observe(sb, {{ childList: true, subtree: true, attributes: true }});
-        
-        const container = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
-        if (container) {{
-          const containerObs = new MutationObserver(ensureCollapseButtonVisible);
-          containerObs.observe(container, {{ attributes: true, attributeFilter: ['class', 'style'] }});
-        }}
       }} catch (e) {{}}
     }})();
     </script>
     """,
     height=0,
 )
-
-
 
 page = st.sidebar.radio(
     "nav",
