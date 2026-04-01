@@ -1,6 +1,7 @@
 import os
 import sys
 import streamlit as st
+import streamlit.components.v1 as components
 from supabase import create_client
 
 # ─── PATH FIX ────────────────────────────────────────────────
@@ -54,7 +55,7 @@ st.markdown("""
     --text-muted: #64748b;
     --border: #e2e8f0;
 }
-[data-theme="dark"] {
+[data-theme="dark"], [data-user-theme="dark"] {
     --app-bg: #0b1220;
     --surface: #1e293b;
     --surface-2: #111827;
@@ -71,7 +72,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stAppViewContainer"] {
     background  : var(--app-bg) !important;
 }
-#MainMenu, footer, header { visibility: hidden; }
+#MainMenu, footer { visibility: hidden; }
 .block-container {
     padding-top   : 24px !important;
     padding-left  : 32px !important;
@@ -85,8 +86,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] {
     background    : linear-gradient(180deg, #0f172a 0%, #111b34 100%) !important;
     border-right  : 1px solid rgba(148,163,184,0.18) !important;
-    min-width     : 248px !important;
-    max-width     : 248px !important;
+    width         : 248px !important;
 }
 [data-testid="stSidebar"] * {
     font-family   : 'Plus Jakarta Sans', sans-serif !important;
@@ -111,6 +111,14 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color         : #94a3b8 !important;
+}
+[data-testid="collapsedControl"]{
+    background:rgba(15,23,42,.9)!important;
+    border:1px solid rgba(148,163,184,.28)!important;
+    border-radius:10px!important;
+}
+[data-testid="collapsedControl"] svg{
+    fill:#e2e8f0!important;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -698,6 +706,39 @@ st.sidebar.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+if "ui_theme" not in st.session_state:
+    st.session_state.ui_theme = "System"
+
+theme_choice = st.sidebar.selectbox(
+    "Theme",
+    ["System", "Light", "Dark"],
+    index=["System", "Light", "Dark"].index(st.session_state.ui_theme),
+    key="ui_theme",
+)
+
+components.html(
+    f"""
+    <script>
+    (function() {{
+      const root = window.parent.document.documentElement;
+      const app = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+      const main = window.parent.document.querySelector('[data-testid="stMain"]');
+      const choice = "{theme_choice}";
+      let mode = "light";
+      if (choice === "Dark") mode = "dark";
+      else if (choice === "System") {{
+        mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }}
+      root.setAttribute("data-user-theme", mode);
+      root.setAttribute("data-theme", mode);
+      if (app) app.setAttribute("data-theme", mode);
+      if (main) main.setAttribute("data-theme", mode);
+    }})();
+    </script>
+    """,
+    height=0,
+)
+
 st.sidebar.markdown("""
 <div style="padding:0 16px 10px;">
     <div style="display:flex;gap:8px;">
@@ -726,6 +767,60 @@ page = st.sidebar.radio(
 
 st.sidebar.markdown("<div style='margin-top:12px'></div>",
                     unsafe_allow_html=True)
+
+if page == "💬  HR Q&A":
+    st.sidebar.markdown("""
+    <div style="padding:0 16px 6px;">
+        <div style="color:#64748b;font-size:9px;letter-spacing:1.4px;
+                    text-transform:uppercase;font-weight:700;">
+            Chat Sessions
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if "active_session" not in st.session_state:
+        st.session_state.active_session = "default"
+
+    if st.sidebar.button("＋ New Session", use_container_width=True, key="new_session_btn"):
+        import time
+        st.session_state.active_session = f"chat-{int(time.time())}"
+        st.session_state.messages = []
+        st.session_state.last_session = ""
+        st.rerun()
+
+    try:
+        from chat_store import get_conn as _gc
+        _conn = _gc()
+        _cur = _conn.cursor()
+        _cur.execute(
+            """
+            SELECT session_id FROM sessions
+            WHERE session_id LIKE %s
+            ORDER BY last_active DESC LIMIT 8
+            """,
+            (f"{current_email}_%",)
+        )
+        _rows = _cur.fetchall()
+        _conn.close()
+
+        for row in _rows:
+            raw = row[0]
+            disp = raw.split("_", 1)[1] if "_" in raw else raw
+            is_active = disp == st.session_state.active_session
+            icon = "🤖" if is_active else "💬"
+            if st.sidebar.button(
+                f"{icon}  {disp}",
+                key=f"chat_session_{raw}",
+                use_container_width=True,
+                type="primary" if is_active else "secondary",
+            ):
+                st.session_state.active_session = disp
+                st.session_state.messages = []
+                st.session_state.last_session = ""
+                st.rerun()
+    except Exception:
+        pass
+
 st.sidebar.divider()
 
 st.sidebar.markdown(f"""
@@ -1061,10 +1156,12 @@ elif page == "💬  HR Q&A":
 
     c1, c2 = st.columns([2, 1])
     with c1:
+        default_session = st.session_state.get("active_session", "default")
         session_id = st.text_input(
-            "Session Name", value="default",
+            "Session Name", value=default_session,
             placeholder="e.g. hr-queries"
         )
+        st.session_state.active_session = session_id
     with c2:
         model = st.selectbox("Model", [
             "llama-3.3-70b-versatile",
