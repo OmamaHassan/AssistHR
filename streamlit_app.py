@@ -224,14 +224,6 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
             
 
-
-/* Hide keyboard-shortcut hint text/icon clutter on sidebar controls */
-[data-testid="stSidebar"] kbd,
-[data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
-[data-testid="stSidebar"] .st-keyboard-shortcut {
-    display:none!important;
-}
-
 /* ══════════════════════════════════════════════════════════
    METRIC CARDS — theme aware
 ══════════════════════════════════════════════════════════ */
