@@ -846,8 +846,38 @@ hr {
 [data-user-theme="dark"] .step-desc {
     color: var(--text-muted);
 }
+            
+
+[data-theme="dark"] [data-testid="stFileUploader"] {
+    background : #162032   ← dark slate, no white flash
+    border     : #334155   ← subtle dark border
+}
+/* hover in dark */
+[data-theme="dark"] [data-testid="stFileUploader"]:hover {
+    background : rgba(37,99,235,0.12)  ← blue tint
+    border     : #3b82f6
+}
+
+
+
+[data-testid="stChatInput"] textarea {
+    min-height : 44px   ← was huge before
+    max-height : 110px  ← auto-grows but stays small
+    padding    : 12px 16px
+    font-size  : 14px
+}
+            
+[data-testid="collapsedControl"] {
+    background : linear-gradient(135deg,#1d4ed8,#2563eb)
+    border     : 2.5px solid #93c5fd   ← light blue outline
+    box-shadow : 0 4px 18px rgba(37,99,235,0.55)
+}
+/* hover: even brighter + slight scale */
+:hover { transform: scale(1.08); box-shadow: 0 6px 28px ... }
 </style>
 """, unsafe_allow_html=True)
+
+
 
 
 # ══════════════════════════════════════════════════════════════
@@ -1608,13 +1638,6 @@ elif page == "💬  HR Q&A":
         with st.chat_message(msg["role"], avatar=avatar):
             st.write(msg["content"])
 
-    st.markdown(
-        '<div class="qa-rag-footer">'
-        "💡 Answers sourced from uploaded documents using "
-        "<strong>Retrieval-Augmented Generation (RAG)</strong>."
-        "</div>",
-        unsafe_allow_html=True,
-    )
 
     if prompt := st.chat_input(
         "Ask about HR policies, leave, dress code..."
@@ -1634,6 +1657,14 @@ elif page == "💬  HR Q&A":
                     )
                 except Exception as e:
                     st.error(f"❌ {e}")
+
+    st.markdown(
+        '<div class="qa-rag-footer">'
+        "💡 Answers sourced from uploaded documents using "
+        "<strong>Retrieval-Augmented Generation (RAG)</strong>."
+        "</div>",
+        unsafe_allow_html=True,
+    )
 
 
 # ══════════════════════════════════════════════════════════════
