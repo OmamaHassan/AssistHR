@@ -505,10 +505,10 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stChatMessageAvatarUser"]      { background: linear-gradient(135deg, #2563eb, #3b82f6) !important; color: #ffffff !important; }
 [data-testid="stChatMessageAvatarAssistant"] { background: linear-gradient(135deg, #0891b2, #14b8a6) !important; color: #ffffff !important; }
 
-            
-/* ══════════════════════════════════════════════════════════
-   HR Q&A INPUT — IMPROVED (clean blue focus, no harsh borders)
+  /* ══════════════════════════════════════════════════════════
+   CHAT INPUT — IMPROVED (modern bot style, full dark/light support)
 ══════════════════════════════════════════════════════════ */
+
 /* ============================= */
 /* MAIN CHAT INPUT CONTAINER */
 /* ============================= */
@@ -521,33 +521,33 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 /* INPUT BOX WRAPPER */
 [data-testid="stChatInput"] > div {
     width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important; /* space between textarea and send button */
     border-radius: 28px !important;
     border: 1.5px solid rgba(59,130,246,0.35) !important;
-    background: #ffffff !important;  /* force uniform color */
+    background: #ffffff !important;  /* light mode base */
     box-shadow: 0 6px 20px rgba(0,0,0,0.08) !important;
+    padding: 0 16px !important; /* horizontal padding */
+    min-height: 56px !important; /* consistent height */
+    box-sizing: border-box !important;
     transition: all 0.25s ease !important;
 }
-            
 
-
-/* ============================= */
-/* DARK MODE FIX (UNIFORM AREA) */
-/* ============================= */
+/* DARK MODE INPUT AREA */
 [data-theme="dark"] [data-testid="stChatInput"] > div,
 [data-user-theme="dark"] [data-testid="stChatInput"] > div {
-    background: #0f172a !important;   /* single solid color */
+    background: #0f172a !important;   /* dark solid color */
     border: 1.5px solid rgba(96,165,250,0.4) !important;
     box-shadow: 0 10px 35px rgba(0,0,0,0.6) !important;
 }
 
-/* ============================= */
-/* FOCUS EFFECT */
-/* ============================= */
+/* FOCUS EFFECT ON INPUT */
 [data-testid="stChatInput"] > div:focus-within {
     border-color: #3b82f6 !important;
     box-shadow: 
-        0 0 0 4px rgba(59,130,246,0.2),
-        0 10px 30px rgba(37,99,235,0.25) !important;
+        0 0 0 4px rgba(59,130,246,0.25),
+        0 10px 30px rgba(37,99,235,0.3) !important;
 }
 
 [data-theme="dark"] [data-testid="stChatInput"] > div:focus-within,
@@ -562,15 +562,33 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 /* TEXT AREA INSIDE INPUT */
 /* ============================= */
 [data-testid="stChatInput"] textarea {
+    flex-grow: 1 !important;
+    resize: none !important;
+    border: none !important;
+    outline: none !important;
     background: transparent !important;
     color: inherit !important;
-    padding: 14px 16px !important;
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+    min-height: 40px !important;
+    max-height: 80px !important;
+    padding: 14px 0 !important; /* vertical padding only */
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* Placeholder styling */
+[data-testid="stChatInput"] textarea::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.7 !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
 }
 
 /* ============================= */
-/* SEND BUTTON FIX */
+/* SEND BUTTON STYLE */
 /* ============================= */
 [data-testid="stChatInput"] button {
+    flex-shrink: 0 !important;
     border-radius: 50% !important;
     background: #3b82f6 !important;
     color: white !important;
@@ -580,6 +598,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     align-items: center !important;
     justify-content: center !important;
     box-shadow: 0 4px 14px rgba(59,130,246,0.35) !important;
+    transition: all 0.25s ease !important;
 }
 
 /* SEND ICON (SVG) */
@@ -597,22 +616,36 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 
 /* ============================= */
-/* CENTERED HELPER TEXT */
+/* RAG HELPER TEXT (CENTERED BELOW INPUT) */
 /* ============================= */
 .rag-helper-text {
-    text-align: center;
-    font-size: 13px;
-    margin-top: 8px;
-    color: var(--text-muted);
-    width: 100%;
+    text-align: center !important;
+    font-size: 13px !important;
+    margin-top: 10px !important;
+    color: var(--text-muted) !important;
+    width: 100% !important;
+    user-select: none !important;
+    font-weight: 500 !important;
 }
 
-/* DARK TEXT */
 [data-theme="dark"] .rag-helper-text,
 [data-user-theme="dark"] .rag-helper-text {
-    color: #94a3b8;
+    color: #94a3b8 !important;
 }
 
+/* ============================= */
+/* FULL FOOTER BACKGROUND DARK MODE */
+/* ============================= */
+[data-theme="dark"] .stBottom,
+[data-user-theme="dark"] .stBottom {
+    background-color: #0f172a !important;
+}
+
+/* ============================= */
+/* OPTIONAL: smooth hover effect for send button */
+[data-testid="stChatInput"] button:hover {
+    filter: brightness(1.1) !important;
+}
 /* ══════════════════════════════════════════════════════════
    MISC
 ══════════════════════════════════════════════════════════ */
@@ -692,12 +725,7 @@ input:focus, textarea:focus, input:hover, textarea:hover {
 }    
 
             
-.stBottom.st-emotion-cache-1p2n2i4.eqt0gmo2{
-    background-color: #0f172a !important;  /* dark blue background */
-    padding: 12px 20px !important;         /* optional: add some padding */
-    border-radius: 36px !important;        /* match the rounding */
-}
-}       
+             
 </style>
 """, unsafe_allow_html=True)
 
