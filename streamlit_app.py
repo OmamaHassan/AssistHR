@@ -191,11 +191,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color         : #94a3b8 !important;
 }
-[data-testid="collapsedControl"] {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
+
 [data-testid="collapsedControl"]{
     background:linear-gradient(145deg,#1e293b 0%,#0f172a 100%)!important;
     border:2px solid rgba(148,163,184,.55)!important;
@@ -216,6 +212,13 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     height:22px!important;
     filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
 }
+            
+[data-testid="collapsedControl"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+            
 /* Hide keyboard-shortcut hint text/icon clutter on sidebar controls */
 [data-testid="stSidebar"] kbd,
 [data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
