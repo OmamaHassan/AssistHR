@@ -792,7 +792,7 @@ def login_page():
         with tab1:
             email    = st.text_input("Email", key="login_email", placeholder="you@company.com")
             password = st.text_input("Password", type="password", key="login_pass", placeholder="••••••••")
-            if st.button("Login →", use_container_width=True, type="primary", key="login_btn"):
+            if st.button("Login →", type="primary", key="login_btn"):
                 if not email or not password:
                     st.error("Please fill in all fields.")
                 else:
