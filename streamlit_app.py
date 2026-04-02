@@ -608,7 +608,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     height: 18px !important;
 }
 
-            /* ══════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    CHAT INPUT — FIXED FOR DARK THEME
 ══════════════════════════════════════════════════════════ */
 
@@ -656,12 +656,24 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     color: #94a3b8;
 }
 
-/* ============================= */
-/* FULL FOOTER BACKGROUND DARK MODE */
-/* ============================= */
+/* ══════════════════════════════════════════════════════════
+   FOOTER — DARK MODE COMPLETE FIX
+══════════════════════════════════════════════════════════ */
 [data-theme="dark"] .stBottom,
-[data-user-theme="dark"] .stBottom {
+[data-user-theme="dark"] .stBottom,
+[data-theme="dark"] [data-testid="stBottom"],
+[data-user-theme="dark"] [data-testid="stBottom"],
+[data-theme="dark"] [data-testid="stBottomBlockContainer"],
+[data-user-theme="dark"] [data-testid="stBottomBlockContainer"],
+[data-theme="dark"] .stBottom > div,
+[data-user-theme="dark"] .stBottom > div,
+[data-theme="dark"] [data-testid="stBottomBlockContainer"] > div,
+[data-user-theme="dark"] [data-testid="stBottomBlockContainer"] > div,
+[data-theme="dark"] section[data-testid="stBottom"],
+[data-user-theme="dark"] section[data-testid="stBottom"] {
+    background: #0f172a !important;
     background-color: #0f172a !important;
+    border-top: 1px solid #1e293b !important;
 }
 
  /* ============================= */
