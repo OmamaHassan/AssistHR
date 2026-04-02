@@ -527,6 +527,8 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     box-shadow: 0 6px 20px rgba(0,0,0,0.08) !important;
     transition: all 0.25s ease !important;
 }
+            
+
 
 /* ============================= */
 /* DARK MODE FIX (UNIFORM AREA) */
@@ -690,7 +692,12 @@ input:focus, textarea:focus, input:hover, textarea:hover {
 }    
 
             
-             
+.stBottom.st-emotion-cache-1p2n2i4.eqt0gmo2{
+    background-color: #0f172a !important;  /* dark blue background */
+    padding: 12px 20px !important;         /* optional: add some padding */
+    border-radius: 36px !important;        /* match the rounding */
+}
+}       
 </style>
 """, unsafe_allow_html=True)
 
