@@ -357,6 +357,9 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 /* ══════════════════════════════════════════════════════════
    FILE UPLOADER
 ══════════════════════════════════════════════════════════ */
+            
+
+
 [data-testid="stFileUploader"] {
     border       : 2px dashed var(--border) !important;
     border-radius: 12px !important;
@@ -374,6 +377,13 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-user-theme="dark"] [data-testid="stFileUploader"] * {
     color: #94a3b8 !important;
 }
+            
+[data-theme="dark"] [data-testid="stFileUploader"],
+[data-user-theme="dark"] [data-testid="stFileUploader"] {
+    background   : #0f172a !important;
+    border-color : #334155 !important;
+}
+
 [data-theme="dark"] [data-testid="stFileUploader"] svg,
 [data-user-theme="dark"] [data-testid="stFileUploader"] svg {
     fill: #475569 !important;
@@ -454,8 +464,8 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
                   inset 0 1px 0 rgba(255,255,255,0.06) !important;
 }
 [data-testid="stChatInput"] textarea {
-    min-height    : 52px !important;
-    padding       : 14px 16px !important;
+    min-height    : 36px !important;
+    padding       : 10px 14px !important;
     font-size     : 14.5px !important;
     letter-spacing: 0.01em !important;
     line-height   : 1.55 !important;
@@ -487,7 +497,25 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stChatInput"] button svg {
     fill: #ffffff !important;
 }
-
+/* Kill the white wrapper Streamlit puts around the chat input */
+[data-theme="dark"] [data-testid="stBottomBlockContainer"],
+[data-user-theme="dark"] [data-testid="stBottomBlockContainer"] {
+    background: #0b1220 !important;
+    box-shadow: none !important;
+}
+[data-theme="dark"] [data-testid="stBottomBlockContainer"]::before,
+[data-user-theme="dark"] [data-testid="stBottomBlockContainer"]::before {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+[data-theme="dark"] section[data-testid="stBottom"],
+[data-user-theme="dark"] section[data-testid="stBottom"] {
+    background: #0b1220 !important;
+}
+[data-theme="dark"] [data-testid="stChatInput"] > div,
+[data-user-theme="dark"] [data-testid="stChatInput"] > div {
+    background: transparent !important;
+}
 
 .qa-rag-footer {
     text-align  : center;
