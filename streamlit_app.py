@@ -359,37 +359,21 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 /* ══════════════════════════════════════════════════════════
 
 /* ══════════════════════════════════════════════════════════
-   KEEP BUTTON, REMOVE DUPLICATE TEXT
+   FILE UPLOADER — FINAL CLEAN VERSION
 ══════════════════════════════════════════════════════════ */
 
-/* Hide only text elements */
-[data-testid="stFileUploader"] section div {
-    font-size: 0 !important;
-}
-
-
-/* Custom label */
-[data-testid="stFileUploader"] section::before {
-    content: "📄 Drag & drop your file or click to upload";
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-muted);
-    margin-bottom: 10px;
-    text-align: center;
-}
-/* Wrapper */
+/* Wrapper cleanup */
 [data-testid="stFileUploader"] {
     border: none !important;
     padding: 0 !important;
 }
 
-/* REAL DROP AREA (this is the important element) */
+/* MAIN DROP AREA */
 [data-testid="stFileUploader"] section {
     border: 2px dashed var(--border) !important;
     border-radius: 14px !important;
     background: var(--surface-2) !important;
-    padding: 28px 20px !important;
+    padding: 30px 20px !important;
     text-align: center !important;
     transition: all 0.25s ease !important;
     cursor: pointer !important;
@@ -410,7 +394,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.03) !important;
 }
 
-/* DARK HOVER — BLUE GLOW EFFECT */
+/* DARK HOVER */
 [data-theme="dark"] [data-testid="stFileUploader"] section:hover,
 [data-user-theme="dark"] [data-testid="stFileUploader"] section:hover {
     border-color: #60a5fa !important;
@@ -424,25 +408,49 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
         0 10px 30px rgba(0,0,0,0.5) !important;
 }
 
-/* TEXT + ICON COLOR */
-[data-testid="stFileUploader"] section * {
-    color: var(--text-muted) !important;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
+/* ══════════════════════════════════════════════════════════
+   REMOVE DEFAULT ELEMENTS
+══════════════════════════════════════════════════════════ */
+
+/* Remove upload button */
+[data-testid="stFileUploader"] section button {
+    display: none !important;
 }
 
-/* DARK TEXT */
-[data-theme="dark"] [data-testid="stFileUploader"] section *,
-[data-user-theme="dark"] [data-testid="stFileUploader"] section * {
-    color: #94a3b8 !important;
+/* Remove "200MB limit" text */
+[data-testid="stFileUploader"] small,
+[data-testid="stFileUploader"] section small {
+    display: none !important;
 }
 
-/* ICON (SVG upload icon) */
+/* Hide default text (without breaking layout) */
+[data-testid="stFileUploader"] section div {
+    font-size: 0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   CUSTOM LABEL
+══════════════════════════════════════════════════════════ */
+
+[data-testid="stFileUploader"] section::before {
+    content: "📄 Drag & drop your file or click to upload";
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ICON STYLING
+══════════════════════════════════════════════════════════ */
+
 [data-testid="stFileUploader"] section svg {
     fill: #64748b !important;
+    margin-bottom: 8px;
     transition: all 0.2s ease !important;
 }
 
-/* ICON HOVER */
 [data-testid="stFileUploader"] section:hover svg {
     fill: #3b82f6 !important;
 }
@@ -453,23 +461,12 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     fill: #475569 !important;
 }
 
-/* DARK ICON HOVER */
 [data-theme="dark"] [data-testid="stFileUploader"] section:hover svg,
 [data-user-theme="dark"] [data-testid="stFileUploader"] section:hover svg {
     fill: #93c5fd !important;
 }
-
-/* REMOVE DEFAULT BUTTON STYLE INSIDE */
-[data-testid="stFileUploader"] button {
-    border-radius: 8px !important;
-    border: 1px solid var(--border) !important;
-    background: transparent !important;
-    font-size: 12px !important;
-    padding: 6px 12px !important;
-}
-
-      
-
+            
+            
 /* ══════════════════════════════════════════════════════════
    EXPANDER
 ══════════════════════════════════════════════════════════ */
