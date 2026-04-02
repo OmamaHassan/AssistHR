@@ -101,7 +101,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 #MainMenu, footer { visibility: hidden; }
 
 /* Hide default Streamlit header — sidebar toggle is managed by Streamlit JS, not CSS */
-[data-testid="stHeader"]     { display: none !important; }
+[data-testid="stHeader"]     { visibility: hidden !important; }
 [data-testid="stDecoration"] { display: none !important; }
 [data-testid="stToolbar"]    { display: none !important; }
 
