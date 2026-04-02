@@ -507,20 +507,6 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
    CHAT INPUT — FULLY FIXED, DARK & LIGHT, AUTO-EXPANDING
 ══════════════════════════════════════════════════════════ */
 
-/* ============================= */
-/* WRAPPER / FOOTER CONSISTENCY */
-/* ============================= */
-.stBottom {
-    background: var(--surface) !important;
-    padding: 12px 20px !important;
-    display: flex !important;
-    justify-content: center !important;
-}
-
-[data-theme="dark"] .stBottom,
-[data-user-theme="dark"] .stBottom {
-    background: #0f172a !important; /* uniform dark footer */
-}
 
 /* ============================= */
 /* MAIN CHAT INPUT CONTAINER */
