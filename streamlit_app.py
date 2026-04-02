@@ -692,8 +692,20 @@ input:focus, textarea:focus, input:hover, textarea:hover {
 [data-theme="dark"] .stBottom,
 [data-user-theme="dark"] .stBottom {
     background-color: #0f172a !important;
-}           
-             
+}
+
+/* Outer container background for chat input area */
+[data-testid="stChatInput"] {
+    background-color: #0f172a !important;  /* dark blue shade */
+    padding: 12px 20px !important;          /* add some space around */
+    border-radius: 36px !important;         /* smooth rounding to match inner */
+}
+
+/* Dark mode overrides */
+[data-theme="dark"] [data-testid="stChatInput"],
+[data-user-theme="dark"] [data-testid="stChatInput"] {
+    background-color: #0f172a !important;
+}        
 </style>
 """, unsafe_allow_html=True)
 
