@@ -375,7 +375,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 [data-theme="dark"] [data-testid="stFileUploader"] *,
 [data-user-theme="dark"] [data-testid="stFileUploader"] * {
-    color: #94a3b8 !important;
+    color: #0f172a !important;
 }
             
 [data-theme="dark"] [data-testid="stFileUploader"],
