@@ -103,8 +103,15 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 #MainMenu, footer { visibility: hidden; }
 /* Remove default Streamlit header strip (empty / awkward gap) */
-[data-testid="stHeader"],
+[data-testid="stHeader"] {
+    background: transparent !important;
+    height: 0px !important;
+    min-height: 0px !important;
+}
 [data-testid="stDecoration"] {
+    display: none !important;
+}
+[data-testid="stToolbar"] {
     display: none !important;
 }
 .block-container {
@@ -183,6 +190,11 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color         : #94a3b8 !important;
+}
+[data-testid="collapsedControl"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 [data-testid="collapsedControl"]{
     background:linear-gradient(145deg,#1e293b 0%,#0f172a 100%)!important;
