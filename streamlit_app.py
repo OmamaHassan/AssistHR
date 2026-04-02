@@ -508,87 +508,93 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
   /* ══════════════════════════════════════════════════════════
    CHAT INPUT — IMPROVED (modern bot style, full dark/light support)
 ══════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   CHAT INPUT — FULLY FIXED, DARK & LIGHT, AUTO-EXPANDING
+══════════════════════════════════════════════════════════ */
+
+/* ============================= */
+/* WRAPPER / FOOTER CONSISTENCY */
+/* ============================= */
+.stBottom {
+    background: var(--surface) !important;
+    padding: 12px 20px !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
+[data-theme="dark"] .stBottom,
+[data-user-theme="dark"] .stBottom {
+    background: #0f172a !important; /* uniform dark footer */
+}
 
 /* ============================= */
 /* MAIN CHAT INPUT CONTAINER */
 /* ============================= */
 [data-testid="stChatInput"] {
     display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
+    flex-direction: row !important;
+    align-items: flex-end !important;
+    width: 100% !important;
 }
 
 /* INPUT BOX WRAPPER */
 [data-testid="stChatInput"] > div {
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important; /* space between textarea and send button */
+    flex-grow: 1 !important;
     border-radius: 28px !important;
     border: 1.5px solid rgba(59,130,246,0.35) !important;
-    background: #ffffff !important;  /* light mode base */
+    background: #ffffff !important;
     box-shadow: 0 6px 20px rgba(0,0,0,0.08) !important;
-    padding: 0 16px !important; /* horizontal padding */
-    min-height: 56px !important; /* consistent height */
-    box-sizing: border-box !important;
     transition: all 0.25s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 6px 14px !important;
+    min-height: 44px !important;
 }
 
-/* DARK MODE INPUT AREA */
+/* DARK MODE INPUT BOX */
 [data-theme="dark"] [data-testid="stChatInput"] > div,
 [data-user-theme="dark"] [data-testid="stChatInput"] > div {
-    background: #0f172a !important;   /* dark solid color */
+    background: #0f172a !important;
     border: 1.5px solid rgba(96,165,250,0.4) !important;
     box-shadow: 0 10px 35px rgba(0,0,0,0.6) !important;
 }
 
-/* FOCUS EFFECT ON INPUT */
+/* FOCUS EFFECT */
 [data-testid="stChatInput"] > div:focus-within {
     border-color: #3b82f6 !important;
-    box-shadow: 
-        0 0 0 4px rgba(59,130,246,0.25),
-        0 10px 30px rgba(37,99,235,0.3) !important;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.2),
+                0 10px 30px rgba(37,99,235,0.25) !important;
 }
 
 [data-theme="dark"] [data-testid="stChatInput"] > div:focus-within,
 [data-user-theme="dark"] [data-testid="stChatInput"] > div:focus-within {
     border-color: #60a5fa !important;
-    box-shadow: 
-        0 0 0 4px rgba(96,165,250,0.25),
-        0 12px 40px rgba(37,99,235,0.4) !important;
+    box-shadow: 0 0 0 4px rgba(96,165,250,0.25),
+                0 12px 40px rgba(37,99,235,0.4) !important;
 }
 
 /* ============================= */
-/* TEXT AREA INSIDE INPUT */
+/* TEXT AREA STYLING (AUTO-EXPAND) */
 /* ============================= */
 [data-testid="stChatInput"] textarea {
     flex-grow: 1 !important;
-    resize: none !important;
-    border: none !important;
-    outline: none !important;
     background: transparent !important;
     color: inherit !important;
-    font-size: 16px !important;
-    line-height: 1.4 !important;
-    min-height: 40px !important;
-    max-height: 80px !important;
-    padding: 14px 0 !important; /* vertical padding only */
+    border: none !important;
+    outline: none !important;
+    resize: none !important;
+    overflow: hidden !important;
+    min-height: 28px !important;
+    line-height: 1.4em !important;
     font-family: 'Plus Jakarta Sans', sans-serif !important;
-}
-
-/* Placeholder styling */
-[data-testid="stChatInput"] textarea::placeholder {
-    color: var(--text-muted) !important;
-    opacity: 0.7 !important;
-    font-weight: 500 !important;
     font-size: 14px !important;
+    padding: 8px 0 !important;
 }
 
 /* ============================= */
-/* SEND BUTTON STYLE */
+/* SEND BUTTON FIXED POSITION */
 /* ============================= */
 [data-testid="stChatInput"] button {
-    flex-shrink: 0 !important;
     border-radius: 50% !important;
     background: #3b82f6 !important;
     color: white !important;
@@ -597,15 +603,9 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    margin-left: 8px !important;
+    flex-shrink: 0 !important;
     box-shadow: 0 4px 14px rgba(59,130,246,0.35) !important;
-    transition: all 0.25s ease !important;
-}
-
-/* SEND ICON (SVG) */
-[data-testid="stChatInput"] button svg {
-    fill: white !important;
-    width: 18px !important;
-    height: 18px !important;
 }
 
 /* DARK MODE SEND BUTTON */
@@ -615,22 +615,27 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     box-shadow: 0 6px 20px rgba(96,165,250,0.45) !important;
 }
 
+/* SEND ICON */
+[data-testid="stChatInput"] button svg {
+    fill: white !important;
+    width: 18px !important;
+    height: 18px !important;
+}
+
 /* ============================= */
-/* RAG HELPER TEXT (CENTERED BELOW INPUT) */
+/* HELPER TEXT BELOW INPUT (optional) */
 /* ============================= */
 .rag-helper-text {
-    text-align: center !important;
-    font-size: 13px !important;
-    margin-top: 10px !important;
-    color: var(--text-muted) !important;
-    width: 100% !important;
-    user-select: none !important;
-    font-weight: 500 !important;
+    text-align: center;
+    font-size: 13px;
+    margin-top: 6px;
+    color: var(--text-muted);
+    width: 100%;
 }
 
 [data-theme="dark"] .rag-helper-text,
 [data-user-theme="dark"] .rag-helper-text {
-    color: #94a3b8 !important;
+    color: #94a3b8;
 }
 
 /* ============================= */
