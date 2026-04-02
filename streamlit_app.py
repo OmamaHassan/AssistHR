@@ -1054,7 +1054,7 @@ if page == "📊  Dashboard":
                 <span style="padding:5px 13px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:99px;font-size:11.5px;color:#cbd5e1;">🔍 Semantic Search</span>
                 <span style="padding:5px 13px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:99px;font-size:11.5px;color:#cbd5e1;">📊 Resume Ranking</span>
                 <span style="padding:5px 13px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:99px;font-size:11.5px;color:#cbd5e1;">⚡ Supabase pgvector</span>
-                <span style="padding:5px 13px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:99px;font-size:11.5px;color:#cbd5e1;">🤖 Groq llama-3.3-70b</span>
+                <span style="padding:5px 13px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:99px;font-size:11.5px;color:#cbd5e1;">🤖 Groq llama-3.3-70b (By default) </span>
             </div>
         </div>
     </div>
@@ -1084,11 +1084,11 @@ if page == "📊  Dashboard":
         sessions_count    = 0
         dash_session_rows = []
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3  = st.columns(3)
     with c1: st.metric("📄  Documents",    docs_count,      help="HR documents in knowledge base")
     with c2: st.metric("💬  Chat Sessions", sessions_count,  help="Your saved HR Q&A sessions")
-    with c3: st.metric("🤖  LLM",          "Groq llama-3.3-70b-versatile (By default)",          help="llama-3.3-70b-versatile")
-    with c4: st.metric("✅  Status",        "Online",        help="All systems operational")
+    # with c3: st.metric("🤖  LLM",          "Groq llama-3.3-70b-versatile (By default)",          help="llama-3.3-70b-versatile")
+    with c3: st.metric("✅  Status",        "Online",        help="All systems operational")
 
     st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
 
