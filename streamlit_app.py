@@ -356,45 +356,120 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 
 /* ══════════════════════════════════════════════════════════
    FILE UPLOADER
-══════════════════════════════════════════════════════════ */
- /* ══════════════════════════════════════════════════════════
-   FILE UPLOADER — CLEAN DARK THEME
+/* ══════════════════════════════════════════════════════════
+   FILE UPLOADER — FINAL CLEAN VERSION (WORKING)
 ══════════════════════════════════════════════════════════ */
 
+/* Wrapper */
 [data-testid="stFileUploader"] {
-    border       : 2px dashed var(--border) !important;
-    border-radius: 12px !important;
-    background   : var(--surface-2) !important;
-    transition   : all 0.2s ease !important;
+    border: none !important;
+    padding: 0 !important;
 }
 
-/* LIGHT hover */
-[data-testid="stFileUploader"]:hover {
+/* REAL DROP AREA (this is the important element) */
+[data-testid="stFileUploader"] section {
+    border: 2px dashed var(--border) !important;
+    border-radius: 14px !important;
+    background: var(--surface-2) !important;
+    padding: 28px 20px !important;
+    text-align: center !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+}
+
+/* LIGHT HOVER */
+[data-testid="stFileUploader"] section:hover {
     border-color: #3b82f6 !important;
-    background  : #eff6ff !important;
+    background: #eff6ff !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.10) !important;
 }
 
-/* DARK base */
-[data-theme="dark"] [data-testid="stFileUploader"],
-[data-user-theme="dark"] [data-testid="stFileUploader"] {
-    background  : #0b1220 !important;
-    border-color: #334155 !important;
+/* DARK MODE BASE */
+[data-theme="dark"] [data-testid="stFileUploader"] section,
+[data-user-theme="dark"] [data-testid="stFileUploader"] section {
+    background: #0b1220 !important;
+    border: 2px dashed #334155 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03) !important;
 }
 
-/* DARK hover — nicer blue fill */
-[data-theme="dark"] [data-testid="stFileUploader"]:hover,
-[data-user-theme="dark"] [data-testid="stFileUploader"]:hover {
+/* DARK HOVER — BLUE GLOW EFFECT */
+[data-theme="dark"] [data-testid="stFileUploader"] section:hover,
+[data-user-theme="dark"] [data-testid="stFileUploader"] section:hover {
     border-color: #60a5fa !important;
-    background  : linear-gradient(135deg, rgba(37,99,235,0.25), rgba(14,165,233,0.18)) !important;
+    background: linear-gradient(
+        135deg,
+        rgba(37,99,235,0.25),
+        rgba(14,165,233,0.18)
+    ) !important;
+    box-shadow: 
+        0 0 0 3px rgba(96,165,250,0.18),
+        0 10px 30px rgba(0,0,0,0.5) !important;
 }
 
-/* text + icon */
-[data-theme="dark"] [data-testid="stFileUploader"] *,
-[data-user-theme="dark"] [data-testid="stFileUploader"] * {
+/* TEXT + ICON COLOR */
+[data-testid="stFileUploader"] section * {
+    color: var(--text-muted) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* DARK TEXT */
+[data-theme="dark"] [data-testid="stFileUploader"] section *,
+[data-user-theme="dark"] [data-testid="stFileUploader"] section * {
     color: #94a3b8 !important;
 }
-            
-            
+
+/* ICON (SVG upload icon) */
+[data-testid="stFileUploader"] section svg {
+    fill: #64748b !important;
+    transition: all 0.2s ease !important;
+}
+
+/* ICON HOVER */
+[data-testid="stFileUploader"] section:hover svg {
+    fill: #3b82f6 !important;
+}
+
+/* DARK ICON */
+[data-theme="dark"] [data-testid="stFileUploader"] section svg,
+[data-user-theme="dark"] [data-testid="stFileUploader"] section svg {
+    fill: #475569 !important;
+}
+
+/* DARK ICON HOVER */
+[data-theme="dark"] [data-testid="stFileUploader"] section:hover svg,
+[data-user-theme="dark"] [data-testid="stFileUploader"] section:hover svg {
+    fill: #93c5fd !important;
+}
+
+/* REMOVE DEFAULT BUTTON STYLE INSIDE */
+[data-testid="stFileUploader"] button {
+    border-radius: 8px !important;
+    border: 1px solid var(--border) !important;
+    background: transparent !important;
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+}
+
+/* BUTTON HOVER */
+[data-testid="stFileUploader"] button:hover {
+    border-color: #3b82f6 !important;
+    color: #2563eb !important;
+}
+
+/* DARK BUTTON */
+[data-theme="dark"] [data-testid="stFileUploader"] button,
+[data-user-theme="dark"] [data-testid="stFileUploader"] button {
+    border-color: #475569 !important;
+    color: #cbd5e1 !important;
+}
+
+/* DARK BUTTON HOVER */
+[data-theme="dark"] [data-testid="stFileUploader"] button:hover,
+[data-user-theme="dark"] [data-testid="stFileUploader"] button:hover {
+    border-color: #60a5fa !important;
+    color: #93c5fd !important;
+}       
+
 /* ══════════════════════════════════════════════════════════
    EXPANDER
 ══════════════════════════════════════════════════════════ */
@@ -435,124 +510,35 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 /* ══════════════════════════════════════════════════════════
    HR Q&A INPUT — IMPROVED (clean blue focus, no harsh borders)
 ══════════════════════════════════════════════════════════ */
-[data-testid="stChatInput"] {
+/* TARGET REAL INNER CHAT INPUT */
+[data-testid="stChatInput"] > div {
     border-radius: 28px !important;
-    border       : 1.5px solid rgba(59,130,246,0.35) !important;
-    background   : var(--surface) !important;
-    box-shadow   : 0 4px 14px rgba(15,23,42,0.08) !important;
-    padding      : 6px 8px 6px 12px !important;
-    max-width    : min(920px, 100%) !important;
-    margin       : 0 auto !important;
-    transition   : all 0.25s ease !important;
+    border: 1.5px solid rgba(59,130,246,0.35) !important;
+    background: var(--surface) !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08) !important;
+    transition: all 0.25s ease !important;
 }
 
-/* DARK THEME — richer blue container */
-[data-theme="dark"] [data-testid="stChatInput"],
-[data-user-theme="dark"] [data-testid="stChatInput"] {
-    background  : linear-gradient(180deg, #18243f 0%, #0f172a 100%) !important;
-    border      : 1.5px solid rgba(96,165,250,0.35) !important;
-    box-shadow  : 0 0 0 1px rgba(96,165,250,0.08),
-                  0 10px 35px rgba(0,0,0,0.55) !important;
-}
-
-/* FOCUS — whole area turns blue (not just border) */
-[data-testid="stChatInput"]:focus-within {
-    border-color: #3b82f6 !important;
-    box-shadow  : 0 0 0 4px rgba(59,130,246,0.18),
-                  0 10px 30px rgba(37,99,235,0.25) !important;
-}
-
-[data-theme="dark"] [data-testid="stChatInput"]:focus-within,
-[data-user-theme="dark"] [data-testid="stChatInput"]:focus-within {
-    border-color: #60a5fa !important;
-    box-shadow  : 0 0 0 4px rgba(96,165,250,0.25),
-                  0 12px 40px rgba(37,99,235,0.35) !important;
-}
-            
-/* Subtle blue glow even when idle (better UX) */
-[data-testid="stChatInput"] {
-    position: relative;
-}
-
-[data-testid="stChatInput"]::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 28px;
-    background: radial-gradient(circle at 50% 50%, rgba(59,130,246,0.08), transparent 70%);
-    pointer-events: none;
-}
-
-[data-testid="stChatInput"] textarea {
-    min-height    : 36px !important;
-    padding       : 10px 14px !important;
-    font-size     : 14.5px !important;
-    letter-spacing: 0.01em !important;
-    line-height   : 1.55 !important;
-    border        : none !important;
-    background    : transparent !important;
-    color         : var(--text-main) !important;
-    font-family   : 'Plus Jakarta Sans', sans-serif !important;
-}
-[data-testid="stChatInput"] textarea::placeholder {
-    color      : var(--text-muted) !important;
-    opacity    : 0.75 !important;
-    font-style : italic !important;
-    font-size  : 13.5px !important;
-}
-[data-testid="stChatInput"] button {
-    border-radius : 20px !important;
-    background    : linear-gradient(135deg, #2563eb 0%, #0891b2 100%) !important;
-    border        : none !important;
-    width         : 38px !important;
-    height        : 38px !important;
-    margin        : 2px !important;
-    transition    : all 0.18s ease !important;
-    box-shadow    : 0 2px 8px rgba(37,99,235,0.4) !important;
-}
-[data-testid="stChatInput"] button:hover {
-    transform  : scale(1.07) !important;
-    box-shadow : 0 4px 16px rgba(37,99,235,0.55) !important;
-}
-[data-testid="stChatInput"] button svg {
-    fill: #ffffff !important;
-}
-/* Kill the white wrapper Streamlit puts around the chat input */
-[data-theme="dark"] [data-testid="stBottomBlockContainer"],
-[data-user-theme="dark"] [data-testid="stBottomBlockContainer"] {
-    background: #0b1220 !important;
-    box-shadow: none !important;
-}
-[data-theme="dark"] [data-testid="stBottomBlockContainer"]::before,
-[data-user-theme="dark"] [data-testid="stBottomBlockContainer"]::before {
-    background: transparent !important;
-    box-shadow: none !important;
-}
-[data-theme="dark"] section[data-testid="stBottom"],
-[data-user-theme="dark"] section[data-testid="stBottom"] {
-    background: #0b1220 !important;
-}
+/* DARK THEME */
 [data-theme="dark"] [data-testid="stChatInput"] > div,
 [data-user-theme="dark"] [data-testid="stChatInput"] > div {
-    background: transparent !important;
+    background: linear-gradient(180deg, #18243f 0%, #0f172a 100%) !important;
+    border: 1.5px solid rgba(96,165,250,0.4) !important;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.6) !important;
 }
 
-.qa-rag-footer {
-    text-align  : center;
-    font-size   : 12.5px !important;
-    line-height : 1.55 !important;
-    color       : var(--text-muted) !important;
-    padding     : 16px 16px 12px !important;
-    margin      : 24px auto 6px auto !important;
-    border-top  : 1px solid var(--border) !important;
-    max-width   : min(920px, 100%) !important;
+/* FOCUS — FULL BLUE AREA */
+[data-testid="stChatInput"] > div:focus-within {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.2),
+                0 10px 30px rgba(37,99,235,0.25) !important;
 }
-.stSelectbox [data-baseweb="select"] > div {
-    border-radius: 10px !important;
-    border       : 1.5px solid var(--border) !important;
-    background   : var(--surface) !important;
-    color        : var(--text-main) !important;
-    font-family  : 'Plus Jakarta Sans', sans-serif !important;
+
+[data-theme="dark"] [data-testid="stChatInput"] > div:focus-within,
+[data-user-theme="dark"] [data-testid="stChatInput"] > div:focus-within {
+    border-color: #60a5fa !important;
+    box-shadow: 0 0 0 4px rgba(96,165,250,0.25),
+                0 12px 40px rgba(37,99,235,0.4) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -626,15 +612,12 @@ hr { border-color: var(--border) !important; margin: 20px 0 !important; }
 [data-user-theme="dark"] .upload-preview-name { color:#93c5fd; }
             
 
-/* Remove unwanted red hover/focus borders globally */
-.stTextInput input:hover,
-.stTextArea textarea:hover,
-.stTextInput input:focus,
-.stTextArea textarea:focus {
+/* FORCE override Streamlit default red */
+input:focus, textarea:focus, input:hover, textarea:hover {
     border-color: #3b82f6 !important;
-    box-shadow  : 0 0 0 3px rgba(59,130,246,0.12) !important;
-}
-            
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.15) !important;
+    outline: none !important;
+}     
 </style>
 """, unsafe_allow_html=True)
 
