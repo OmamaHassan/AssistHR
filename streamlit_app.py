@@ -100,9 +100,6 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 #MainMenu, footer { visibility: hidden; }
 
-/* Hide default Streamlit header — sidebar toggle is managed by Streamlit JS, not CSS */
-[data-testid="stHeader"]     { visibility: hidden !important; height: 0 !important;}
-
 
 /* Style the toggle button only — never override display/visibility/position */
 [data-testid="stSidebarCollapsedControl"] button,
