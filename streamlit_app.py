@@ -1016,7 +1016,7 @@ if st.sidebar.button("Logout", use_container_width=True, key="logout_btn"):
 st.sidebar.markdown("""
 <div style="padding:12px 4px 4px;text-align:center;">
     <div style="color:#334155;font-size:10px;font-family:'JetBrains Mono',monospace;">
-        AssistHR v1.0 · MIT License
+        AssistHR v1.0
     </div>
 </div>
 """, unsafe_allow_html=True)
