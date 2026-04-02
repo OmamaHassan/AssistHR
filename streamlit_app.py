@@ -358,20 +358,31 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
    FILE UPLOADER
 /* ══════════════════════════════════════════════════════════
 
-/* Hide all default text */
+/* ══════════════════════════════════════════════════════════
+   KEEP BUTTON, REMOVE DUPLICATE TEXT
+══════════════════════════════════════════════════════════ */
+
+/* Hide only text elements */
 [data-testid="stFileUploader"] section div {
-    display: none !important;
+    font-size: 0 !important;
 }
 
-/* Add custom label */
+/* Restore button visibility */
+[data-testid="stFileUploader"] section button {
+    font-size: 12px !important;
+    display: inline-block !important;
+}
+
+/* Custom label */
 [data-testid="stFileUploader"] section::before {
     content: "📄 Drag & drop your file or click to upload";
     display: block;
     font-size: 14px;
     font-weight: 600;
     color: var(--text-muted);
+    margin-bottom: 10px;
+    text-align: center;
 }
-            
 /* Wrapper */
 [data-testid="stFileUploader"] {
     border: none !important;
