@@ -357,46 +357,44 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 /* ══════════════════════════════════════════════════════════
    FILE UPLOADER
 ══════════════════════════════════════════════════════════ */
-            
-
+ /* ══════════════════════════════════════════════════════════
+   FILE UPLOADER — CLEAN DARK THEME
+══════════════════════════════════════════════════════════ */
 
 [data-testid="stFileUploader"] {
     border       : 2px dashed var(--border) !important;
     border-radius: 12px !important;
     background   : var(--surface-2) !important;
-    transition   : all 0.18s ease !important;
+    transition   : all 0.2s ease !important;
 }
-[data-testid="stFileUploader"]:hover { border-color: #2563eb !important; background: #eff6ff !important; }
+
+/* LIGHT hover */
+[data-testid="stFileUploader"]:hover {
+    border-color: #3b82f6 !important;
+    background  : #eff6ff !important;
+}
+
+/* DARK base */
 [data-theme="dark"] [data-testid="stFileUploader"],
 [data-user-theme="dark"] [data-testid="stFileUploader"] {
-    background  : rgba(15, 23, 42, 0.65) !important;
+    background  : #0b1220 !important;
     border-color: #334155 !important;
-    border-style: dashed !important;
 }
+
+/* DARK hover — nicer blue fill */
+[data-theme="dark"] [data-testid="stFileUploader"]:hover,
+[data-user-theme="dark"] [data-testid="stFileUploader"]:hover {
+    border-color: #60a5fa !important;
+    background  : linear-gradient(135deg, rgba(37,99,235,0.25), rgba(14,165,233,0.18)) !important;
+}
+
+/* text + icon */
 [data-theme="dark"] [data-testid="stFileUploader"] *,
 [data-user-theme="dark"] [data-testid="stFileUploader"] * {
     color: #94a3b8 !important;
 }
             
-[data-theme="dark"] [data-testid="stFileUploader"],
-[data-user-theme="dark"] [data-testid="stFileUploader"] {
-    background   : #0f172a !important;
-    border-color : #334155 !important;
-}
-
-[data-theme="dark"] [data-testid="stFileUploader"] svg,
-[data-user-theme="dark"] [data-testid="stFileUploader"] svg {
-    fill: #475569 !important;
-}
-[data-theme="dark"] [data-testid="stFileUploader"]:hover,
-[data-user-theme="dark"] [data-testid="stFileUploader"]:hover {
-    border-color: #3b82f6 !important;
-    background  : rgba(30, 58, 138, 0.2) !important;
-}
-[data-theme="dark"] [data-testid="stFileUploader"]:hover *,
-[data-user-theme="dark"] [data-testid="stFileUploader"]:hover * {
-    color: #bfdbfe !important;
-}
+            
 /* ══════════════════════════════════════════════════════════
    EXPANDER
 ══════════════════════════════════════════════════════════ */
@@ -433,95 +431,58 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stChatMessageAvatarUser"]      { background: linear-gradient(135deg, #2563eb, #3b82f6) !important; color: #ffffff !important; }
 [data-testid="stChatMessageAvatarAssistant"] { background: linear-gradient(135deg, #0891b2, #14b8a6) !important; color: #ffffff !important; }
 
-
-
-
-
-
-
-
-
-
-            /* ══════════════════════════════════════════════════════════
-   DARK THEME — FULL BOTTOM BAR FIX
-══════════════════════════════════════════════════════════ */
-[data-theme="dark"] .stChatFloatingInputContainer,
-[data-user-theme="dark"] .stChatFloatingInputContainer,
-[data-theme="dark"] [data-testid="stChatInputContainer"],
-[data-user-theme="dark"] [data-testid="stChatInputContainer"],
-[data-theme="dark"] [data-testid="stBottom"],
-[data-user-theme="dark"] [data-testid="stBottom"],
-[data-theme="dark"] [data-testid="stBottomBlockContainer"],
-[data-user-theme="dark"] [data-testid="stBottomBlockContainer"],
-[data-theme="dark"] section[data-testid="stBottom"] > div,
-[data-user-theme="dark"] section[data-testid="stBottom"] > div,
-[data-theme="dark"] .stChatInputContainer,
-[data-user-theme="dark"] .stChatInputContainer {
-    background : #0b1220 !important;
-    box-shadow : none !important;
-    border-top : 1px solid #1e293b !important;
-}
-
-/* The actual textarea text color fix */
-[data-theme="dark"] [data-testid="stChatInput"] textarea,
-[data-user-theme="dark"] [data-testid="stChatInput"] textarea {
-    color            : #f1f5f9 !important;
-    caret-color      : #60a5fa !important;
-    -webkit-text-fill-color: #f1f5f9 !important;
-}
-
-[data-theme="dark"] [data-testid="stChatInput"] textarea::placeholder,
-[data-user-theme="dark"] [data-testid="stChatInput"] textarea::placeholder {
-    color            : #64748b !important;
-    -webkit-text-fill-color: #64748b !important;
-    opacity          : 1 !important;
-    font-style       : italic !important;
-}
-
-/* The input box itself in dark mode */
-[data-theme="dark"] [data-testid="stChatInput"],
-[data-user-theme="dark"] [data-testid="stChatInput"] {
-    background  : #1e293b !important;
-    border      : 1.5px solid #334155 !important;
-    box-shadow  : 0 0 0 1px rgba(96,165,250,0.08) !important;
-}
-
-[data-theme="dark"] [data-testid="stChatInput"]:focus-within,
-[data-user-theme="dark"] [data-testid="stChatInput"]:focus-within {
-    border-color: #3b82f6 !important;
-    box-shadow  : 0 0 0 3px rgba(59,130,246,0.2) !important;
-}
             
-                 
-
+/* ══════════════════════════════════════════════════════════
+   HR Q&A INPUT — IMPROVED (clean blue focus, no harsh borders)
+══════════════════════════════════════════════════════════ */
 [data-testid="stChatInput"] {
     border-radius: 28px !important;
-    border       : 1.5px solid rgba(37,99,235,0.28) !important;
+    border       : 1.5px solid rgba(59,130,246,0.35) !important;
     background   : var(--surface) !important;
-    box-shadow   : 0 2px 8px rgba(15,23,42,0.06) !important;
-    padding      : 4px 6px 4px 10px !important;
+    box-shadow   : 0 4px 14px rgba(15,23,42,0.08) !important;
+    padding      : 6px 8px 6px 12px !important;
     max-width    : min(920px, 100%) !important;
-    margin-left  : auto !important;
-    margin-right : auto !important;
-    transition   : box-shadow 0.22s ease, border-color 0.22s ease !important;
+    margin       : 0 auto !important;
+    transition   : all 0.25s ease !important;
 }
+
+/* DARK THEME — richer blue container */
 [data-theme="dark"] [data-testid="stChatInput"],
 [data-user-theme="dark"] [data-testid="stChatInput"] {
-    background  : linear-gradient(180deg, #1a2540 0%, #131e35 100%) !important;
-    border-color: rgba(96,165,250,0.3) !important;
-    box-shadow  : 0 0 0 1px rgba(96,165,250,0.08), 0 8px 32px rgba(0,0,0,0.4),
-                  inset 0 1px 0 rgba(255,255,255,0.04) !important;
+    background  : linear-gradient(180deg, #18243f 0%, #0f172a 100%) !important;
+    border      : 1.5px solid rgba(96,165,250,0.35) !important;
+    box-shadow  : 0 0 0 1px rgba(96,165,250,0.08),
+                  0 10px 35px rgba(0,0,0,0.55) !important;
 }
+
+/* FOCUS — whole area turns blue (not just border) */
 [data-testid="stChatInput"]:focus-within {
     border-color: #3b82f6 !important;
-    box-shadow  : 0 0 0 4px rgba(59,130,246,0.14), 0 8px 28px rgba(37,99,235,0.14) !important;
+    box-shadow  : 0 0 0 4px rgba(59,130,246,0.18),
+                  0 10px 30px rgba(37,99,235,0.25) !important;
 }
+
 [data-theme="dark"] [data-testid="stChatInput"]:focus-within,
 [data-user-theme="dark"] [data-testid="stChatInput"]:focus-within {
     border-color: #60a5fa !important;
-    box-shadow  : 0 0 0 4px rgba(96,165,250,0.18), 0 8px 28px rgba(37,99,235,0.25),
-                  inset 0 1px 0 rgba(255,255,255,0.06) !important;
+    box-shadow  : 0 0 0 4px rgba(96,165,250,0.25),
+                  0 12px 40px rgba(37,99,235,0.35) !important;
 }
+            
+/* Subtle blue glow even when idle (better UX) */
+[data-testid="stChatInput"] {
+    position: relative;
+}
+
+[data-testid="stChatInput"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    background: radial-gradient(circle at 50% 50%, rgba(59,130,246,0.08), transparent 70%);
+    pointer-events: none;
+}
+
 [data-testid="stChatInput"] textarea {
     min-height    : 36px !important;
     padding       : 10px 14px !important;
@@ -663,6 +624,17 @@ hr { border-color: var(--border) !important; margin: 20px 0 !important; }
 [data-user-theme="dark"] .upload-preview { background:rgba(37,99,235,0.14); border-color:rgba(96,165,250,0.35); }
 [data-theme="dark"] .upload-preview-name,
 [data-user-theme="dark"] .upload-preview-name { color:#93c5fd; }
+            
+
+/* Remove unwanted red hover/focus borders globally */
+.stTextInput input:hover,
+.stTextArea textarea:hover,
+.stTextInput input:focus,
+.stTextArea textarea:focus {
+    border-color: #3b82f6 !important;
+    box-shadow  : 0 0 0 3px rgba(59,130,246,0.12) !important;
+}
+            
 </style>
 """, unsafe_allow_html=True)
 
@@ -1163,8 +1135,6 @@ elif page == "💬  HR Q&A":
         with st.chat_message(msg["role"], avatar=avatar):
             st.write(msg["content"])
 
-    st.markdown('<div class="qa-rag-footer">💡 Answers sourced from uploaded documents using <strong>Retrieval-Augmented Generation (RAG)</strong>.</div>', unsafe_allow_html=True)
-
     if prompt := st.chat_input("Ask about HR policies, leave, dress code..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user", avatar="🧑‍💼"):
@@ -1177,6 +1147,9 @@ elif page == "💬  HR Q&A":
                     st.session_state.messages.append({"role": "assistant", "content": ans})
                 except Exception as e:
                     st.error(f"❌ {e}")
+
+
+    st.markdown('<div class="qa-rag-footer">💡 Answers sourced from uploaded documents using <strong>Retrieval-Augmented Generation (RAG)</strong>.</div>', unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════
