@@ -648,6 +648,12 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     color: #f1f5f9 !important;
 }
             
+/* DARK MODE — USER INPUT PLACEHOLDER TEXT */
+[data-theme="dark"] [data-testid="stChatInput"] > div textarea::placeholder,
+[data-user-theme="dark"] [data-testid="stChatInput"] > div textarea::placeholder {
+    color: #94a3b8 !important;  /* soft gray-blue placeholder for visibility */
+    opacity: 1 !important;       /* ensure it's fully visible */
+}          
 /* ============================= */
 /* HELPER TEXT BELOW INPUT (optional) */
 /* ============================= */
