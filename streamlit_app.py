@@ -507,7 +507,6 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 
   /* ══════════════════════════════════════════════════════════
    CHAT INPUT — IMPROVED (modern bot style, full dark/light support)
-══════════════════════════════════════════════════════════ */
 /* ══════════════════════════════════════════════════════════
    CHAT INPUT — FULLY FIXED, DARK & LIGHT, AUTO-EXPANDING
 ══════════════════════════════════════════════════════════ */
@@ -557,6 +556,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background: #0f172a !important;
     border: 1.5px solid rgba(96,165,250,0.4) !important;
     box-shadow: 0 10px 35px rgba(0,0,0,0.6) !important;
+    color: #f1f5f9 !important; /* make user input text visible */
 }
 
 /* FOCUS EFFECT */
@@ -589,6 +589,12 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     font-size: 14px !important;
     padding: 8px 0 !important;
+    color: #111827 !important; /* light theme text */
+}
+
+[data-theme="dark"] [data-testid="stChatInput"] textarea,
+[data-user-theme="dark"] [data-testid="stChatInput"] textarea {
+    color: #f1f5f9 !important; /* dark theme text visible */
 }
 
 /* ============================= */
@@ -646,6 +652,18 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background-color: #0f172a !important;
 }
 
+ /* ============================= */
+/* FORCE FOOTER DARK MODE UNIFORMITY */
+/* ============================= */
+[data-theme="dark"] .stBottom,
+[data-user-theme="dark"] .stBottom,
+[data-theme="dark"] section > .stBottom,
+[data-user-theme="dark"] section > .stBottom,
+[data-theme="dark"] .withScreencast .stBottom,
+[data-user-theme="dark"] .withScreencast .stBottom {
+    background: #0f172a !important;  /* solid dark background */
+    color: #f1f5f9 !important;       /* ensure text/icons are visible */
+}
 /* ============================= */
 /* OPTIONAL: smooth hover effect for send button */
 [data-testid="stChatInput"] button:hover {
@@ -729,7 +747,7 @@ input:focus, textarea:focus, input:hover, textarea:hover {
     outline: none !important;
 }    
 
-            
+.#root > div:nth-child(1) > div.withScreencast > div > div > div > section > div.stBottom.st-emotion-cache-1p2n2i4.eqt0gmo2          
              
 </style>
 """, unsafe_allow_html=True)
