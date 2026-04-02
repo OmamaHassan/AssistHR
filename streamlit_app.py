@@ -509,81 +509,89 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 /* ══════════════════════════════════════════════════════════
    HR Q&A INPUT — IMPROVED (clean blue focus, no harsh borders)
 ══════════════════════════════════════════════════════════ */
-/* FULL WRAPPER - make background solid navy-blue and round corners */
+/* ============================= */
+/* MAIN CHAT INPUT CONTAINER */
+/* ============================= */
 [data-testid="stChatInput"] {
-    background-color: #0b1220 !important; /* deep navy */
-    border-radius: 40px !important;
-    padding: 12px 20px !important;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.7) !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    width: 100% !important;
-    max-width: 720px; /* optional max width */
-    margin: auto;
 }
 
-/* CHAT INPUT BOX */
+/* INPUT BOX WRAPPER */
 [data-testid="stChatInput"] > div {
     width: 100% !important;
     border-radius: 28px !important;
-    border: none !important;
-    background: #15263f !important; /* slightly lighter blue inside */
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.5) !important;
-    padding: 0 !important;
+    border: 1.5px solid rgba(59,130,246,0.35) !important;
+    background: #ffffff !important;  /* force uniform color */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08) !important;
+    transition: all 0.25s ease !important;
 }
 
-/* TEXTAREA INSIDE */
-[data-testid="stChatInput"] textarea {
-    background: transparent !important;
-    color: #cbd5e1 !important; /* lighter text */
-    padding: 14px 20px !important;
-    font-size: 15px !important;
-    font-weight: 400 !important;
-    border-radius: 28px !important;
-    width: 100% !important;
-    height: 38px !important;
-    resize: none !important;
-    border: none !important;
-    outline: none !important;
-}
-
-/* SEND BUTTON */
-[data-testid="stChatInput"] button {
-    background: #3b82f6 !important; /* bright blue */
-    border-radius: 50% !important;
-    width: 38px !important;
-    height: 38px !important;
-    padding: 0 !important;
-    margin-left: 8px !important;
-    box-shadow: 0 6px 14px rgba(59,130,246,0.6) !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-}
-
-/* SEND ICON */
-[data-testid="stChatInput"] button svg {
-    fill: white !important;
-    width: 20px !important;
-    height: 20px !important;
-}
-
-/* FOCUS EFFECT */
-[data-testid="stChatInput"] > div:focus-within {
-    box-shadow: 0 0 10px 2px rgba(59,130,246,0.6) inset !important;
-}
-
-/* DARK MODE OVERRIDES */
-[data-theme="dark"] [data-testid="stChatInput"],
-[data-user-theme="dark"] [data-testid="stChatInput"] {
-    background-color: #0b1220 !important;
-}
-
+/* ============================= */
+/* DARK MODE FIX (UNIFORM AREA) */
+/* ============================= */
 [data-theme="dark"] [data-testid="stChatInput"] > div,
 [data-user-theme="dark"] [data-testid="stChatInput"] > div {
-    background: #15263f !important;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.7) !important;
+    background: #0f172a !important;   /* single solid color */
+    border: 1.5px solid rgba(96,165,250,0.4) !important;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.6) !important;
+}
+
+/* ============================= */
+/* FOCUS EFFECT */
+/* ============================= */
+[data-testid="stChatInput"] > div:focus-within {
+    border-color: #3b82f6 !important;
+    box-shadow: 
+        0 0 0 4px rgba(59,130,246,0.2),
+        0 10px 30px rgba(37,99,235,0.25) !important;
+}
+
+[data-theme="dark"] [data-testid="stChatInput"] > div:focus-within,
+[data-user-theme="dark"] [data-testid="stChatInput"] > div:focus-within {
+    border-color: #60a5fa !important;
+    box-shadow: 
+        0 0 0 4px rgba(96,165,250,0.25),
+        0 12px 40px rgba(37,99,235,0.4) !important;
+}
+
+/* ============================= */
+/* TEXT AREA INSIDE INPUT */
+/* ============================= */
+[data-testid="stChatInput"] textarea {
+    background: transparent !important;
+    color: inherit !important;
+    padding: 14px 16px !important;
+}
+
+/* ============================= */
+/* SEND BUTTON FIX */
+/* ============================= */
+[data-testid="stChatInput"] button {
+    border-radius: 50% !important;
+    background: #3b82f6 !important;
+    color: white !important;
+    width: 42px !important;
+    height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 14px rgba(59,130,246,0.35) !important;
+}
+
+/* SEND ICON (SVG) */
+[data-testid="stChatInput"] button svg {
+    fill: white !important;
+    width: 18px !important;
+    height: 18px !important;
+}
+
+/* DARK MODE SEND BUTTON */
+[data-theme="dark"] [data-testid="stChatInput"] button,
+[data-user-theme="dark"] [data-testid="stChatInput"] button {
+    background: #60a5fa !important;
+    box-shadow: 0 6px 20px rgba(96,165,250,0.45) !important;
 }
 
 /* ============================= */
@@ -681,20 +689,8 @@ input:focus, textarea:focus, input:hover, textarea:hover {
     outline: none !important;
 }    
 
- /* Set background for the parent container */
-.stBottom {
-    background-color: #0f172a !important;  /* dark blue background */
-    padding: 12px 20px !important;         /* optional: add some padding */
-    border-radius: 36px !important;        /* match the rounding */
-}
-
-/* Dark mode overrides for stBottom (if necessary) */
-[data-theme="dark"] .stBottom,
-[data-user-theme="dark"] .stBottom {
-    background-color: #0f172a !important;
-}
             
-                    
+             
 </style>
 """, unsafe_allow_html=True)
 
