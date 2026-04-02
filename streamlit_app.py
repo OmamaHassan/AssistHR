@@ -367,11 +367,6 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     font-size: 0 !important;
 }
 
-/* Restore button visibility */
-[data-testid="stFileUploader"] section button {
-    font-size: 12px !important;
-    display: inline-block !important;
-}
 
 /* Custom label */
 [data-testid="stFileUploader"] section::before {
