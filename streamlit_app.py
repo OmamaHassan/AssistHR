@@ -552,7 +552,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background: #0f172a !important;
     border: 1.5px solid rgba(96,165,250,0.4) !important;
     box-shadow: 0 10px 35px rgba(0,0,0,0.6) !important;
-    color: #080808 !important; /* make user input text visible */
+    color: #f1f5f9 !important; /* make user input text visible */
 }
 
 /* FOCUS EFFECT */
@@ -743,7 +743,16 @@ input:focus, textarea:focus, input:hover, textarea:hover {
     outline: none !important;
 }    
 
-    
+/* FIX: User text in HR Q&A chat input - visible in both themes */
+[data-testid="stChatInput"] textarea {
+    color: #0f172a !important;           /* Black/very dark for light input box */
+}
+
+[data-theme="dark"] [data-testid="stChatInput"] textarea,
+[data-user-theme="dark"] [data-testid="stChatInput"] textarea {
+    color: #e2e8f0 !important;           /* Light gray/white for dark input box */
+}
+              
 </style>
 """, unsafe_allow_html=True)
 
@@ -1061,7 +1070,7 @@ if page == "📊  Dashboard":
     c1, c2, c3, c4 = st.columns(4)
     with c1: st.metric("📄  Documents",    docs_count,      help="HR documents in knowledge base")
     with c2: st.metric("💬  Chat Sessions", sessions_count,  help="Your saved HR Q&A sessions")
-    with c3: st.metric("🤖  LLM",          "Groq",          help="llama-3.3-70b-versatile")
+    with c3: st.metric("🤖  LLM",          "Groq llama-3.3-70b-versatile (By default)",          help="llama-3.3-70b-versatile")
     with c4: st.metric("✅  Status",        "Online",        help="All systems operational")
 
     st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
