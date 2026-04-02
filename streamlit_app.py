@@ -100,41 +100,32 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 #MainMenu, footer { visibility: hidden; }
 
-/* FIX #2: Use height:0 + overflow:visible instead of display:none
-   display:none was killing the sidebar toggle button entirely */
-[data-testid="stHeader"] {
-    background  : transparent !important;
-    height      : 0px !important;
-    min-height  : 0px !important;
-    overflow    : visible !important;
-}
-[data-testid="stDecoration"] {
-    display: none !important;
-}
-[data-testid="stToolbar"] {
-    display: none !important;
-}
+/* Hide default Streamlit header — sidebar toggle is managed by Streamlit JS, not CSS */
+[data-testid="stHeader"]     { display: none !important; }
+[data-testid="stDecoration"] { display: none !important; }
+[data-testid="stToolbar"]    { display: none !important; }
 
-/* ── Sidebar toggle: always clickable, always visible ────── */
-/* Cover both old and new Streamlit selector names           */
-[data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"] {
-    display        : flex !important;
-    visibility     : visible !important;
-    opacity        : 1 !important;
-    z-index        : 999999 !important;
-    pointer-events : all !important;
-    position       : fixed !important;
-    top            : 12px !important;
-    left           : 12px !important;
+/* Style the toggle button only — never override display/visibility/position */
+[data-testid="stSidebarCollapsedControl"] button,
+[data-testid="collapsedControl"] button {
+    background     : linear-gradient(145deg, #1e293b 0%, #0f172a 100%) !important;
+    border         : 2px solid rgba(148,163,184,.55) !important;
+    border-radius  : 12px !important;
+    box-shadow     : 0 4px 14px rgba(0,0,0,.35) !important;
+    width          : 44px !important;
+    height         : 44px !important;
+    cursor         : pointer !important;
 }
-/* When sidebar IS open the toggle sits inside it — keep clickable */
-[data-testid="stSidebar"] [data-testid="stSidebarCollapsedControl"],
-[data-testid="stSidebar"] [data-testid="collapsedControl"] {
-    position       : relative !important;
-    top            : unset !important;
-    left           : unset !important;
-    pointer-events : all !important;
+[data-testid="stSidebarCollapsedControl"] button:hover,
+[data-testid="collapsedControl"] button:hover {
+    border-color: rgba(96,165,250,.85) !important;
+    box-shadow  : 0 6px 20px rgba(37,99,235,.35) !important;
+}
+[data-testid="stSidebarCollapsedControl"] button svg,
+[data-testid="collapsedControl"] button svg {
+    fill  : #f1f5f9 !important;
+    width : 20px !important;
+    height: 20px !important;
 }
 
 .block-container {
@@ -163,24 +154,16 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 .app-topbar-page  { font-size: 13px; font-weight: 600; color: var(--text-muted); }
 
 /* ══════════════════════════════════════════════════════════
-   SIDEBAR
+   SIDEBAR — only style internals, never override dimensions
+   or visibility so Streamlit JS can freely toggle it
 ══════════════════════════════════════════════════════════ */
 [data-testid="stSidebar"] {
     background  : linear-gradient(180deg, #0f172a 0%, #111b34 100%) !important;
     border-right: 1px solid rgba(148,163,184,0.18) !important;
-    /* FIX: Do NOT set width here — hardcoded width blocks Streamlit
-       from collapsing the sidebar to 0 when toggle is clicked      */
-    min-width   : 248px !important;
-    max-width   : 248px !important;
-    transition  : all 0.3s ease !important;
 }
-/* FIX: Do NOT use [data-testid="stSidebar"] * — the wildcard
-   overrides pointer-events on the toggle button making it unclickable.
-   Target only what you need explicitly instead.                         */
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] span,
-[data-testid="stSidebar"] label,
-[data-testid="stSidebar"] div:not([data-testid="stSidebarCollapsedControl"]):not([data-testid="collapsedControl"]) {
+[data-testid="stSidebar"] label {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
 [data-testid="stSidebar"] .stRadio > div[role="radiogroup"],
@@ -215,31 +198,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color: #94a3b8 !important;
 }
-[data-testid="collapsedControl"],
-[data-testid="stSidebarCollapsedControl"] {
-    background     : linear-gradient(145deg,#1e293b 0%,#0f172a 100%) !important;
-    border         : 2px solid rgba(148,163,184,.55) !important;
-    border-radius  : 12px !important;
-    box-shadow     : 0 4px 14px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.06) inset !important;
-    z-index        : 999999 !important;
-    min-width      : 44px !important;
-    min-height     : 44px !important;
-    cursor         : pointer !important;
-    pointer-events : all !important;
-}
-[data-testid="collapsedControl"]:hover,
-[data-testid="stSidebarCollapsedControl"]:hover {
-    border-color: rgba(96,165,250,.85) !important;
-    box-shadow  : 0 6px 20px rgba(37,99,235,.35),0 0 0 1px rgba(96,165,250,.25) inset !important;
-}
-[data-testid="collapsedControl"] svg,
-[data-testid="stSidebarCollapsedControl"] svg {
-    fill  : #f1f5f9 !important;
-    width : 22px !important;
-    height: 22px !important;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
-    pointer-events: none !important;
-}
+/* Toggle button styles already defined above — no duplicate needed */
 [data-testid="stSidebar"] kbd,
 [data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
 [data-testid="stSidebar"] .st-keyboard-shortcut {
