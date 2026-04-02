@@ -468,25 +468,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     padding: 6px 12px !important;
 }
 
-/* BUTTON HOVER */
-[data-testid="stFileUploader"] button:hover {
-    border-color: #3b82f6 !important;
-    color: #2563eb !important;
-}
-
-/* DARK BUTTON */
-[data-theme="dark"] [data-testid="stFileUploader"] button,
-[data-user-theme="dark"] [data-testid="stFileUploader"] button {
-    border-color: #475569 !important;
-    color: #cbd5e1 !important;
-}
-
-/* DARK BUTTON HOVER */
-[data-theme="dark"] [data-testid="stFileUploader"] button:hover,
-[data-user-theme="dark"] [data-testid="stFileUploader"] button:hover {
-    border-color: #60a5fa !important;
-    color: #93c5fd !important;
-}       
+      
 
 /* ══════════════════════════════════════════════════════════
    EXPANDER
