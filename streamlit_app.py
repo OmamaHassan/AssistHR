@@ -624,6 +624,32 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     height: 18px !important;
 }
 
+            /* ══════════════════════════════════════════════════════════
+   CHAT INPUT — FIXED FOR DARK THEME
+══════════════════════════════════════════════════════════ */
+
+[data-testid="stChatInput"] > div {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 28px !important;
+}
+
+[data-theme="dark"] [data-testid="stChatInput"] > div,
+[data-user-theme="dark"] [data-testid="stChatInput"] > div {
+    background: #1e293b !important;     /* Dark background */
+    border-color: #475569 !important;
+}
+
+/* Text color safety */
+[data-testid="stChatInput"] textarea {
+    color: #0f172a !important;
+}
+
+[data-theme="dark"] [data-testid="stChatInput"] textarea,
+[data-user-theme="dark"] [data-testid="stChatInput"] textarea {
+    color: #f1f5f9 !important;
+}
+            
 /* ============================= */
 /* HELPER TEXT BELOW INPUT (optional) */
 /* ============================= */
@@ -743,15 +769,7 @@ input:focus, textarea:focus, input:hover, textarea:hover {
     outline: none !important;
 }    
 
-/* Strong fix for chat input text color */
-[data-testid="stChatInput"] textarea {
-    color: #111827 !important;   /* Dark gray/black */
-}
-
-[data-theme="dark"] [data-testid="stChatInput"] textarea,
-[data-user-theme="dark"] [data-testid="stChatInput"] textarea {
-    color: #f1f5f9 !important;   /* Light color for dark mode */
-}  
+ 
 </style>
 """, unsafe_allow_html=True)
 
