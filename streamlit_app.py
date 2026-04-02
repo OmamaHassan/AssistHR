@@ -357,9 +357,21 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 /* ══════════════════════════════════════════════════════════
    FILE UPLOADER
 /* ══════════════════════════════════════════════════════════
-   FILE UPLOADER — FINAL CLEAN VERSION (WORKING)
-══════════════════════════════════════════════════════════ */
 
+/* Hide all default text */
+[data-testid="stFileUploader"] section div {
+    display: none !important;
+}
+
+/* Add custom label */
+[data-testid="stFileUploader"] section::before {
+    content: "📄 Drag & drop your file or click to upload";
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+            
 /* Wrapper */
 [data-testid="stFileUploader"] {
     border: none !important;
@@ -617,7 +629,10 @@ input:focus, textarea:focus, input:hover, textarea:hover {
     border-color: #3b82f6 !important;
     box-shadow: 0 0 0 2px rgba(59,130,246,0.15) !important;
     outline: none !important;
-}     
+}    
+
+            
+             
 </style>
 """, unsafe_allow_html=True)
 
