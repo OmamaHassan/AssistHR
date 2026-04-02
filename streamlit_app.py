@@ -747,8 +747,7 @@ input:focus, textarea:focus, input:hover, textarea:hover {
     outline: none !important;
 }    
 
-.#root > div:nth-child(1) > div.withScreencast > div > div > div > section > div.stBottom.st-emotion-cache-1p2n2i4.eqt0gmo2          
-             
+    
 </style>
 """, unsafe_allow_html=True)
 
