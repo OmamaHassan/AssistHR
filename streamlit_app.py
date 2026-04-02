@@ -466,7 +466,9 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     fill: #93c5fd !important;
 }
             
-            
+[data-testid="stFileUploader"] section > div:last-child {
+    display: none !important;
+}
 /* ══════════════════════════════════════════════════════════
    EXPANDER
 ══════════════════════════════════════════════════════════ */
