@@ -545,14 +545,12 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     padding: 6px 14px !important;
     min-height: 44px !important;
 }
-
-/* DARK MODE INPUT BOX */
-[data-theme="dark"] [data-testid="stChatInput"] > div,
-[data-user-theme="dark"] [data-testid="stChatInput"] > div {
-    background: #0f172a !important;
-    border: 1.5px solid rgba(96,165,250,0.4) !important;
-    box-shadow: 0 10px 35px rgba(0,0,0,0.6) !important;
-    color: #f1f5f9 !important; /* make user input text visible */
+/* DARK MODE — USER INPUT BOX COLOR */
+[data-theme="dark"] [data-testid="stChatInput"] > div textarea,
+[data-user-theme="dark"] [data-testid="stChatInput"] > div textarea {
+    background: #1e293b !important;  /* dark blue-gray background */
+    color: #bfdbfe !important;       /* light blue text for visibility */
+    caret-color: #60a5fa !important; /* optional: visible caret */
 }
 
 /* FOCUS EFFECT */
