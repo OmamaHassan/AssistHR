@@ -375,12 +375,12 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 [data-theme="dark"] [data-testid="stFileUploader"] *,
 [data-user-theme="dark"] [data-testid="stFileUploader"] * {
-    color: #0f172a !important;
+    color: #94a3b8 !important;
 }
             
 [data-theme="dark"] [data-testid="stFileUploader"],
 [data-user-theme="dark"] [data-testid="stFileUploader"] {
-    background   : #0f172a !important;
+    background   : #94a3b8 !important;
     border-color : #334155 !important;
 }
 
