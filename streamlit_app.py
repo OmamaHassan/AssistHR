@@ -4,6 +4,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 # ─── PATH FIX ────────────────────────────────────────────────
+# FIX #1: Removed broken BACKEND_DIR path (no backend/ subfolder exists)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
@@ -98,8 +99,10 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background: var(--app-bg) !important;
 }
 #MainMenu, footer { visibility: hidden; }
-[data-testid="stHeader"] { background: transparent !important }
 
+[data-testid="stHeader"]     { background: transparent !important}
+
+/* Style the toggle button only — never override display/visibility/position */
 [data-testid="stSidebarCollapsedControl"] button,
 [data-testid="collapsedControl"] button {
     background     : linear-gradient(145deg, #1e293b 0%, #0f172a 100%) !important;
@@ -148,7 +151,8 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 .app-topbar-page  { font-size: 13px; font-weight: 600; color: var(--text-muted); }
 
 /* ══════════════════════════════════════════════════════════
-   SIDEBAR
+   SIDEBAR — only style internals, never override dimensions
+   or visibility so Streamlit JS can freely toggle it
 ══════════════════════════════════════════════════════════ */
 [data-testid="stSidebar"] {
     background  : linear-gradient(180deg, #0f172a 0%, #111b34 100%) !important;
@@ -191,6 +195,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
     color: #94a3b8 !important;
 }
+/* Toggle button styles already defined above — no duplicate needed */
 [data-testid="stSidebar"] kbd,
 [data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
 [data-testid="stSidebar"] .st-keyboard-shortcut {
@@ -350,57 +355,120 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 
 /* ══════════════════════════════════════════════════════════
-   FILE UPLOADER — CLEAN VERSION
+   FILE UPLOADER
+/* ══════════════════════════════════════════════════════════
+
+/* ══════════════════════════════════════════════════════════
+   FILE UPLOADER — FINAL CLEAN VERSION
 ══════════════════════════════════════════════════════════ */
+
+/* Wrapper cleanup */
 [data-testid="stFileUploader"] {
-    border  : none !important;
-    padding : 0 !important;
+    border: none !important;
+    padding: 0 !important;
 }
+
+/* MAIN DROP AREA */
 [data-testid="stFileUploader"] section {
-    border       : 2px dashed var(--border) !important;
+    border: 2px dashed var(--border) !important;
     border-radius: 14px !important;
-    background   : var(--surface-2) !important;
-    padding      : 30px 20px !important;
-    text-align   : center !important;
-    transition   : all 0.25s ease !important;
-    cursor       : pointer !important;
+    background: var(--surface-2) !important;
+    padding: 30px 20px !important;
+    text-align: center !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
 }
+
+/* LIGHT HOVER */
 [data-testid="stFileUploader"] section:hover {
     border-color: #3b82f6 !important;
-    background  : #eff6ff !important;
-    box-shadow  : 0 0 0 3px rgba(59,130,246,0.10) !important;
+    background: #eff6ff !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.10) !important;
 }
+
+/* DARK MODE BASE */
 [data-theme="dark"] [data-testid="stFileUploader"] section,
 [data-user-theme="dark"] [data-testid="stFileUploader"] section {
-    background  : #0d1829 !important;
-    border      : 2px dashed #2a3a55 !important;
-    box-shadow  : inset 0 1px 0 rgba(255,255,255,0.03) !important;
+    background: #0b1220 !important;
+    border: 2px dashed #334155 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03) !important;
 }
-[data-theme="dark"] [data-testid="stFileUploader"] section *,
-[data-user-theme="dark"] [data-testid="stFileUploader"] section * {
-    color: #64748b !important;
-}
+
+/* DARK HOVER */
 [data-theme="dark"] [data-testid="stFileUploader"] section:hover,
 [data-user-theme="dark"] [data-testid="stFileUploader"] section:hover {
-    border-color: #3b82f6 !important;
-    background  : rgba(37,99,235,0.12) !important;
-    box-shadow  : 0 0 0 3px rgba(59,130,246,0.15) !important;
+    border-color: #60a5fa !important;
+    background: linear-gradient(
+        135deg,
+        rgba(37,99,235,0.25),
+        rgba(14,165,233,0.18)
+    ) !important;
+    box-shadow: 
+        0 0 0 3px rgba(96,165,250,0.18),
+        0 10px 30px rgba(0,0,0,0.5) !important;
 }
-[data-theme="dark"] [data-testid="stFileUploader"] section:hover *,
-[data-user-theme="dark"] [data-testid="stFileUploader"] section:hover * {
-    color: #93c5fd !important;
+
+/* ══════════════════════════════════════════════════════════
+   REMOVE DEFAULT ELEMENTS
+══════════════════════════════════════════════════════════ */
+
+/* Remove upload button */
+[data-testid="stFileUploader"] section button {
+    display: none !important;
 }
+
+/* Remove "200MB limit" text */
+[data-testid="stFileUploader"] small,
+[data-testid="stFileUploader"] section small {
+    display: none !important;
+}
+
+/* Hide default text (without breaking layout) */
+[data-testid="stFileUploader"] section div {
+    font-size: 0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   CUSTOM LABEL
+══════════════════════════════════════════════════════════ */
+
+[data-testid="stFileUploader"] section::before {
+    content: "📄 Drag & drop your file or click to upload";
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ICON STYLING
+══════════════════════════════════════════════════════════ */
+
 [data-testid="stFileUploader"] section svg {
-    fill      : #64748b !important;
+    fill: #64748b !important;
     margin-bottom: 8px;
     transition: all 0.2s ease !important;
 }
-[data-testid="stFileUploader"] section:hover svg { fill: #3b82f6 !important; }
-[data-theme="dark"] [data-testid="stFileUploader"] section svg,
-[data-user-theme="dark"] [data-testid="stFileUploader"] section svg { fill: #334155 !important; }
-[data-theme="dark"] [data-testid="stFileUploader"] section:hover svg,
-[data-user-theme="dark"] [data-testid="stFileUploader"] section:hover svg { fill: #60a5fa !important; }
 
+[data-testid="stFileUploader"] section:hover svg {
+    fill: #3b82f6 !important;
+}
+
+/* DARK ICON */
+[data-theme="dark"] [data-testid="stFileUploader"] section svg,
+[data-user-theme="dark"] [data-testid="stFileUploader"] section svg {
+    fill: #475569 !important;
+}
+
+[data-theme="dark"] [data-testid="stFileUploader"] section:hover svg,
+[data-user-theme="dark"] [data-testid="stFileUploader"] section:hover svg {
+    fill: #93c5fd !important;
+}
+            
+[data-testid="stFileUploader"] section > div:last-child {
+    display: none !important;
+}
 /* ══════════════════════════════════════════════════════════
    EXPANDER
 ══════════════════════════════════════════════════════════ */
@@ -437,112 +505,110 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stChatMessageAvatarUser"]      { background: linear-gradient(135deg, #2563eb, #3b82f6) !important; color: #ffffff !important; }
 [data-testid="stChatMessageAvatarAssistant"] { background: linear-gradient(135deg, #0891b2, #14b8a6) !important; color: #ffffff !important; }
 
+            
 /* ══════════════════════════════════════════════════════════
-   CHAT INPUT BOTTOM BAR — FULL DARK THEME FIX
+   HR Q&A INPUT — IMPROVED (clean blue focus, no harsh borders)
 ══════════════════════════════════════════════════════════ */
-
-/* Kill every layer of the sticky footer that shows white */
-[data-theme="dark"] [data-testid="stBottom"],
-[data-user-theme="dark"] [data-testid="stBottom"],
-[data-theme="dark"] [data-testid="stBottomBlockContainer"],
-[data-user-theme="dark"] [data-testid="stBottomBlockContainer"],
-[data-theme="dark"] section[data-testid="stBottom"],
-[data-user-theme="dark"] section[data-testid="stBottom"],
-[data-theme="dark"] section[data-testid="stBottom"] > div,
-[data-user-theme="dark"] section[data-testid="stBottom"] > div,
-[data-theme="dark"] .stChatFloatingInputContainer,
-[data-user-theme="dark"] .stChatFloatingInputContainer,
-[data-theme="dark"] [data-testid="stChatInputContainer"],
-[data-user-theme="dark"] [data-testid="stChatInputContainer"],
-[data-theme="dark"] .stChatInputContainer,
-[data-user-theme="dark"] .stChatInputContainer,
-[data-theme="dark"] [data-testid="stBottom"] > div > div,
-[data-user-theme="dark"] [data-testid="stBottom"] > div > div {
-    background : #0b1220 !important;
-    box-shadow : none !important;
-    border-top : 1px solid #1a2540 !important;
-}
-
-/* The pill-shaped input box itself */
+/* ============================= */
+/* MAIN CHAT INPUT CONTAINER */
+/* ============================= */
 [data-testid="stChatInput"] {
-    border-radius: 24px !important;
-    border       : 1.5px solid #2a3a55 !important;
-    background   : var(--surface) !important;
-    box-shadow   : 0 2px 8px rgba(0,0,0,0.08) !important;
-    transition   : border-color 0.2s ease, box-shadow 0.2s ease !important;
-    overflow     : hidden !important;
-}
-[data-theme="dark"] [data-testid="stChatInput"],
-[data-user-theme="dark"] [data-testid="stChatInput"] {
-    background  : #111c32 !important;
-    border      : 1.5px solid #2a3a55 !important;
-    box-shadow  : 0 0 0 1px rgba(96,165,250,0.06), 0 4px 20px rgba(0,0,0,0.4) !important;
-}
-[data-testid="stChatInput"]:focus-within {
-    border-color: #3b82f6 !important;
-    box-shadow  : 0 0 0 3px rgba(59,130,246,0.18), 0 4px 20px rgba(37,99,235,0.15) !important;
-}
-[data-theme="dark"] [data-testid="stChatInput"]:focus-within,
-[data-user-theme="dark"] [data-testid="stChatInput"]:focus-within {
-    border-color: #3b82f6 !important;
-    box-shadow  : 0 0 0 3px rgba(59,130,246,0.22), 0 4px 24px rgba(37,99,235,0.3) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
 }
 
-/* Textarea inside — height + text color */
+/* INPUT BOX WRAPPER */
+[data-testid="stChatInput"] > div {
+    width: 100% !important;
+    border-radius: 28px !important;
+    border: 1.5px solid rgba(59,130,246,0.35) !important;
+    background: #ffffff !important;  /* force uniform color */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08) !important;
+    transition: all 0.25s ease !important;
+}
+
+/* ============================= */
+/* DARK MODE FIX (UNIFORM AREA) */
+/* ============================= */
+[data-theme="dark"] [data-testid="stChatInput"] > div,
+[data-user-theme="dark"] [data-testid="stChatInput"] > div {
+    background: #0f172a !important;   /* single solid color */
+    border: 1.5px solid rgba(96,165,250,0.4) !important;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.6) !important;
+}
+
+/* ============================= */
+/* FOCUS EFFECT */
+/* ============================= */
+[data-testid="stChatInput"] > div:focus-within {
+    border-color: #3b82f6 !important;
+    box-shadow: 
+        0 0 0 4px rgba(59,130,246,0.2),
+        0 10px 30px rgba(37,99,235,0.25) !important;
+}
+
+[data-theme="dark"] [data-testid="stChatInput"] > div:focus-within,
+[data-user-theme="dark"] [data-testid="stChatInput"] > div:focus-within {
+    border-color: #60a5fa !important;
+    box-shadow: 
+        0 0 0 4px rgba(96,165,250,0.25),
+        0 12px 40px rgba(37,99,235,0.4) !important;
+}
+
+/* ============================= */
+/* TEXT AREA INSIDE INPUT */
+/* ============================= */
 [data-testid="stChatInput"] textarea {
-    min-height             : 36px !important;
-    max-height             : 120px !important;
-    padding                : 10px 14px !important;
-    font-size              : 14px !important;
-    line-height            : 1.5 !important;
-    border                 : none !important;
-    background             : transparent !important;
-    color                  : var(--text-main) !important;
-    -webkit-text-fill-color: var(--text-main) !important;
-    caret-color            : #3b82f6 !important;
-    font-family            : 'Plus Jakarta Sans', sans-serif !important;
-}
-[data-theme="dark"] [data-testid="stChatInput"] textarea,
-[data-user-theme="dark"] [data-testid="stChatInput"] textarea {
-    color                  : #e2e8f0 !important;
-    -webkit-text-fill-color: #e2e8f0 !important;
-}
-[data-testid="stChatInput"] textarea::placeholder {
-    color                  : #94a3b8 !important;
-    -webkit-text-fill-color: #94a3b8 !important;
-    opacity                : 1 !important;
-    font-style             : italic !important;
+    background: transparent !important;
+    color: inherit !important;
+    padding: 14px 16px !important;
 }
 
-/* Send button */
+/* ============================= */
+/* SEND BUTTON FIX */
+/* ============================= */
 [data-testid="stChatInput"] button {
-    border-radius : 50% !important;
-    background    : linear-gradient(135deg, #2563eb, #0891b2) !important;
-    border        : none !important;
-    width         : 36px !important;
-    height        : 36px !important;
-    margin        : 2px !important;
-    transition    : all 0.18s ease !important;
-    box-shadow    : 0 2px 8px rgba(37,99,235,0.4) !important;
-    flex-shrink   : 0 !important;
-}
-[data-testid="stChatInput"] button:hover {
-    transform  : scale(1.08) !important;
-    box-shadow : 0 4px 14px rgba(37,99,235,0.55) !important;
-}
-[data-testid="stChatInput"] button svg {
-    fill  : #ffffff !important;
-    width : 16px !important;
-    height: 16px !important;
+    border-radius: 50% !important;
+    background: #3b82f6 !important;
+    color: white !important;
+    width: 42px !important;
+    height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 14px rgba(59,130,246,0.35) !important;
 }
 
-.qa-rag-footer {
-    text-align  : center;
-    font-size   : 12.5px !important;
-    color       : var(--text-muted) !important;
-    padding     : 8px 16px 4px !important;
-    margin      : 0 auto !important;
-    max-width   : min(920px, 100%) !important;
+/* SEND ICON (SVG) */
+[data-testid="stChatInput"] button svg {
+    fill: white !important;
+    width: 18px !important;
+    height: 18px !important;
+}
+
+/* DARK MODE SEND BUTTON */
+[data-theme="dark"] [data-testid="stChatInput"] button,
+[data-user-theme="dark"] [data-testid="stChatInput"] button {
+    background: #60a5fa !important;
+    box-shadow: 0 6px 20px rgba(96,165,250,0.45) !important;
+}
+
+/* ============================= */
+/* CENTERED HELPER TEXT */
+/* ============================= */
+.rag-helper-text {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 8px;
+    color: var(--text-muted);
+    width: 100%;
+}
+
+/* DARK TEXT */
+[data-theme="dark"] .rag-helper-text,
+[data-user-theme="dark"] .rag-helper-text {
+    color: #94a3b8;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -614,21 +680,17 @@ hr { border-color: var(--border) !important; margin: 20px 0 !important; }
 [data-user-theme="dark"] .upload-preview { background:rgba(37,99,235,0.14); border-color:rgba(96,165,250,0.35); }
 [data-theme="dark"] .upload-preview-name,
 [data-user-theme="dark"] .upload-preview-name { color:#93c5fd; }
+            
 
-/* FORCE blue focus on all inputs */
+/* FORCE override Streamlit default red */
 input:focus, textarea:focus, input:hover, textarea:hover {
     border-color: #3b82f6 !important;
-    box-shadow  : 0 0 0 2px rgba(59,130,246,0.15) !important;
-    outline     : none !important;
-}
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.15) !important;
+    outline: none !important;
+}    
 
-.stSelectbox [data-baseweb="select"] > div {
-    border-radius: 10px !important;
-    border       : 1.5px solid var(--border) !important;
-    background   : var(--surface) !important;
-    color        : var(--text-main) !important;
-    font-family  : 'Plus Jakarta Sans', sans-serif !important;
-}
+            
+             
 </style>
 """, unsafe_allow_html=True)
 
@@ -776,35 +838,6 @@ components.html(f"""
   const body = window.parent.document.body;
   if (body) body.setAttribute("data-user-theme", mode);
 
-  function applyBottomBarTheme() {{
-    const doc = window.parent.document;
-    const darkSelectors = [
-      '[data-testid="stBottom"]',
-      '[data-testid="stBottomBlockContainer"]',
-      '.stChatFloatingInputContainer',
-      '[data-testid="stChatInputContainer"]',
-    ];
-    darkSelectors.forEach(function(sel) {{
-      doc.querySelectorAll(sel).forEach(function(el) {{
-        if (mode === "dark") {{
-          el.style.setProperty("background", "#0b1220", "important");
-          el.style.setProperty("box-shadow", "none", "important");
-        }} else {{
-          el.style.removeProperty("background");
-          el.style.removeProperty("box-shadow");
-        }}
-      }});
-    }});
-  }}
-
-  applyBottomBarTheme();
-  [300, 800, 1500].forEach(function(ms) {{ setTimeout(applyBottomBarTheme, ms); }});
-
-  try {{
-    const obs = new MutationObserver(applyBottomBarTheme);
-    obs.observe(window.parent.document.body, {{ childList: true, subtree: true }});
-  }} catch(e) {{}}
-
   function stripHints() {{
     const doc = window.parent.document;
     doc.querySelectorAll('[data-testid="stSidebar"] button[title],[data-testid="stSidebar"] [title]').forEach(function(el) {{
@@ -818,9 +851,9 @@ components.html(f"""
   stripHints();
   [200, 600, 1200].forEach(function(ms) {{ setTimeout(stripHints, ms); }});
   try {{
-    const obs2 = new MutationObserver(stripHints);
-    const sb   = window.parent.document.querySelector('[data-testid="stSidebar"]');
-    if (sb) obs2.observe(sb, {{ childList: true, subtree: true, attributes: true }});
+    const obs = new MutationObserver(stripHints);
+    const sb  = window.parent.document.querySelector('[data-testid="stSidebar"]');
+    if (sb) obs.observe(sb, {{ childList: true, subtree: true, attributes: true }});
   }} catch(e) {{}}
 }})();
 </script>
@@ -1171,8 +1204,11 @@ elif page == "💬  HR Q&A":
                 except Exception as e:
                     st.error(f"❌ {e}")
 
-    st.markdown('<div class="qa-rag-footer">💡 Answers sourced from uploaded documents using <b>Retrieval-Augmented Generation (RAG)</b>.</div>', unsafe_allow_html=True)
 
+    st.markdown(
+    '<div class="rag-helper-text">💡 Answers sourced from uploaded documents using Retrieval-Augmented Generation (RAG).</div>',
+    unsafe_allow_html=True
+)
 
 # ══════════════════════════════════════════════════════════════
 # RESUME SCREENER
