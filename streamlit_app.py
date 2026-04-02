@@ -100,7 +100,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 #MainMenu, footer { visibility: hidden; }
 
-[data-testid="stHeader"]     { visibility: hidden !important; height: 0 !important;}
+[data-testid="stHeader"]     { background: transparent !important}
 
 /* Style the toggle button only — never override display/visibility/position */
 [data-testid="stSidebarCollapsedControl"] button,
