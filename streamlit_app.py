@@ -743,16 +743,15 @@ input:focus, textarea:focus, input:hover, textarea:hover {
     outline: none !important;
 }    
 
-/* FIX: User text in HR Q&A chat input - visible in both themes */
+/* Strong fix for chat input text color */
 [data-testid="stChatInput"] textarea {
-    color: #0f172a !important;           /* Black/very dark for light input box */
+    color: #111827 !important;   /* Dark gray/black */
 }
 
 [data-theme="dark"] [data-testid="stChatInput"] textarea,
 [data-user-theme="dark"] [data-testid="stChatInput"] textarea {
-    color: #e2e8f0 !important;           /* Light gray/white for dark input box */
-}
-              
+    color: #f1f5f9 !important;   /* Light color for dark mode */
+}  
 </style>
 """, unsafe_allow_html=True)
 
