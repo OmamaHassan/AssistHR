@@ -747,7 +747,39 @@ input:focus, textarea:focus, input:hover, textarea:hover {
     outline: none !important;
 }    
 
-    
+/* ============================= */
+/* CHAT INPUT CONTAINER — DARK MODE FIX */
+/* ============================= */
+[data-theme="dark"] [data-testid="stChatInput"],
+[data-user-theme="dark"] [data-testid="stChatInput"] {
+    background: #0f172a !important;      /* uniform dark background for container */
+    border-radius: 28px !important;
+    padding: 8px 12px !important;        /* optional, to match real bot style */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5) !important;
+}
+
+/* ACTUAL INPUT BOX (textarea wrapper) */
+[data-theme="dark"] [data-testid="stChatInput"] > div,
+[data-user-theme="dark"] [data-testid="stChatInput"] > div {
+    background: #0f172a !important;      /* match container */
+    border: 1.5px solid rgba(96,165,250,0.4) !important;
+    color: #f1f5f9 !important;           /* text inside input */
+}
+
+/* TEXTAREA ITSELF */
+[data-theme="dark"] [data-testid="stChatInput"] textarea,
+[data-user-theme="dark"] [data-testid="stChatInput"] textarea {
+    background: transparent !important;   /* already handled by parent */
+    color: #f1f5f9 !important;            /* ensures typing text is visible */
+}
+
+/* SEND BUTTON */
+[data-theme="dark"] [data-testid="stChatInput"] button,
+[data-user-theme="dark"] [data-testid="stChatInput"] button {
+    background: #60a5fa !important;
+    color: #fff !important;
+    box-shadow: 0 6px 20px rgba(96,165,250,0.45) !important;
+}    
 </style>
 """, unsafe_allow_html=True)
 
