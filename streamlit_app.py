@@ -505,15 +505,13 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stChatMessageAvatarUser"]      { background: linear-gradient(135deg, #2563eb, #3b82f6) !important; color: #ffffff !important; }
 [data-testid="stChatMessageAvatarAssistant"] { background: linear-gradient(135deg, #0891b2, #14b8a6) !important; color: #ffffff !important; }
 
-/* ============================= */
 /* MAIN CHAT INPUT CONTAINER */
-/* ============================= */
 [data-testid="stChatInput"] {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     width: 100% !important;
-    background: #ffffff; /* Light mode background */
+    background: #ffffff !important; /* Light mode background */
     border-radius: 28px !important;
     padding: 8px 12px !important;
     box-shadow: 0 6px 20px rgba(0,0,0,0.08) !important;
@@ -530,8 +528,8 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     transition: all 0.25s ease !important;
 }
 
-/* TEXT AREA INSIDE INPUT */
-[data-testid="stChatInput"] textarea {
+/* TEXTAREA INSIDE INPUT */
+[data-testid="stChatInput"] > div textarea {
     background: transparent !important;
     color: #1e293b !important;  /* dark text for light mode */
     padding: 14px 16px !important;
@@ -539,6 +537,8 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
+    border: none !important;
+    outline: none !important;
 }
 
 /* SEND BUTTON */
@@ -568,16 +568,14 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stChatInput"] > div:focus-within {
     border-color: #3b82f6 !important;
     box-shadow:
-        0 0 0 4px rgba(59,130,246,0.2),
+        0 0 0 4px rgba(59,130,246,0.2) !important,
         0 10px 30px rgba(37,99,235,0.25) !important;
 }
 
-/* ============================= */
 /* DARK THEME */
-/* ============================= */
 [data-theme="dark"] [data-testid="stChatInput"],
 [data-user-theme="dark"] [data-testid="stChatInput"] {
-    background: #0f172a !important; /* dark navy container */
+    background: #0f172a !important;
     box-shadow: 0 6px 20px rgba(0,0,0,0.5) !important;
     border-radius: 28px !important;
     padding: 8px 12px !important;
@@ -585,16 +583,18 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 
 [data-theme="dark"] [data-testid="stChatInput"] > div,
 [data-user-theme="dark"] [data-testid="stChatInput"] > div {
-    background: #0f172a !important; /* dark navy input box */
+    background: #0f172a !important;
     border: 1.5px solid rgba(96,165,250,0.4) !important;
     color: #f1f5f9 !important;
     box-shadow: none !important;
 }
 
-[data-theme="dark"] [data-testid="stChatInput"] textarea,
-[data-user-theme="dark"] [data-testid="stChatInput"] textarea {
+[data-theme="dark"] [data-testid="stChatInput"] > div textarea,
+[data-user-theme="dark"] [data-testid="stChatInput"] > div textarea {
     background: transparent !important;
     color: #f1f5f9 !important; /* light text */
+    border: none !important;
+    outline: none !important;
 }
 
 /* DARK MODE SEND BUTTON */
@@ -616,33 +616,15 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-user-theme="dark"] [data-testid="stChatInput"] > div:focus-within {
     border-color: #60a5fa !important;
     box-shadow:
-        0 0 0 4px rgba(96,165,250,0.25),
+        0 0 0 4px rgba(96,165,250,0.25) !important,
         0 12px 40px rgba(37,99,235,0.4) !important;
 }
 
-/* ============================= */
 /* DYNAMIC HEIGHT FOR TEXTAREA */
-/* ============================= */
-[data-testid="stChatInput"] textarea {
+[data-testid="stChatInput"] > div textarea {
     min-height: 40px !important;
     max-height: 120px !important;
     overflow-y: auto !important;
-}
-
-/* ============================= */
-/* HELPER TEXT (if any) centered */
-/* ============================= */
-.rag-helper-text {
-    text-align: center;
-    font-size: 13px;
-    margin-top: 8px;
-    color: var(--text-muted);
-    width: 100%;
-}
-
-[data-theme="dark"] .rag-helper-text,
-[data-user-theme="dark"] .rag-helper-text {
-    color: #94a3b8;
 }
 /* ══════════════════════════════════════════════════════════
    MISC
