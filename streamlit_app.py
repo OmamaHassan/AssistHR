@@ -681,7 +681,18 @@ input:focus, textarea:focus, input:hover, textarea:hover {
     outline: none !important;
 }    
 
-            
+ /* Set background for the parent container */
+.stBottom {
+    background-color: #0f172a !important;  /* dark blue background */
+    padding: 12px 20px !important;         /* optional: add some padding */
+    border-radius: 36px !important;        /* match the rounding */
+}
+
+/* Dark mode overrides for stBottom (if necessary) */
+[data-theme="dark"] .stBottom,
+[data-user-theme="dark"] .stBottom {
+    background-color: #0f172a !important;
+}           
              
 </style>
 """, unsafe_allow_html=True)
