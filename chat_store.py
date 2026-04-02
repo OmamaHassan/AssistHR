@@ -125,6 +125,3 @@ def list_sessions():
             print(f"{r[0]} | {r[1]} | {r[2]}")
     except Exception as e:
         print(f"⚠️ List sessions warning: {e}")
-
-# FIX: Removed init_db() call at module level — was crashing app on import
-# Tables are now created lazily inside create_session()

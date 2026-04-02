@@ -18,18 +18,17 @@ def get_embedding_model():
 def get_conn():
     return psycopg2.connect(
         DATABASE_URL,
-        connect_timeout = 10,
-        sslmode         = "require"
+        connect_timeout=10,
+        sslmode="require"
     )
 
 
 def init_vector_table():
+    """Call this explicitly — NOT on import, to avoid crashing Streamlit Cloud startup."""
     try:
         conn   = get_conn()
         cursor = conn.cursor()
-        cursor.execute(
-            "CREATE EXTENSION IF NOT EXISTS vector"
-        )
+        cursor.execute("CREATE EXTENSION IF NOT EXISTS vector")
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS documents (
                 id         BIGSERIAL PRIMARY KEY,
@@ -41,8 +40,7 @@ def init_vector_table():
             )
         """)
         cursor.execute("""
-            CREATE INDEX IF NOT EXISTS
-            documents_embedding_idx
+            CREATE INDEX IF NOT EXISTS documents_embedding_idx
             ON documents
             USING ivfflat (embedding vector_cosine_ops)
             WITH (lists = 100)
@@ -55,11 +53,11 @@ def init_vector_table():
 
 def get_existing_files() -> set:
     try:
+        # FIX: ensure table exists before querying
+        init_vector_table()
         conn   = get_conn()
         cursor = conn.cursor()
-        cursor.execute(
-            "SELECT DISTINCT filename FROM documents"
-        )
+        cursor.execute("SELECT DISTINCT filename FROM documents")
         rows = cursor.fetchall()
         conn.close()
         return set(r[0] for r in rows if r[0])
@@ -68,11 +66,11 @@ def get_existing_files() -> set:
 
 
 def create_vector_store(chunks):
+    # FIX: ensure table exists before inserting
+    init_vector_table()
+
     existing   = get_existing_files()
-    new_chunks = [
-        c for c in chunks
-        if c.metadata.get("filename") not in existing
-    ]
+    new_chunks = [c for c in chunks if c.metadata.get("filename") not in existing]
 
     if not new_chunks:
         print("⚠️ Already exists. Skipping.")
@@ -85,12 +83,9 @@ def create_vector_store(chunks):
 
     for chunk in new_chunks:
         try:
-            embedding = model.embed_query(
-                chunk.page_content
-            )
+            embedding = model.embed_query(chunk.page_content)
             cursor.execute("""
-                INSERT INTO documents
-                (filename, page, content, embedding)
+                INSERT INTO documents (filename, page, content, embedding)
                 VALUES (%s, %s, %s, %s)
             """, (
                 chunk.metadata.get("filename"),
@@ -106,10 +101,7 @@ def create_vector_store(chunks):
     print("✅ Done.")
 
 
-def similarity_search(
-    query: str,
-    k    : int = 4
-) -> list:
+def similarity_search(query: str, k: int = 4) -> list:
     try:
         model     = get_embedding_model()
         query_vec = model.embed_query(query)
@@ -117,8 +109,7 @@ def similarity_search(
         cursor    = conn.cursor()
         cursor.execute("""
             SELECT filename, page, content,
-                   1 - (embedding <=> %s::vector)
-                   AS score
+                   1 - (embedding <=> %s::vector) AS score
             FROM documents
             ORDER BY embedding <=> %s::vector
             LIMIT %s
@@ -131,17 +122,9 @@ def similarity_search(
             if score >= 0.3:
                 results.append(Document(
                     page_content=content,
-                    metadata={
-                        "filename": filename,
-                        "page"    : page,
-                        "score"   : score
-                    }
+                    metadata={"filename": filename, "page": page, "score": score}
                 ))
         return results
     except Exception as e:
         print(f"⚠️ Similarity search warning: {e}")
         return []
-
-
-# initialize on import
-init_vector_table()

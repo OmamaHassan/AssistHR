@@ -1,7 +1,6 @@
 import os
 import re
 import json
-import hashlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -13,41 +12,25 @@ from document_loader import (
     ocr_image_with_mistral
 )
 
-CACHE_FILE     = "screening_cache.json"
-DEFAULT_MODEL  = "llama-3.1-8b-instant"
+# FIX: Removed file-system cache (screening_cache.json) — Streamlit Cloud
+# ephemeral filesystem resets on every deploy/restart so the cache was useless
+# and could cause stale/corrupt results. In-memory cache per session instead.
+_memory_cache: dict = {}
+
+DEFAULT_MODEL = "llama-3.1-8b-instant"
 
 
 def get_llm(model: str = DEFAULT_MODEL):
     from langchain_groq import ChatGroq
     return ChatGroq(
-        model      = model,
-        api_key    = os.getenv("GROQ_API_KEY"),
-        temperature= 0
+        model=model,
+        api_key=os.getenv("GROQ_API_KEY"),
+        temperature=0
     )
-
-
-# =====================================
-# CACHE
-# =====================================
-
-def load_cache() -> dict:
-    if os.path.exists(CACHE_FILE):
-        with open(CACHE_FILE, "r") as f:
-            return json.load(f)
-    return {}
-
-def save_cache(cache: dict):
-    with open(CACHE_FILE, "w") as f:
-        json.dump(cache, f, indent=2)
-
-def file_hash(path: str) -> str:
-    with open(path, "rb") as f:
-        return hashlib.md5(f.read()).hexdigest()
 
 
 def extract_text(file_path: str) -> str:
     ext = file_path.lower().split(".")[-1]
-
     if ext == "pdf":
         if is_scanned_pdf(file_path):
             print(f"  [Scanned PDF] Using OCR...")
@@ -55,15 +38,12 @@ def extract_text(file_path: str) -> str:
         else:
             docs = extract_pdf_text(file_path)
             return "\n".join(doc.page_content for doc in docs)
-
     elif ext == "docx":
         docs = load_document(file_path)
         return "\n".join(doc.page_content for doc in docs)
-
     elif ext in ["jpg", "jpeg", "png"]:
         print(f"  [Image] Using OCR...")
         return ocr_image_with_mistral(file_path)
-
     else:
         raise ValueError(f"Unsupported file type: .{ext}")
 
@@ -89,7 +69,6 @@ def extract_json_safe(text: str) -> dict:
             except Exception:
                 pass
     return {}
-
 
 
 screen_prompt = ChatPromptTemplate.from_template("""
@@ -152,22 +131,13 @@ Resume:
 """)
 
 
-
-def screen_resume(
-    resume_path: str,
-    jd_text    : str,
-    model      : str = DEFAULT_MODEL
-) -> dict:
-
-    cache     = load_cache()
-    file_id   = file_hash(resume_path)
-    cache_key = f"{file_id}_{model}"   # unique per file + model
-
-    if cache_key in cache:
+def screen_resume(resume_path: str, jd_text: str, model: str = DEFAULT_MODEL) -> dict:
+    # FIX: in-memory cache keyed by path + model (valid within one Streamlit session)
+    cache_key = f"{resume_path}_{model}"
+    if cache_key in _memory_cache:
         print(f"  [cached ⚡] {os.path.basename(resume_path)}")
-        return cache[cache_key]
+        return _memory_cache[cache_key]
 
-    # extract text
     try:
         resume_text = normalize_text(extract_text(resume_path))
     except Exception as e:
@@ -178,27 +148,19 @@ def screen_resume(
         print(f"  ❌ Empty text: {resume_path}")
         return None
 
-    # LLM call with selected model
     llm   = get_llm(model)
     chain = screen_prompt | llm | StrOutputParser()
 
     try:
-        raw    = chain.invoke({
-            "jd_text"    : jd_text,       # full text ✅
-            "resume_text": resume_text    # full text ✅
-        })
+        raw    = chain.invoke({"jd_text": jd_text, "resume_text": resume_text})
         parsed = extract_json_safe(raw)
-
         if not parsed:
-            print(f"  ⚠️  Empty response: "
-                  f"{os.path.basename(resume_path)}")
+            print(f"  ⚠️  Empty response: {os.path.basename(resume_path)}")
             return None
-
     except Exception as e:
         print(f"  ❌ LLM failed: {resume_path} → {e}")
         return None
 
-    # normalize verdict
     verdict_map = {
         "strongly recommended": "✅ Strongly Recommended",
         "recommended"         : "⚠️  Recommended",
@@ -206,10 +168,7 @@ def screen_resume(
         "not recommended"     : "❌ Not Recommended"
     }
     raw_verdict = str(parsed.get("verdict", "")).lower()
-    verdict     = next(
-        (v for k, v in verdict_map.items() if k in raw_verdict),
-        "🔶 Maybe"
-    )
+    verdict     = next((v for k, v in verdict_map.items() if k in raw_verdict), "🔶 Maybe")
 
     result = {
         "filename"      : os.path.basename(resume_path),
@@ -224,26 +183,16 @@ def screen_resume(
         "missing_skills": parsed.get("missing_skills", []),
         "strengths"     : parsed.get("strengths",     ""),
         "weaknesses"    : parsed.get("weaknesses",    ""),
-        "score"         : int(parsed.get("score")     or 0),
+        "score"         : int(parsed.get("score") or 0),
         "verdict"       : verdict,
         "model"         : model
     }
 
-    cache[cache_key] = result
-    save_cache(cache)
+    _memory_cache[cache_key] = result
     return result
 
 
-# =====================================
-# SCREEN ALL — parallel
-# =====================================
-
-def screen_all(
-    resume_paths: list,
-    jd_path     : str,
-    model       : str = DEFAULT_MODEL
-) -> list:
-
+def screen_all(resume_paths: list, jd_path: str, model: str = DEFAULT_MODEL) -> list:
     print(f"\n📋 Loading Job Description...")
     print(f"   Model: {model}")
 
@@ -254,16 +203,12 @@ def screen_all(
         return []
 
     print(f"✅ JD loaded ({len(jd_text)} chars)")
-    print(f"\n👥 Screening {len(resume_paths)} "
-          f"resume(s) in parallel...\n")
+    print(f"\n👥 Screening {len(resume_paths)} resume(s) in parallel...\n")
 
     results = []
-
     with ThreadPoolExecutor(max_workers=3) as executor:
         futures = {
-            executor.submit(
-                screen_resume, path, jd_text, model
-            ): path
+            executor.submit(screen_resume, path, jd_text, model): path
             for path in resume_paths
         }
         for future in as_completed(futures):
@@ -272,49 +217,9 @@ def screen_all(
                 result = future.result()
                 if result:
                     results.append(result)
-                    print(f"  ✅ Done: "
-                          f"{os.path.basename(path)}"
-                          f" → {result['score']}%")
+                    print(f"  ✅ Done: {os.path.basename(path)} → {result['score']}%")
             except Exception as e:
                 print(f"  ❌ Failed: {path} → {e}")
 
     results.sort(key=lambda x: x["score"], reverse=True)
     return results
-
-
-# =====================================
-# PRINT REPORT
-# =====================================
-
-def print_report(results: list):
-    if not results:
-        print("❌ No results to display.")
-        return
-
-    print("\n" + "=" * 65)
-    print("            CANDIDATE SCREENING REPORT")
-    print("=" * 65)
-
-    for i, r in enumerate(results, 1):
-        print(f"\n#{i}  {r['name'] or 'Unknown'}  "
-              f"|  Score: {r['score']}%  "
-              f"|  {r['verdict']}")
-        print(f"    File          : {r['filename']}")
-        print(f"    Email         : {r['email']}")
-        print(f"    Phone         : {r['phone']}")
-        print(f"    LinkedIn      : {r['linkedin']}")
-        print(f"    GitHub        : {r['github']}")
-        print(f"    Experience    : {r['experience']}")
-        print(f"    Education     : {r['education']}")
-        print(f"    Model Used    : {r['model']}")
-        print(f"    Matched Skills: "
-              f"{', '.join(r['matched_skills'][:6]) if r['matched_skills'] else 'None'}")
-        print(f"    Missing Skills: "
-              f"{', '.join(r['missing_skills'][:4]) if r['missing_skills'] else 'None'}")
-        print(f"    Strengths     : {r['strengths']}")
-        print(f"    Weaknesses    : {r['weaknesses']}")
-        print("-" * 65)
-
-    print(f"\n🏆 Top Candidate: "
-          f"{results[0]['name'] or 'Unknown'} "
-          f"({results[0]['score']}%)")
