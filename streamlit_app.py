@@ -34,7 +34,7 @@ supabase = create_client(
 st.set_page_config(
     page_title="AssistHR",
     page_icon="🤖",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="expanded",
 )
 
