@@ -115,20 +115,26 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     display: none !important;
 }
 
-/* FIX #3: Force sidebar toggle always visible */
+/* ── Sidebar toggle: always clickable, always visible ────── */
+/* Cover both old and new Streamlit selector names           */
 [data-testid="stSidebarCollapsedControl"],
 [data-testid="collapsedControl"] {
-    display    : flex !important;
-    visibility : visible !important;
-    opacity    : 1 !important;
-    z-index    : 999999 !important;
+    display        : flex !important;
+    visibility     : visible !important;
+    opacity        : 1 !important;
+    z-index        : 999999 !important;
+    pointer-events : all !important;
+    position       : fixed !important;
+    top            : 12px !important;
+    left           : 12px !important;
 }
-
-/* FIX #4: Force sidebar itself always visible */
-[data-testid="stSidebar"] {
-    display    : flex !important;
-    visibility : visible !important;
-    opacity    : 1 !important;
+/* When sidebar IS open the toggle sits inside it — keep clickable */
+[data-testid="stSidebar"] [data-testid="stSidebarCollapsedControl"],
+[data-testid="stSidebar"] [data-testid="collapsedControl"] {
+    position       : relative !important;
+    top            : unset !important;
+    left           : unset !important;
+    pointer-events : all !important;
 }
 
 .block-container {
@@ -162,9 +168,19 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stSidebar"] {
     background  : linear-gradient(180deg, #0f172a 0%, #111b34 100%) !important;
     border-right: 1px solid rgba(148,163,184,0.18) !important;
-    width       : 248px !important;
+    /* FIX: Do NOT set width here — hardcoded width blocks Streamlit
+       from collapsing the sidebar to 0 when toggle is clicked      */
+    min-width   : 248px !important;
+    max-width   : 248px !important;
+    transition  : all 0.3s ease !important;
 }
-[data-testid="stSidebar"] * {
+/* FIX: Do NOT use [data-testid="stSidebar"] * — the wildcard
+   overrides pointer-events on the toggle button making it unclickable.
+   Target only what you need explicitly instead.                         */
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] div:not([data-testid="stSidebarCollapsedControl"]):not([data-testid="collapsedControl"]) {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
 [data-testid="stSidebar"] .stRadio > div[role="radiogroup"],
@@ -201,14 +217,15 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 [data-testid="collapsedControl"],
 [data-testid="stSidebarCollapsedControl"] {
-    background   : linear-gradient(145deg,#1e293b 0%,#0f172a 100%) !important;
-    border       : 2px solid rgba(148,163,184,.55) !important;
-    border-radius: 12px !important;
-    box-shadow   : 0 4px 14px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.06) inset !important;
-    z-index      : 999991 !important;
-    min-width    : 44px !important;
-    min-height   : 44px !important;
-    top          : 12px !important;
+    background     : linear-gradient(145deg,#1e293b 0%,#0f172a 100%) !important;
+    border         : 2px solid rgba(148,163,184,.55) !important;
+    border-radius  : 12px !important;
+    box-shadow     : 0 4px 14px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.06) inset !important;
+    z-index        : 999999 !important;
+    min-width      : 44px !important;
+    min-height     : 44px !important;
+    cursor         : pointer !important;
+    pointer-events : all !important;
 }
 [data-testid="collapsedControl"]:hover,
 [data-testid="stSidebarCollapsedControl"]:hover {
@@ -221,6 +238,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     width : 22px !important;
     height: 22px !important;
     filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
+    pointer-events: none !important;
 }
 [data-testid="stSidebar"] kbd,
 [data-testid="stSidebar"] [data-testid="stKeyboardShortcut"],
