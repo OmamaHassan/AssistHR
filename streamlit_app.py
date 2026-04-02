@@ -354,9 +354,6 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     box-shadow  : 0 0 0 3px rgba(37,99,235,0.12) !important;
 }
 
-/* ══════════════════════════════════════════════════════════
-   FILE UPLOADER
-/* ══════════════════════════════════════════════════════════
 
 /* ══════════════════════════════════════════════════════════
    FILE UPLOADER — FINAL CLEAN VERSION
@@ -505,8 +502,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 [data-testid="stChatMessageAvatarUser"]      { background: linear-gradient(135deg, #2563eb, #3b82f6) !important; color: #ffffff !important; }
 [data-testid="stChatMessageAvatarAssistant"] { background: linear-gradient(135deg, #0891b2, #14b8a6) !important; color: #ffffff !important; }
 
-  /* ══════════════════════════════════════════════════════════
-   CHAT INPUT — IMPROVED (modern bot style, full dark/light support)
+  
 /* ══════════════════════════════════════════════════════════
    CHAT INPUT — FULLY FIXED, DARK & LIGHT, AUTO-EXPANDING
 ══════════════════════════════════════════════════════════ */
@@ -556,7 +552,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background: #0f172a !important;
     border: 1.5px solid rgba(96,165,250,0.4) !important;
     box-shadow: 0 10px 35px rgba(0,0,0,0.6) !important;
-    color: #f1f5f9 !important; /* make user input text visible */
+    color: #080808 !important; /* make user input text visible */
 }
 
 /* FOCUS EFFECT */
