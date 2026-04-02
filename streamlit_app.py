@@ -1294,7 +1294,7 @@ elif page == "📄  Resume Screener":
 
     st.markdown('<div class="callout-info">💡 <b>Scoring:</b> Skills match · Experience level · Education · Role alignment. Score ≥ 65 = Recommended.</div>', unsafe_allow_html=True)
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    screen_clicked = st.button("🔍 Screen Resumes", type="primary", use_container_width=True)
+    screen_clicked = st.button("🔍 Screen Resumes", type="primary")
     st.markdown("</div></div>", unsafe_allow_html=True)
 
     if screen_clicked:
