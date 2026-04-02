@@ -103,10 +103,12 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 }
 #MainMenu, footer { visibility: hidden; }
 /* Remove default Streamlit header strip (empty / awkward gap) */
+
 [data-testid="stHeader"] {
     background: transparent !important;
     height: 0px !important;
     min-height: 0px !important;
+    overflow: visible !important;  /* critical — lets toggle button escape */
 }
 [data-testid="stDecoration"] {
     display: none !important;
@@ -860,6 +862,20 @@ hr {
 [data-theme="dark"] .step-desc,
 [data-user-theme="dark"] .step-desc {
     color: var(--text-muted);
+}
+            
+/* Force sidebar and its toggle to always be visible */
+[data-testid="stSidebar"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 999999 !important;
 }
 </style>
 """, unsafe_allow_html=True)
