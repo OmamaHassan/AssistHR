@@ -212,21 +212,11 @@ streamlit run streamlit_app.py
 
 ## 🤖 Available Models
 
-| Model | Quality | Speed | Best For |
-|---|---|---|---|
+| Model 
+|
 | `llama-3.3-70b-versatile`
 | `llama-4-scout-17b` 
 | `llama-3.1-8b-instant`
 
 ---
 
-## 📋 Requirements
-
-```
-streamlit · supabase · python-dotenv
-langchain · langchain-core · langchain-community
-langchain-groq · langchain-huggingface
-psycopg2-binary · sentence-transformers
-PyMuPDF · python-docx · mistralai
-httpx · pgvector · numpy
-```
