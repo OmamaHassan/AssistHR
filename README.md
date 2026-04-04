@@ -1,7 +1,5 @@
 # 🤖 AssistHR — AI-Powered HR Assistant
 
-> **Saylani Mass IT Training · AI & Data Science · Batch 9**
-
 An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** with **Groq LLM** to manage HR documents, answer policy questions, and screen resumes — all in one secure web app.
 
 ---
