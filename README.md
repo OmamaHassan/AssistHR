@@ -1,6 +1,6 @@
 # 🤖 AssistHR — AI-Powered HR Assistant
 
-An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** with **Groq LLM** to manage HR documents, answer policy questions, and screen resumes — all in one secure web app.
+An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** with **Groq LLM** to manage HR documents, answer policy questions, and screen resumes - all in one web app.
 
 ---
 
@@ -21,9 +21,9 @@ An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** w
 | 💬 **HR Q&A** | RAG-powered answers from your documents |
 | 💬 **Chat Sessions** | Multiple named sessions with history |
 | 📄 **Resume Screener** | Upload resumes + JD → ranked candidates |
-| 📝 **JD Text Input** | Paste job description as text or upload file |
-| 🤖 **Model Selection** | Choose from multiple Groq LLM models |
-| 🌓 **Dark/Light Theme** | Full theme-aware UI |
+| 📝 **JD Input** | Upload job description file |
+| 🤖 **Model Selection** | Choose from multiple llama models from Groq |
+| 🌓 **Dark/Light Theme** | Theme-aware UI |
 
 ---
 
@@ -54,7 +54,7 @@ An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** w
                │
     ┌──────────▼──────────┐
     │    Mistral OCR      │
-    │  (scanned PDFs)     │
+    │(scanned PDFs/images)│
     └─────────────────────┘
 ```
 
@@ -65,7 +65,7 @@ An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** w
 | Layer | Technology |
 |---|---|
 | **Frontend/App** | Streamlit |
-| **LLM** | Groq API (llama-3.3-70b-versatile) |
+| **LLM** | Groq API (llama models) |
 | **Embeddings** | sentence-transformers/all-MiniLM-L12-v2 |
 | **Vector DB** | Supabase pgvector |
 | **Database** | Supabase PostgreSQL |
@@ -85,14 +85,13 @@ AssistHR/
 ├── requirements.txt          ← Python dependencies
 ├── .gitignore
 ├── README.md
-└── backend/
-    ├── document_loader.py    ← PDF/DOCX/TXT/image loading + OCR
-    ├── chunking.py           ← text splitting
-    ├── embedding.py          ← Supabase pgvector operations
-    ├── retriever.py          ← similarity search
-    ├── rag_chain.py          ← RAG pipeline with Groq
-    ├── chat_store.py         ← PostgreSQL chat history
-    └── screener.py           ← resume screening engine
+├── document_loader.py        ← PDF/DOCX/TXT/image loading + OCR
+├── chunking.py               ← text splitting
+├── embedding.py              ← Supabase pgvector operations
+├── retriever.py              ← similarity search
+├── rag_chain.py              ← RAG pipeline with Groq
+├── chat_store.py             ← PostgreSQL chat history
+└── screener.py               ← resume screening engine
 ```
 
 ---
@@ -161,9 +160,9 @@ CREATE TABLE IF NOT EXISTS messages (
 |---|---|
 | `GROQ_API_KEY` | [console.groq.com](https://console.groq.com) → API Keys |
 | `MISTRAL_API_KEY` | [console.mistral.ai](https://console.mistral.ai) → API Keys |
-| `SUPABASE_URL` | Supabase → Settings → API → Project URL |
-| `SUPABASE_ANON_KEY` | Supabase → Settings → API → Publishable key |
-| `DATABASE_URL` | Supabase → Settings → Database → Transaction pooler URI |
+| `SUPABASE_URL` | 
+| `SUPABASE_ANON_KEY` |
+| `DATABASE_URL` | 
 
 ### 5. Run Locally
 
@@ -215,18 +214,9 @@ streamlit run streamlit_app.py
 
 | Model | Quality | Speed | Best For |
 |---|---|---|---|
-| `llama-3.3-70b-versatile` | ⭐⭐⭐⭐⭐ | ⚡⚡⚡ | Best overall |
-| `llama-4-scout-17b` | ⭐⭐⭐⭐⭐ | ⚡⚡⚡⚡⚡ | Newest fastest |
-| `llama-3.1-8b-instant` | ⭐⭐⭐ | ⚡⚡⚡⚡⚡ | Quick responses |
-
----
-
-## 🔒 Security
-
-- API keys encrypted in Streamlit secrets — never in code
-- Supabase Auth handles authentication (industry-standard JWT)
-- Chat history isolated per user email prefix
-- Documents shared across authenticated users (HR team use case)
+| `llama-3.3-70b-versatile`
+| `llama-4-scout-17b` 
+| `llama-3.1-8b-instant`
 
 ---
 
@@ -240,24 +230,3 @@ psycopg2-binary · sentence-transformers
 PyMuPDF · python-docx · mistralai
 httpx · pgvector · numpy
 ```
-
----
-
-## 🙏 Credits
-
-- [Groq](https://groq.com) — ultra-fast LLM inference
-- [Supabase](https://supabase.com) — auth + PostgreSQL + pgvector
-- [LangChain](https://langchain.com) — RAG framework
-- [Streamlit](https://streamlit.io) — Python web app framework
-- [Mistral AI](https://mistral.ai) — OCR for scanned documents
-- [Saylani Mass IT Training](https://saylaniwelfare.com)
-
----
-
-## 📄 License
-
-MIT License
-
----
-
-*Built with ❤️ — Saylani Mass IT Training · AI & Data Science · Batch 9*
