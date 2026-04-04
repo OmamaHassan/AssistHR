@@ -109,7 +109,7 @@ AssistHR/
 ### 1. Clone
 
 ```bash
-git clone https://github.com/yourname/assisthr.git
+git clone https://github.com/omamahassan/assisthr.git
 cd assisthr
 ```
 
@@ -212,7 +212,7 @@ streamlit run streamlit_app.py
 
 ## 🤖 Available Models
 
-| Model 
+| Models
 |
 | `llama-3.3-70b-versatile`
 | `llama-4-scout-17b` 
