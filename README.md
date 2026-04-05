@@ -1,4 +1,4 @@
-# 🤖 AssistHR — AI-Powered HR Assistant
+# 🤖 AssistHR - AI-Powered HR Assistant
 
 An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** with **Groq LLM** to manage HR documents, answer policy questions, and screen resumes - all in one web app.
 
