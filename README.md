@@ -169,18 +169,11 @@ CREATE TABLE IF NOT EXISTS messages (
 Create `.streamlit/secrets.toml`:
 
 ```toml
-GROQ_API_KEY      = "gsk_..."
+GROQ_API_KEY      = "..."
 MISTRAL_API_KEY   = "..."
 SUPABASE_URL      = "https://xxxxx.supabase.co"
-SUPABASE_ANON_KEY = "eyJhbG..."
-DATABASE_URL      = "postgresql://postgres.xxx:pass@aws-0-region.pooler.supabase.com:6543/postgres"
-```
-
-```bash
-streamlit run streamlit_app.py
-# opens at http://localhost:8501
-```
-
+SUPABASE_ANON_KEY = "..."
+DATABASE_URL      = "..."
 ---
 
 ## Deploy to Streamlit Cloud (Free)
@@ -212,8 +205,7 @@ streamlit run streamlit_app.py
 
 ## Available Models
 
-| Models
-|
+| Models:
 | `llama-3.3-70b-versatile`
 | `llama-4-scout-17b` 
 | `llama-3.1-8b-instant`
