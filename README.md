@@ -4,7 +4,7 @@ An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** w
 
 ---
 
-## 🌐 Live Demo
+## Live Demo
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://assisthr.streamlit.app)
 
@@ -12,22 +12,22 @@ An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** w
 
 ---
 
-## ✨ Features
+## Features
 
 | Feature | Description |
 |---|---|
-| 🔐 **Auth** | Secure login & register via Supabase |
-| 📚 **Knowledge Base** | Upload HR docs (PDF, DOCX, TXT) — auto-indexed |
-| 💬 **HR Q&A** | RAG-powered answers from your documents |
-| 💬 **Chat Sessions** | Multiple named sessions with history |
-| 📄 **Resume Screener** | Upload resumes + JD → ranked candidates |
-| 📝 **JD Input** | Upload job description file |
-| 🤖 **Model Selection** | Choose from multiple llama models from Groq |
-| 🌓 **Dark/Light Theme** | Theme-aware UI |
+| **Auth** | Secure login & register via Supabase |
+| **Knowledge Base** | Upload HR docs (PDF, DOCX, TXT) — auto-indexed |
+| **HR Q&A** | RAG-powered answers from your documents |
+| **Chat Sessions** | Multiple named sessions with history |
+| **Resume Screener** | Upload resumes + JD → ranked candidates |
+| **JD Input** | Upload job description file |
+| **Model Selection** | Choose from multiple llama models from Groq |
+| **Dark/Light Theme** | Theme-aware UI |
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌──────────────────────────────────────────┐
@@ -60,7 +60,7 @@ An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** w
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -77,7 +77,7 @@ An intelligent HR assistant combining **Retrieval-Augmented Generation (RAG)** w
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 AssistHR/
@@ -96,7 +96,7 @@ AssistHR/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -183,7 +183,7 @@ streamlit run streamlit_app.py
 
 ---
 
-## ☁️ Deploy to Streamlit Cloud (Free)
+## Deploy to Streamlit Cloud (Free)
 
 ```
 1. Push to GitHub
@@ -196,7 +196,7 @@ streamlit run streamlit_app.py
 
 ---
 
-## 📖 How to Use
+## How to Use
 
 **1. Register & Login** — create account with email/password via Supabase
 
@@ -210,7 +210,7 @@ streamlit run streamlit_app.py
 
 ---
 
-## 🤖 Available Models
+## Available Models
 
 | Models
 |
