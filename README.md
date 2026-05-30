@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS messages (
 | `SUPABASE_ANON_KEY` |
 | `DATABASE_URL` | 
 
-### 5. Run Locally
+### 5.
 
 Create `.streamlit/secrets.toml`:
 
@@ -174,10 +174,10 @@ MISTRAL_API_KEY   = "..."
 SUPABASE_URL      = "https://xxxxx.supabase.co"
 SUPABASE_ANON_KEY = "..."
 DATABASE_URL      = "..."
+```
 ---
 
-## Deploy to Streamlit Cloud (Free)
-
+### Deploy to Streamlit Cloud (Free)
 ```
 1. Push to GitHub
 2. Go to share.streamlit.io
